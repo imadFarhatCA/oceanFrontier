@@ -1,4 +1,4 @@
-<!-- Auto-deployment test: 2026-02-06 -->
+<!-- Cloudflare Pages deployment test -->
 <script lang="ts">
 	import '../styles/main.css';
 	import { onMount } from 'svelte';
