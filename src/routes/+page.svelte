@@ -96,8 +96,17 @@
 		showTrainingView = false;
 		document.body.style.overflow = 'hidden';
 		document.body.style.height = '100vh';
-		if (leftSection) leftSection.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
-		if (rightSection) rightSection.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
+
+		// On mobile, return to training section (section 0)
+		if (isMobile) {
+			currentMobileSection = 0;
+		}
+
+		// On desktop, restore clip paths
+		if (!isMobile) {
+			if (leftSection) leftSection.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
+			if (rightSection) rightSection.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
+		}
 	}
 
 	function handleNavClick(e: Event, target: string) {
@@ -343,6 +352,15 @@
 
 		// Set current flow
 		currentFlow = ctaId;
+
+		// On mobile, ensure we stay on the section where CTA was clicked
+		if (isMobile) {
+			if (section === 'training') {
+				currentMobileSection = 0;
+			} else if (section === 'gear') {
+				currentMobileSection = 1;
+			}
+		}
 
 		// Wait for animation
 		await new Promise(resolve => setTimeout(resolve, 100));
