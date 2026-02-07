@@ -610,15 +610,13 @@
 							<div class="hero-fade-overlay" class:hidden={heroExpanded}></div>
 						</div>
 
-						<!-- Read More Button (mobile only) -->
-						{#if !heroExpanded}
-							<button class="read-more-button" on:click={() => heroExpanded = true}>
-								<span>Read more</span>
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-									<polyline points="6 9 12 15 18 9"></polyline>
-								</svg>
-							</button>
-						{/if}
+						<!-- Read More/Less Button (mobile only) -->
+						<button class="read-more-button" class:expanded={heroExpanded} on:click={() => heroExpanded = !heroExpanded}>
+							<span>{heroExpanded ? 'Read less' : 'Read more'}</span>
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<polyline points="6 9 12 15 18 9"></polyline>
+							</svg>
+						</button>
 					</div>
 
 					<!-- Courses Grid - Right Side -->
@@ -1011,6 +1009,11 @@
 							<path d="m2 7 10 7 10-7"/>
 						</svg>
 					</a>
+				</div>
+				<div class="mobile-contact-info">
+					<span class="contact-location">Cyprus, Nicosia</span>
+					<a href="tel:+35795119881" class="contact-phone">+357 95 119 881</a>
+					<a href="https://www.oceanfrontier.com" target="_blank" rel="noopener" class="contact-website">www.oceanfrontier.com</a>
 				</div>
 			</div>
 		</div>
