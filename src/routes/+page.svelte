@@ -777,7 +777,7 @@
 			{/if}
 
 			{#if !showTrainingView}
-			<div class="section-label">
+			<div class="section-label" class:hidden={showQuestionnaire || showTrainingView}>
 				<span class="label-text">DIVE TRAINING</span>
 			</div>
 			{/if}
@@ -936,7 +936,7 @@
 				</div>
 			{/if}
 
-			<div class="section-label">
+			<div class="section-label" class:hidden={showQuestionnaire || showTrainingView}>
 				<span class="label-text">DIVE GEAR</span>
 			</div>
 		</div>
@@ -1040,15 +1040,15 @@
 			></button>
 		</div>
 
-		<!-- Swipe Hint with hand cursor animation -->
+		<!-- Swipe Hint with hand and arrow -->
 		<div class="swipe-hint">
-			<svg class="hand-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-				<path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
-				<path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
-				<path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
-				<path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+			<svg class="hand-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+				<path d="M23 12l-4-4v3h-9v2h9v3l4-4zM1 18V6c0-.55.45-1 1-1h9c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1H2c-.55 0-1-.45-1-1z"/>
 			</svg>
 			<span>SWIPE</span>
+			<svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+				<polyline points="9 18 15 12 9 6"></polyline>
+			</svg>
 		</div>
 	{/if}
 </div>

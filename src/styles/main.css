@@ -188,7 +188,7 @@ body {
 	animation-fill-mode: backwards;
 	padding: 10px;
 	cursor: pointer;
-	transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+	transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 	position: relative;
 	transform: translateY(0) scale(1);
 	border-radius: 8px;
@@ -2088,6 +2088,20 @@ button:focus-visible {
 
 /* Training View Responsive */
 @media (max-width: 768px) {
+	/* Fix training view on mobile */
+	.mobile-view.training-active {
+		overflow-y: auto !important;
+	}
+
+	.mobile-view .split-section.left.expanded {
+		position: relative !important;
+		transform: none !important;
+		opacity: 1 !important;
+		filter: none !important;
+		z-index: 400 !important;
+		background: linear-gradient(135deg, #e8e8e8 0%, #f5f5f5 100%) !important;
+	}
+
 	.section-content {
 		padding: 30px 24px;
 	}
@@ -2423,7 +2437,7 @@ button:focus-visible {
 		transform: scale(1.25);
 	}
 
-	/* Swipe Hint - animated hand cursor */
+	/* Swipe Hint - minimal style without background */
 	.swipe-hint {
 		position: fixed;
 		bottom: 40px;
@@ -2432,27 +2446,27 @@ button:focus-visible {
 		display: flex;
 		align-items: center;
 		gap: 16px;
-		color: rgba(255, 255, 255, 0.95);
+		color: rgba(255, 255, 255, 0.9);
 		font-size: 15px;
 		font-weight: 700;
 		letter-spacing: 2.5px;
 		z-index: 300;
 		animation: swipeHintFloat 3s ease-in-out infinite;
 		pointer-events: none;
-		background: linear-gradient(135deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.6));
-		padding: 14px 28px;
-		border-radius: 50px;
-		backdrop-filter: blur(14px);
-		text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-		border: 2px solid rgba(255, 255, 255, 0.25);
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+		text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6);
 	}
 
 	.swipe-hint .hand-icon {
-		width: 32px;
-		height: 32px;
-		animation: handSwipe 2.5s ease-in-out infinite;
-		filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+		width: 28px;
+		height: 28px;
+		filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 12px rgba(0, 0, 0, 0.6));
+	}
+
+	.swipe-hint .arrow-icon {
+		width: 24px;
+		height: 24px;
+		animation: arrowSlide 2s ease-in-out infinite;
+		filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 12px rgba(0, 0, 0, 0.6));
 	}
 
 	@keyframes swipeHintFloat {
@@ -2466,22 +2480,14 @@ button:focus-visible {
 		}
 	}
 
-	@keyframes handSwipe {
+	@keyframes arrowSlide {
 		0%, 100% {
-			transform: translateX(0) rotate(0deg);
+			transform: translateX(0);
 			opacity: 1;
-		}
-		25% {
-			transform: translateX(-15px) rotate(-8deg);
-			opacity: 0.7;
 		}
 		50% {
-			transform: translateX(15px) rotate(8deg);
-			opacity: 1;
-		}
-		75% {
-			transform: translateX(-8px) rotate(-4deg);
-			opacity: 0.85;
+			transform: translateX(10px);
+			opacity: 0.5;
 		}
 	}
 
@@ -2500,41 +2506,78 @@ button:focus-visible {
 		z-index: 340 !important;
 	}
 
-	/* Mobile section labels - vertical on side */
+	/* Ensure logo is properly hidden when questionnaire or training view is active */
+	.mobile-view .center-logo-left.hidden,
+	.mobile-view .center-logo-right.hidden {
+		opacity: 0 !important;
+		visibility: hidden !important;
+		pointer-events: none !important;
+		z-index: -1 !important;
+	}
+
+	/* Mobile section labels - horizontal bars at top like Instagram stories */
 	.mobile-view .section-label {
 		position: fixed;
-		left: 20px;
+		left: 0;
+		right: 0;
+		top: 80px;
 		bottom: auto;
-		top: 50%;
-		transform: translateY(-50%) rotate(-90deg);
-		transform-origin: center;
-		z-index: 280;
+		transform: none;
+		z-index: 290;
 		pointer-events: none;
+		display: flex;
+		justify-content: center;
+		padding: 0 24px;
+		gap: 8px;
 	}
 
 	.mobile-view .section-label .label-text {
-		font-size: 13px;
-		font-weight: 700;
-		letter-spacing: 3px;
-		opacity: 0.7;
+		flex: 1;
+		max-width: 200px;
+		height: 3px;
+		background: rgba(255, 255, 255, 0.3);
+		border-radius: 3px;
+		transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+		position: relative;
+		overflow: hidden;
+		font-size: 0;
 		white-space: nowrap;
 	}
 
-	/* Adjust opacity based on which section is active */
-	.mobile-view.mobile-section-0 .split-section.left .section-label {
-		opacity: 1;
+	.mobile-view .section-label .label-text::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 0%;
+		background: rgba(255, 255, 255, 0.95);
+		border-radius: 3px;
+		transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+		box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 	}
 
-	.mobile-view.mobile-section-0 .split-section.right .section-label {
-		opacity: 0.3;
+	/* Show progress bar based on which section is active */
+	.mobile-view.mobile-section-0 .split-section.left .section-label .label-text::before {
+		width: 100%;
 	}
 
-	.mobile-view.mobile-section-1 .split-section.left .section-label {
-		opacity: 0.3;
+	.mobile-view.mobile-section-0 .split-section.right .section-label .label-text::before {
+		width: 0%;
 	}
 
-	.mobile-view.mobile-section-1 .split-section.right .section-label {
-		opacity: 1;
+	.mobile-view.mobile-section-1 .split-section.left .section-label .label-text::before {
+		width: 0%;
+	}
+
+	.mobile-view.mobile-section-1 .split-section.right .section-label .label-text::before {
+		width: 100%;
+	}
+
+	/* Hide section labels when questionnaire or training view is active */
+	.mobile-view .section-label.hidden {
+		opacity: 0;
+		pointer-events: none;
 	}
 }
 
