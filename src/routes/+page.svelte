@@ -778,6 +778,7 @@
 
 			{#if !showTrainingView}
 			<div class="section-label" class:hidden={showQuestionnaire || showTrainingView}>
+				<span class="label-number">1</span>
 				<span class="label-text">DIVE TRAINING</span>
 			</div>
 			{/if}
@@ -937,6 +938,7 @@
 			{/if}
 
 			<div class="section-label" class:hidden={showQuestionnaire || showTrainingView}>
+				<span class="label-number">2</span>
 				<span class="label-text">DIVE GEAR</span>
 			</div>
 		</div>
@@ -1040,18 +1042,15 @@
 			></button>
 		</div>
 
-		<!-- Swipe Hint with hand and arrow -->
-		<div class="swipe-hint">
+		<!-- Swipe Hint - iPhone unlock style -->
+		<div class="swipe-hint" class:swipe-left={currentMobileSection === 1}>
 			<div class="swipe-track">
-				<svg class="chevron-icon chevron-1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-					<polyline points="9 18 15 12 9 6"></polyline>
-				</svg>
-				<svg class="chevron-icon chevron-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-					<polyline points="9 18 15 12 9 6"></polyline>
-				</svg>
-				<svg class="chevron-icon chevron-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-					<polyline points="9 18 15 12 9 6"></polyline>
-				</svg>
+				<div class="swipe-slider">
+					<svg class="swipe-arrow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="9 18 15 12 9 6"></polyline>
+					</svg>
+				</div>
+				<span class="swipe-text">slide to view</span>
 			</div>
 		</div>
 	{/if}

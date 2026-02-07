@@ -874,8 +874,8 @@ button:focus-visible {
    QUESTIONNAIRE IN-PAGE
    =================================== */
 .cta-container.minimized {
-	transform: translate(-85%, -50%) scale(0.75) !important;
-	opacity: 0.35 !important;
+	transform: translate(-50%, -120%) scale(0.7) !important;
+	opacity: 0.3 !important;
 	pointer-events: none !important;
 	filter: blur(0.5px) !important;
 	transition: all 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -1527,8 +1527,8 @@ button:focus-visible {
 
 /* Responsive */
 @media (max-width: 768px) {
-	.cta-container.minimized {
-		transform: translate(-50%, -50%) scale(0.65) !important;
+	.mobile-view .cta-container.minimized {
+		transform: translate(-50%, -200%) scale(0.6) !important;
 		opacity: 0 !important;
 		pointer-events: none !important;
 		transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -1634,7 +1634,6 @@ button:focus-visible {
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	animation: trainingSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes trainingSlideIn {
@@ -2441,7 +2440,7 @@ button:focus-visible {
 		transform: scale(1.25);
 	}
 
-	/* Swipe Hint - iPhone unlock style */
+	/* Swipe Hint - iPhone slide to unlock style */
 	.swipe-hint {
 		position: fixed;
 		bottom: 40px;
@@ -2452,51 +2451,77 @@ button:focus-visible {
 	}
 
 	.swipe-track {
+		position: relative;
+		width: 200px;
+		height: 48px;
+		background: rgba(255, 255, 255, 0.15);
+		border-radius: 24px;
+		border: 2px solid rgba(255, 255, 255, 0.3);
+		backdrop-filter: blur(12px);
+		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 		display: flex;
 		align-items: center;
-		gap: 6px;
-		padding: 10px 18px;
-		background: rgba(255, 255, 255, 0.12);
-		border-radius: 30px;
-		border: 1.5px solid rgba(255, 255, 255, 0.25);
-		backdrop-filter: blur(10px);
-		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+		justify-content: center;
+		overflow: hidden;
 	}
 
-	.chevron-icon {
-		width: 20px;
-		height: 20px;
-		color: rgba(255, 255, 255, 0.9);
-		filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+	.swipe-slider {
+		position: absolute;
+		left: 4px;
+		width: 40px;
+		height: 40px;
+		background: rgba(255, 255, 255, 0.95);
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+		animation: slideHint 2.5s ease-in-out infinite;
 	}
 
-	.chevron-1 {
-		animation: chevronSlide 1.8s ease-in-out infinite;
-		animation-delay: 0s;
+	.swipe-arrow {
+		width: 18px;
+		height: 18px;
+		color: rgba(0, 0, 0, 0.7);
+		transition: transform 0.3s ease;
 	}
 
-	.chevron-2 {
-		animation: chevronSlide 1.8s ease-in-out infinite;
-		animation-delay: 0.3s;
+	/* Flip arrow when on right section */
+	.swipe-hint.swipe-left .swipe-arrow {
+		transform: rotate(180deg);
 	}
 
-	.chevron-3 {
-		animation: chevronSlide 1.8s ease-in-out infinite;
-		animation-delay: 0.6s;
+	.swipe-text {
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 0.5px;
+		color: rgba(255, 255, 255, 0.85);
+		text-transform: lowercase;
+		text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+		pointer-events: none;
+		user-select: none;
 	}
 
-	@keyframes chevronSlide {
-		0% {
-			opacity: 0.3;
-			transform: translateX(-8px);
+	@keyframes slideHint {
+		0%, 100% {
+			left: 4px;
 		}
 		50% {
-			opacity: 1;
-			transform: translateX(4px);
+			left: calc(100% - 44px);
 		}
-		100% {
-			opacity: 0.3;
-			transform: translateX(-8px);
+	}
+
+	/* Reverse animation when swiping left */
+	.swipe-hint.swipe-left .swipe-slider {
+		animation: slideHintReverse 2.5s ease-in-out infinite;
+	}
+
+	@keyframes slideHintReverse {
+		0%, 100% {
+			left: calc(100% - 44px);
+		}
+		50% {
+			left: 4px;
 		}
 	}
 
@@ -2515,72 +2540,60 @@ button:focus-visible {
 		z-index: 340 !important;
 	}
 
-	/* Ensure logo is properly hidden when questionnaire or training view is active */
+	/* Lower logo z-index when questionnaire is active so questionnaire appears on top */
 	.mobile-view .center-logo-left.hidden,
 	.mobile-view .center-logo-right.hidden {
-		opacity: 0 !important;
-		visibility: hidden !important;
-		pointer-events: none !important;
-		z-index: -1 !important;
+		z-index: 100 !important;
 	}
 
-	/* Mobile section labels - horizontal bars above Instagram bubble */
+	/* Mobile section labels - numbered indicators above Instagram bubble */
 	.mobile-view .section-label {
 		position: fixed;
-		left: 0;
-		right: 0;
-		top: auto;
-		bottom: 155px;
-		transform: none;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: 170px;
 		z-index: 290;
 		pointer-events: none;
 		display: flex;
+		align-items: center;
+		gap: 12px;
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 1.5px;
+		color: rgba(255, 255, 255, 0.9);
+		text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+	}
+
+	.mobile-view .section-label .label-number {
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.2);
+		border: 2px solid rgba(255, 255, 255, 0.6);
+		display: flex;
+		align-items: center;
 		justify-content: center;
-		padding: 0 24px;
-		gap: 8px;
+		font-size: 14px;
+		font-weight: 700;
+		backdrop-filter: blur(8px);
 	}
 
 	.mobile-view .section-label .label-text {
-		flex: 1;
-		max-width: 200px;
-		height: 3px;
-		background: rgba(255, 255, 255, 0.3);
-		border-radius: 3px;
-		transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-		position: relative;
-		overflow: hidden;
-		font-size: 0;
-		white-space: nowrap;
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
 	}
 
-	.mobile-view .section-label .label-text::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 0%;
-		background: rgba(255, 255, 255, 0.95);
-		border-radius: 3px;
-		transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-		box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+	/* Show appropriate label based on section */
+	.mobile-view.mobile-section-0 .split-section.right .section-label,
+	.mobile-view.mobile-section-1 .split-section.left .section-label {
+		opacity: 0;
 	}
 
-	/* Show progress bar based on which section is active */
-	.mobile-view.mobile-section-0 .split-section.left .section-label .label-text::before {
-		width: 100%;
-	}
-
-	.mobile-view.mobile-section-0 .split-section.right .section-label .label-text::before {
-		width: 0%;
-	}
-
-	.mobile-view.mobile-section-1 .split-section.left .section-label .label-text::before {
-		width: 0%;
-	}
-
-	.mobile-view.mobile-section-1 .split-section.right .section-label .label-text::before {
-		width: 100%;
+	.mobile-view.mobile-section-0 .split-section.left .section-label,
+	.mobile-view.mobile-section-1 .split-section.right .section-label {
+		opacity: 1;
 	}
 
 	/* Hide section labels when questionnaire or training view is active */
@@ -2616,17 +2629,26 @@ button:focus-visible {
 	}
 
 	.swipe-hint {
-		bottom: 25px;
+		bottom: 15px;
 	}
 
 	.swipe-track {
-		padding: 8px 14px;
-		gap: 4px;
+		width: 160px;
+		height: 40px;
 	}
 
-	.chevron-icon {
-		width: 16px;
-		height: 16px;
+	.swipe-slider {
+		width: 32px;
+		height: 32px;
+	}
+
+	.swipe-arrow {
+		width: 14px;
+		height: 14px;
+	}
+
+	.swipe-text {
+		font-size: 11px;
 	}
 
 	/* Hide logo in landscape to save space */
