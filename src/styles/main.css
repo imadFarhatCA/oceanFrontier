@@ -896,18 +896,18 @@ button:focus-visible {
 .questionnaire-panel.active {
 	opacity: 1;
 	pointer-events: auto;
-	animation: slideInFromTop 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+	animation: panelSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* iPhone notification style - slide from top */
-@keyframes slideInFromTop {
+/* Smooth panel entrance */
+@keyframes panelSlideIn {
 	0% {
 		opacity: 0;
-		transform: translate(-50%, -150%);
+		transform: translate(-50%, -50%) scale(0.95);
 	}
 	100% {
 		opacity: 1;
-		transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%) scale(1);
 	}
 }
 
@@ -988,6 +988,7 @@ button:focus-visible {
 	margin-bottom: 26px;
 	letter-spacing: -0.03em;
 	line-height: 1.2;
+	animation: smoothFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
 }
 
 .split-section.right .questionnaire-title {
@@ -1004,15 +1005,13 @@ button:focus-visible {
 }
 
 .message {
-	animation: messageSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-	animation-delay: calc(var(--message-index) * 0.12s);
-	animation-fill-mode: backwards;
+	animation: smoothFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
 }
 
-@keyframes messageSlide {
+@keyframes smoothFadeIn {
 	0% {
 		opacity: 0;
-		transform: translateY(-20px);
+		transform: translateY(10px);
 	}
 	100% {
 		opacity: 1;
@@ -1026,23 +1025,10 @@ button:focus-visible {
 	width: 100%;
 	font-size: 15px;
 	line-height: 1.55;
-	animation: notificationSlideIn 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 	border: none;
 	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 	transition: all 0.3s ease;
 	text-align: center;
-}
-
-/* iPhone notification style - slide from top */
-@keyframes notificationSlideIn {
-	0% {
-		transform: translateY(-30px);
-		opacity: 0;
-	}
-	100% {
-		transform: translateY(0);
-		opacity: 1;
-	}
 }
 
 .bot-message {
@@ -1141,6 +1127,7 @@ button:focus-visible {
 	flex-direction: column;
 	gap: 14px;
 	margin-top: 24px;
+	animation: smoothFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
 }
 
 .option-button {
@@ -1157,19 +1144,19 @@ button:focus-visible {
 	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 	letter-spacing: 0.3px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-	animation: optionNotificationIn 0.4s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+	animation: optionFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
-/* Staggered animation for options appearing in series - iPhone notification style */
-.option-button:nth-child(1) { animation-delay: 0.15s; }
-.option-button:nth-child(2) { animation-delay: 0.25s; }
-.option-button:nth-child(3) { animation-delay: 0.35s; }
-.option-button:nth-child(4) { animation-delay: 0.45s; }
+/* Staggered animation for options - smooth cascade */
+.option-button:nth-child(1) { animation-delay: 0.05s; }
+.option-button:nth-child(2) { animation-delay: 0.12s; }
+.option-button:nth-child(3) { animation-delay: 0.19s; }
+.option-button:nth-child(4) { animation-delay: 0.26s; }
 
-@keyframes optionNotificationIn {
+@keyframes optionFadeIn {
 	0% {
 		opacity: 0;
-		transform: translateY(-20px);
+		transform: translateY(12px);
 	}
 	100% {
 		opacity: 1;
@@ -1208,7 +1195,7 @@ button:focus-visible {
 /* Products */
 .products-container {
 	margin-top: 34px;
-	animation: notificationSlideIn 0.5s cubic-bezier(0.32, 0.72, 0, 1) 0.2s backwards;
+	animation: smoothFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
 	position: relative;
 }
 
@@ -1364,11 +1351,11 @@ button:focus-visible {
 @keyframes productPop {
 	0% {
 		opacity: 0;
-		transform: translateY(-15px);
+		transform: translateY(15px) scale(0.98);
 	}
 	100% {
 		opacity: 1;
-		transform: translateY(0);
+		transform: translateY(0) scale(1);
 	}
 }
 
@@ -1499,7 +1486,7 @@ button:focus-visible {
 /* Primary CTA Button */
 .cta-button-container {
 	margin-top: 24px;
-	animation: notificationSlideIn 0.4s cubic-bezier(0.32, 0.72, 0, 1) 0.3s backwards;
+	animation: smoothFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.25s backwards;
 }
 
 .primary-cta-button {
@@ -1553,17 +1540,17 @@ button:focus-visible {
 	}
 
 	.questionnaire-panel.active {
-		animation: slideInFromTopMobile 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+		animation: panelSlideInMobile 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 	}
 
-	@keyframes slideInFromTopMobile {
+	@keyframes panelSlideInMobile {
 		0% {
 			opacity: 0;
-			transform: translate(-50%, -200%);
+			transform: translate(-50%, -50%) scale(0.92);
 		}
 		100% {
 			opacity: 1;
-			transform: translate(-50%, -50%);
+			transform: translate(-50%, -50%) scale(1);
 		}
 	}
 
@@ -1690,8 +1677,20 @@ button:focus-visible {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	animation: fadeIn 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+	animation: chunkFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
 	position: relative;
+}
+
+/* Staggered bottom-up fade animation for training view elements */
+@keyframes chunkFadeUp {
+	0% {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .training-header .logo.centered {
@@ -1759,7 +1758,7 @@ button:focus-visible {
 	align-items: flex-start;
 	width: 100%;
 	margin-top: 40px;
-	animation: fadeIn 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+	animation: chunkFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
 }
 
 .split-section.right.hidden,
@@ -1847,7 +1846,6 @@ button:focus-visible {
 	gap: 60px;
 	width: 100%;
 	margin-top: 32px;
-	animation: fadeIn 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.15s backwards;
 }
 
 /* Training Hero Section - Left 25% */
@@ -1858,6 +1856,7 @@ button:focus-visible {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+	animation: chunkFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
 }
 
 .training-hero-title {
@@ -1981,10 +1980,29 @@ button:focus-visible {
 	background: linear-gradient(135deg, #0097a7 0%, #00838f 50%, #006064 100%);
 }
 
+/* Hero Expandable Content (Mobile Read More) */
+.hero-expandable {
+	position: relative;
+	width: 100%;
+}
+
+.hero-expandable-content {
+	width: 100%;
+}
+
+.hero-fade-overlay {
+	display: none;
+}
+
+.read-more-button {
+	display: none;
+}
+
 /* Courses Grid - Right 75% */
 .courses-container {
 	flex: 1;
 	padding: 0 0 60px 0;
+	animation: chunkFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
 }
 
 .courses-grid {
@@ -2131,16 +2149,7 @@ button:focus-visible {
 		z-index: 400 !important;
 		visibility: visible !important;
 		background: linear-gradient(135deg, #e8e8e8 0%, #f5f5f5 100%) !important;
-		animation: trainingFadeIn 0.4s ease-out !important;
-	}
-
-	@keyframes trainingFadeIn {
-		0% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 1;
-		}
+		animation: none !important;
 	}
 
 	.section-content {
@@ -2270,6 +2279,68 @@ button:focus-visible {
 		padding: 18px 36px;
 		font-size: 15px;
 		width: 100%;
+	}
+
+	/* Mobile Read More Feature */
+	.hero-expandable {
+		position: relative;
+		max-height: 80px;
+		overflow: hidden;
+		transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.hero-expandable.expanded {
+		max-height: 600px;
+	}
+
+	.hero-fade-overlay {
+		display: block;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 60px;
+		background: linear-gradient(to bottom, transparent 0%, #e8e8e8 80%);
+		pointer-events: none;
+		transition: opacity 0.3s ease;
+	}
+
+	.hero-fade-overlay.hidden {
+		opacity: 0;
+	}
+
+	.read-more-button {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		background: transparent;
+		border: none;
+		color: #2a2a2a;
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 0.5px;
+		cursor: pointer;
+		padding: 12px 0;
+		margin-top: 8px;
+		transition: all 0.3s ease;
+	}
+
+	.read-more-button span {
+		opacity: 0.7;
+	}
+
+	.read-more-button svg {
+		opacity: 0.5;
+		transition: transform 0.3s ease;
+	}
+
+	.read-more-button:hover span {
+		opacity: 1;
+	}
+
+	.read-more-button:hover svg {
+		opacity: 0.8;
+		transform: translateY(3px);
 	}
 
 	.courses-container {

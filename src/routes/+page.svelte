@@ -37,6 +37,7 @@
 
 	// Training view state
 	let showTrainingView = false;
+	let heroExpanded = false;
 	type CourseFilter = 'all' | 'none-diver' | 'existing-diver' | 'gue-diver' | 'rebreathers' | 'instructor';
 	let activeFilter: CourseFilter = 'all';
 
@@ -588,19 +589,36 @@
 						<h1 class="training-hero-title">Discover Your Perfect Dive Course</h1>
 						<p class="training-hero-description">Our training programs are designed for divers who demand excellence, precision, and mastery in every environment. Whether your objective is technical diving, cave exploration, or the development of world-class foundational skills, GUE sets the global benchmark for uncompromising training standards.</p>
 						<p class="training-hero-tagline">Train for Mastery, learn to explore</p>
-						<p class="training-hero-intro">These curricula are built for divers who:</p>
-						<ul class="training-hero-list">
-							<li>Value discipline, structure, and consistency</li>
-							<li>Commit to long-term progression rather than shortcuts</li>
-							<li>Seek to explore demanding environments with confidence and control</li>
-							<li>Understand that true excellence is achieved through repetition, precision, and intent</li>
-						</ul>
-						<div class="training-hero-cta-wrapper">
-							<p class="training-hero-cta-title">Don't know what's best for you?</p>
-							<button class="training-hero-cta" on:click={() => handleCTAClick('better-diver', 'training')}>
-								Let us Guide you
-							</button>
+
+						<!-- Mobile: Collapsible content with read more -->
+						<div class="hero-expandable" class:expanded={heroExpanded}>
+							<div class="hero-expandable-content">
+								<p class="training-hero-intro">These curricula are built for divers who:</p>
+								<ul class="training-hero-list">
+									<li>Value discipline, structure, and consistency</li>
+									<li>Commit to long-term progression rather than shortcuts</li>
+									<li>Seek to explore demanding environments with confidence and control</li>
+									<li>Understand that true excellence is achieved through repetition, precision, and intent</li>
+								</ul>
+								<div class="training-hero-cta-wrapper">
+									<p class="training-hero-cta-title">Don't know what's best for you?</p>
+									<button class="training-hero-cta" on:click={() => handleCTAClick('better-diver', 'training')}>
+										Let us Guide you
+									</button>
+								</div>
+							</div>
+							<div class="hero-fade-overlay" class:hidden={heroExpanded}></div>
 						</div>
+
+						<!-- Read More Button (mobile only) -->
+						{#if !heroExpanded}
+							<button class="read-more-button" on:click={() => heroExpanded = true}>
+								<span>Read more</span>
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<polyline points="6 9 12 15 18 9"></polyline>
+								</svg>
+							</button>
+						{/if}
 					</div>
 
 					<!-- Courses Grid - Right Side -->
