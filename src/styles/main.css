@@ -114,7 +114,7 @@ body {
 	font-weight: 300;
 	letter-spacing: 3px;
 	opacity: 0.6;
-	margin-bottom: 12px;
+	margin-bottom: 0px;
 	margin-top: -4px;
 }
 
@@ -583,8 +583,8 @@ body {
 
 	.center-logo-left,
 	.center-logo-right {
-		width: 240px;
-		height: 240px;
+		width: 280px;
+		height: 280px;
 		top: 12%;
 	}
 
@@ -787,7 +787,7 @@ body {
 	align-items: center;
 	gap: 24px;
 	position: absolute;
-	bottom: 70px;
+	bottom: 120px;
 	left: 50%;
 	transform: translateX(-50%);
 }
@@ -1528,19 +1528,10 @@ button:focus-visible {
 /* Responsive */
 @media (max-width: 768px) {
 	.cta-container.minimized {
-		animation: ctaMobileSlide 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-	}
-
-	@keyframes ctaMobileSlide {
-		0% {
-			transform: translate(-50%, -50%) scale(1);
-			opacity: 1;
-		}
-		100% {
-			transform: translate(-50%, -180%) scale(0.65);
-			opacity: 0.15;
-			pointer-events: none;
-		}
+		transform: translate(-50%, -50%) scale(0.65) !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+		transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 	}
 
 	.questionnaire-panel {
@@ -1643,6 +1634,18 @@ button:focus-visible {
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
+	animation: trainingSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes trainingSlideIn {
+	0% {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .split-section.left.expanded .section-content {
@@ -2100,6 +2103,7 @@ button:focus-visible {
 		filter: none !important;
 		z-index: 400 !important;
 		background: linear-gradient(135deg, #e8e8e8 0%, #f5f5f5 100%) !important;
+		animation: trainingSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	.section-content {
@@ -2383,7 +2387,7 @@ button:focus-visible {
 
 	/* Make CTAs bigger on mobile */
 	.mobile-view .cta-container {
-		transform: translate(-50%, -50%) scale(1.25) !important;
+		transform: translate(-50%, -50%) scale(1.375) !important;
 		max-width: 90%;
 	}
 
@@ -2437,57 +2441,62 @@ button:focus-visible {
 		transform: scale(1.25);
 	}
 
-	/* Swipe Hint - minimal style without background */
+	/* Swipe Hint - iPhone unlock style */
 	.swipe-hint {
 		position: fixed;
 		bottom: 40px;
 		left: 50%;
 		transform: translateX(-50%);
+		z-index: 300;
+		pointer-events: none;
+	}
+
+	.swipe-track {
 		display: flex;
 		align-items: center;
-		gap: 16px;
+		gap: 6px;
+		padding: 10px 18px;
+		background: rgba(255, 255, 255, 0.12);
+		border-radius: 30px;
+		border: 1.5px solid rgba(255, 255, 255, 0.25);
+		backdrop-filter: blur(10px);
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+	}
+
+	.chevron-icon {
+		width: 20px;
+		height: 20px;
 		color: rgba(255, 255, 255, 0.9);
-		font-size: 15px;
-		font-weight: 700;
-		letter-spacing: 2.5px;
-		z-index: 300;
-		animation: swipeHintFloat 3s ease-in-out infinite;
-		pointer-events: none;
-		text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6);
+		filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 	}
 
-	.swipe-hint .hand-icon {
-		width: 28px;
-		height: 28px;
-		filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 12px rgba(0, 0, 0, 0.6));
+	.chevron-1 {
+		animation: chevronSlide 1.8s ease-in-out infinite;
+		animation-delay: 0s;
 	}
 
-	.swipe-hint .arrow-icon {
-		width: 24px;
-		height: 24px;
-		animation: arrowSlide 2s ease-in-out infinite;
-		filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 12px rgba(0, 0, 0, 0.6));
+	.chevron-2 {
+		animation: chevronSlide 1.8s ease-in-out infinite;
+		animation-delay: 0.3s;
 	}
 
-	@keyframes swipeHintFloat {
-		0%, 100% {
-			opacity: 0.9;
-			transform: translateX(-50%) translateY(0);
+	.chevron-3 {
+		animation: chevronSlide 1.8s ease-in-out infinite;
+		animation-delay: 0.6s;
+	}
+
+	@keyframes chevronSlide {
+		0% {
+			opacity: 0.3;
+			transform: translateX(-8px);
 		}
 		50% {
 			opacity: 1;
-			transform: translateX(-50%) translateY(-6px);
+			transform: translateX(4px);
 		}
-	}
-
-	@keyframes arrowSlide {
-		0%, 100% {
-			transform: translateX(0);
-			opacity: 1;
-		}
-		50% {
-			transform: translateX(10px);
-			opacity: 0.5;
+		100% {
+			opacity: 0.3;
+			transform: translateX(-8px);
 		}
 	}
 
@@ -2515,13 +2524,13 @@ button:focus-visible {
 		z-index: -1 !important;
 	}
 
-	/* Mobile section labels - horizontal bars at top like Instagram stories */
+	/* Mobile section labels - horizontal bars above Instagram bubble */
 	.mobile-view .section-label {
 		position: fixed;
 		left: 0;
 		right: 0;
-		top: 80px;
-		bottom: auto;
+		top: auto;
+		bottom: 155px;
 		transform: none;
 		z-index: 290;
 		pointer-events: none;
@@ -2607,11 +2616,15 @@ button:focus-visible {
 	}
 
 	.swipe-hint {
-		bottom: 45px;
-		font-size: 12px;
+		bottom: 25px;
 	}
 
-	.swipe-hint svg {
+	.swipe-track {
+		padding: 8px 14px;
+		gap: 4px;
+	}
+
+	.chevron-icon {
 		width: 16px;
 		height: 16px;
 	}

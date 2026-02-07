@@ -1042,13 +1042,17 @@
 
 		<!-- Swipe Hint with hand and arrow -->
 		<div class="swipe-hint">
-			<svg class="hand-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-				<path d="M23 12l-4-4v3h-9v2h9v3l4-4zM1 18V6c0-.55.45-1 1-1h9c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1H2c-.55 0-1-.45-1-1z"/>
-			</svg>
-			<span>SWIPE</span>
-			<svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-				<polyline points="9 18 15 12 9 6"></polyline>
-			</svg>
+			<div class="swipe-track">
+				<svg class="chevron-icon chevron-1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+					<polyline points="9 18 15 12 9 6"></polyline>
+				</svg>
+				<svg class="chevron-icon chevron-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+					<polyline points="9 18 15 12 9 6"></polyline>
+				</svg>
+				<svg class="chevron-icon chevron-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+					<polyline points="9 18 15 12 9 6"></polyline>
+				</svg>
+			</div>
 		</div>
 	{/if}
 </div>
