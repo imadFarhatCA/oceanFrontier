@@ -2751,18 +2751,60 @@ button:focus-visible {
 		justify-content: center;
 		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 		transition: right 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-		animation: toggleGlow 2.5s ease-in-out infinite;
 	}
 
-	@keyframes toggleGlow {
-		0%, 100% {
-			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15),
-			            0 0 0 0 rgba(0, 188, 212, 0);
+	/* Rotating glow ring */
+	.swipe-slider::before {
+		content: '';
+		position: absolute;
+		top: -3px;
+		left: -3px;
+		right: -3px;
+		bottom: -3px;
+		border-radius: 50%;
+		background: conic-gradient(
+			from 0deg,
+			transparent 0deg,
+			transparent 60deg,
+			rgba(0, 188, 212, 0) 90deg,
+			rgba(0, 188, 212, 0.6) 180deg,
+			rgba(0, 188, 212, 0) 270deg,
+			transparent 300deg,
+			transparent 360deg
+		);
+		animation: rotateGlow 3s linear infinite;
+		z-index: -1;
+		opacity: 0.8;
+	}
+
+	/* Soft outer glow */
+	.swipe-slider::after {
+		content: '';
+		position: absolute;
+		top: -6px;
+		left: -6px;
+		right: -6px;
+		bottom: -6px;
+		border-radius: 50%;
+		background: conic-gradient(
+			from 0deg,
+			transparent 0deg,
+			transparent 120deg,
+			rgba(0, 188, 212, 0.2) 180deg,
+			transparent 240deg,
+			transparent 360deg
+		);
+		animation: rotateGlow 3s linear infinite;
+		z-index: -2;
+		filter: blur(4px);
+	}
+
+	@keyframes rotateGlow {
+		0% {
+			transform: rotate(0deg);
 		}
-		50% {
-			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15),
-			            0 0 0 3px rgba(0, 188, 212, 0.4),
-			            0 0 12px rgba(0, 188, 212, 0.3);
+		100% {
+			transform: rotate(360deg);
 		}
 	}
 
