@@ -2481,7 +2481,7 @@ button:focus-visible {
 
 	.swipe-slider {
 		position: absolute;
-		left: 5px;
+		right: 5px;
 		width: 46px;
 		height: 46px;
 		background: rgba(255, 255, 255, 0.95);
@@ -2490,19 +2490,25 @@ button:focus-visible {
 		align-items: center;
 		justify-content: center;
 		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-		animation: slideHintOnce 2s ease-out infinite;
+		animation: slideLeft 2.5s ease-in-out forwards;
 	}
 
 	.swipe-arrow {
 		width: 20px;
 		height: 20px;
 		color: rgba(0, 0, 0, 0.7);
-		transition: transform 0.3s ease;
+		transform: rotate(180deg);
 	}
 
-	/* Flip arrow when on right section */
+	/* When on right section - arrow points right, slider on left */
+	.swipe-hint.swipe-left .swipe-slider {
+		right: auto;
+		left: 5px;
+		animation: slideRight 2.5s ease-in-out forwards;
+	}
+
 	.swipe-hint.swipe-left .swipe-arrow {
-		transform: rotate(180deg);
+		transform: rotate(0deg);
 	}
 
 	.swipe-text {
@@ -2514,58 +2520,37 @@ button:focus-visible {
 		text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 		pointer-events: none;
 		user-select: none;
-		padding-left: 35px;
 	}
 
-	/* One-way slide animation - slides once then resets */
-	@keyframes slideHintOnce {
+	/* Single slide animation - swipe left (for section 0 going to section 1) */
+	@keyframes slideLeft {
+		0% {
+			right: 5px;
+			opacity: 1;
+		}
+		70% {
+			right: calc(100% - 51px);
+			opacity: 1;
+		}
+		100% {
+			right: calc(100% - 51px);
+			opacity: 0.4;
+		}
+	}
+
+	/* Single slide animation - swipe right (for section 1 going to section 0) */
+	@keyframes slideRight {
 		0% {
 			left: 5px;
 			opacity: 1;
 		}
-		60% {
+		70% {
 			left: calc(100% - 51px);
 			opacity: 1;
-		}
-		80% {
-			left: calc(100% - 51px);
-			opacity: 0;
-		}
-		81% {
-			left: 5px;
-			opacity: 0;
-		}
-		100% {
-			left: 5px;
-			opacity: 1;
-		}
-	}
-
-	/* Reverse animation when on right section */
-	.swipe-hint.swipe-left .swipe-slider {
-		animation: slideHintOnceReverse 2s ease-out infinite;
-	}
-
-	@keyframes slideHintOnceReverse {
-		0% {
-			left: calc(100% - 51px);
-			opacity: 1;
-		}
-		60% {
-			left: 5px;
-			opacity: 1;
-		}
-		80% {
-			left: 5px;
-			opacity: 0;
-		}
-		81% {
-			left: calc(100% - 51px);
-			opacity: 0;
 		}
 		100% {
 			left: calc(100% - 51px);
-			opacity: 1;
+			opacity: 0.4;
 		}
 	}
 
