@@ -1050,7 +1050,7 @@
 						<polyline points="9 18 15 12 9 6"></polyline>
 					</svg>
 				</div>
-				<span class="swipe-text">slide to view</span>
+				<span class="swipe-text">{currentMobileSection === 0 ? 'slide for equipment' : 'slide for training'}</span>
 			</div>
 		</div>
 	{/if}
