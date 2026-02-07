@@ -583,9 +583,9 @@ body {
 
 	.center-logo-left,
 	.center-logo-right {
-		width: 180px;
-		height: 180px;
-		top: 15%;
+		width: 240px;
+		height: 240px;
+		top: 12%;
 	}
 
 	.section-label {
@@ -787,7 +787,7 @@ body {
 	align-items: center;
 	gap: 24px;
 	position: absolute;
-	bottom: 40px;
+	bottom: 70px;
 	left: 50%;
 	transform: translateX(-50%);
 }
@@ -878,6 +878,7 @@ button:focus-visible {
 	opacity: 0.35 !important;
 	pointer-events: none !important;
 	filter: blur(0.5px) !important;
+	transition: all 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .questionnaire-panel {
@@ -887,7 +888,7 @@ button:focus-visible {
 	transform: translate(-50%, -50%);
 	width: 45%;
 	max-width: 550px;
-	z-index: 170;
+	z-index: 320;
 	opacity: 0;
 	pointer-events: none;
 }
@@ -1527,7 +1528,7 @@ button:focus-visible {
 /* Responsive */
 @media (max-width: 768px) {
 	.cta-container.minimized {
-		animation: ctaMobileSlide 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+		animation: ctaMobileSlide 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 	}
 
 	@keyframes ctaMobileSlide {
@@ -1536,8 +1537,8 @@ button:focus-visible {
 			opacity: 1;
 		}
 		100% {
-			transform: translate(-50%, -150%) scale(0.7);
-			opacity: 0.2;
+			transform: translate(-50%, -180%) scale(0.65);
+			opacity: 0.15;
 			pointer-events: none;
 		}
 	}
@@ -2266,10 +2267,34 @@ button:focus-visible {
 		display: none !important;
 	}
 
-	/* Show logo on mobile - centered */
-	.mobile-view .center-logo-left,
+	/* Show logo on mobile - centered - control which logo shows based on section */
+	.mobile-view .center-logo-left {
+		display: block !important;
+		opacity: 0.95;
+		transition: opacity 0.6s ease;
+	}
+
 	.mobile-view .center-logo-right {
 		display: block !important;
+		opacity: 0;
+		transition: opacity 0.6s ease;
+	}
+
+	/* Show dark logo on training section (light background) */
+	.mobile-view.mobile-section-0 .center-logo-left {
+		opacity: 0.95;
+	}
+
+	.mobile-view.mobile-section-0 .center-logo-right {
+		opacity: 0;
+	}
+
+	/* Show white logo on gear section (dark background) */
+	.mobile-view.mobile-section-1 .center-logo-left {
+		opacity: 0;
+	}
+
+	.mobile-view.mobile-section-1 .center-logo-right {
 		opacity: 0.95;
 	}
 
@@ -2355,22 +2380,23 @@ button:focus-visible {
 		font-weight: 700;
 	}
 
-	/* Mobile Pagination Dots - repositioned to right side */
+	/* Mobile Pagination Dots - horizontal center */
 	.mobile-pagination {
 		position: fixed;
-		bottom: 50%;
-		right: 20px;
-		transform: translateY(50%);
+		bottom: 120px;
+		left: 50%;
+		transform: translateX(-50%);
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		gap: 16px;
 		z-index: 300;
 		pointer-events: auto;
-		background: rgba(0, 0, 0, 0.6);
-		padding: 16px 12px;
-		border-radius: 30px;
-		backdrop-filter: blur(12px);
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: rgba(0, 0, 0, 0.65);
+		padding: 12px 24px;
+		border-radius: 40px;
+		backdrop-filter: blur(14px);
+		border: 1.5px solid rgba(255, 255, 255, 0.15);
+		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
 	}
 
 	.pagination-dot {
@@ -2385,19 +2411,19 @@ button:focus-visible {
 	}
 
 	.pagination-dot.active {
-		height: 40px;
-		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.95);
+		width: 50px;
+		border-radius: 10px;
+		background: rgba(255, 255, 255, 0.98);
 		border-color: rgba(255, 255, 255, 1);
-		box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
+		box-shadow: 0 4px 16px rgba(255, 255, 255, 0.45);
 	}
 
 	.pagination-dot:hover {
-		background: rgba(255, 255, 255, 0.8);
-		transform: scale(1.3);
+		background: rgba(255, 255, 255, 0.85);
+		transform: scale(1.25);
 	}
 
-	/* Swipe Hint - animated floating icon */
+	/* Swipe Hint - animated hand cursor */
 	.swipe-hint {
 		position: fixed;
 		bottom: 40px;
@@ -2405,57 +2431,57 @@ button:focus-visible {
 		transform: translateX(-50%);
 		display: flex;
 		align-items: center;
-		gap: 14px;
+		gap: 16px;
 		color: rgba(255, 255, 255, 0.95);
-		font-size: 16px;
+		font-size: 15px;
 		font-weight: 700;
-		letter-spacing: 2px;
+		letter-spacing: 2.5px;
 		z-index: 300;
 		animation: swipeHintFloat 3s ease-in-out infinite;
 		pointer-events: none;
-		background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
-		padding: 16px 32px;
-		border-radius: 40px;
-		backdrop-filter: blur(12px);
-		text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-		border: 2px solid rgba(255, 255, 255, 0.2);
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+		background: linear-gradient(135deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.6));
+		padding: 14px 28px;
+		border-radius: 50px;
+		backdrop-filter: blur(14px);
+		text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+		border: 2px solid rgba(255, 255, 255, 0.25);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 	}
 
-	.swipe-hint svg {
-		width: 28px;
-		height: 28px;
-		animation: swipeArrowBounce 1.8s ease-in-out infinite;
-		filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-	}
-
-	.swipe-hint svg:first-child {
-		animation-delay: 0s;
-	}
-
-	.swipe-hint svg:last-child {
-		animation-delay: 0.9s;
+	.swipe-hint .hand-icon {
+		width: 32px;
+		height: 32px;
+		animation: handSwipe 2.5s ease-in-out infinite;
+		filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
 	}
 
 	@keyframes swipeHintFloat {
 		0%, 100% {
-			opacity: 0.85;
-			transform: translateX(-50%) translateY(0) scale(1);
+			opacity: 0.9;
+			transform: translateX(-50%) translateY(0);
 		}
 		50% {
 			opacity: 1;
-			transform: translateX(-50%) translateY(-8px) scale(1.05);
+			transform: translateX(-50%) translateY(-6px);
 		}
 	}
 
-	@keyframes swipeArrowBounce {
+	@keyframes handSwipe {
 		0%, 100% {
-			transform: translateX(0);
+			transform: translateX(0) rotate(0deg);
 			opacity: 1;
 		}
+		25% {
+			transform: translateX(-15px) rotate(-8deg);
+			opacity: 0.7;
+		}
 		50% {
-			transform: translateX(12px);
-			opacity: 0.4;
+			transform: translateX(15px) rotate(8deg);
+			opacity: 1;
+		}
+		75% {
+			transform: translateX(-8px) rotate(-4deg);
+			opacity: 0.85;
 		}
 	}
 
@@ -2472,6 +2498,43 @@ button:focus-visible {
 	/* Ensure mobile menu has proper z-index */
 	.mobile-menu-overlay {
 		z-index: 340 !important;
+	}
+
+	/* Mobile section labels - vertical on side */
+	.mobile-view .section-label {
+		position: fixed;
+		left: 20px;
+		bottom: auto;
+		top: 50%;
+		transform: translateY(-50%) rotate(-90deg);
+		transform-origin: center;
+		z-index: 280;
+		pointer-events: none;
+	}
+
+	.mobile-view .section-label .label-text {
+		font-size: 13px;
+		font-weight: 700;
+		letter-spacing: 3px;
+		opacity: 0.7;
+		white-space: nowrap;
+	}
+
+	/* Adjust opacity based on which section is active */
+	.mobile-view.mobile-section-0 .split-section.left .section-label {
+		opacity: 1;
+	}
+
+	.mobile-view.mobile-section-0 .split-section.right .section-label {
+		opacity: 0.3;
+	}
+
+	.mobile-view.mobile-section-1 .split-section.left .section-label {
+		opacity: 0.3;
+	}
+
+	.mobile-view.mobile-section-1 .split-section.right .section-label {
+		opacity: 1;
 	}
 }
 
