@@ -2454,7 +2454,7 @@ button:focus-visible {
 		transform: scale(1.15);
 	}
 
-	/* Swipe Hint - iPhone slide to unlock style - 15% bigger */
+	/* Swipe Hint - iPhone toggle style */
 	.swipe-hint {
 		position: fixed;
 		bottom: 70px;
@@ -2462,96 +2462,79 @@ button:focus-visible {
 		transform: translateX(-50%);
 		z-index: 300;
 		pointer-events: none;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+
+	/* Dynamic label above slider */
+	.swipe-label {
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		transition: color 0.3s ease;
+	}
+
+	/* Dark text on light background (section 0) */
+	.swipe-label {
+		color: rgba(0, 0, 0, 0.6);
+	}
+
+	/* Light text on dark background (section 1) */
+	.swipe-hint.swipe-left .swipe-label {
+		color: rgba(255, 255, 255, 0.8);
 	}
 
 	.swipe-track {
 		position: relative;
-		width: 230px;
-		height: 55px;
-		background: rgba(255, 255, 255, 0.15);
-		border-radius: 28px;
-		border: 2px solid rgba(255, 255, 255, 0.3);
-		backdrop-filter: blur(12px);
-		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+		width: 70px;
+		height: 38px;
+		background: rgba(0, 0, 0, 0.2);
+		border-radius: 19px;
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		backdrop-filter: blur(8px);
+		box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		overflow: hidden;
+		padding: 3px;
+	}
+
+	/* Light track on dark background */
+	.swipe-hint.swipe-left .swipe-track {
+		background: rgba(255, 255, 255, 0.2);
 	}
 
 	.swipe-slider {
 		position: absolute;
-		right: 5px;
-		width: 46px;
-		height: 46px;
+		left: 3px;
+		width: 32px;
+		height: 32px;
 		background: rgba(255, 255, 255, 0.95);
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-		animation: slideLeft 2.5s ease-in-out forwards;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+		transition: left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	/* When on right section - slider on right side */
+	.swipe-hint.swipe-left .swipe-slider {
+		left: calc(100% - 35px);
 	}
 
 	.swipe-arrow {
-		width: 20px;
-		height: 20px;
-		color: rgba(0, 0, 0, 0.7);
+		width: 16px;
+		height: 16px;
+		color: rgba(0, 0, 0, 0.5);
 		transform: rotate(180deg);
 	}
 
-	/* When on right section - arrow points right, slider on left */
-	.swipe-hint.swipe-left .swipe-slider {
-		right: auto;
-		left: 5px;
-		animation: slideRight 2.5s ease-in-out forwards;
-	}
-
+	/* Flip arrow when on right section */
 	.swipe-hint.swipe-left .swipe-arrow {
 		transform: rotate(0deg);
-	}
-
-	.swipe-text {
-		font-size: 14px;
-		font-weight: 600;
-		letter-spacing: 0.5px;
-		color: rgba(255, 255, 255, 0.85);
-		text-transform: lowercase;
-		text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-		pointer-events: none;
-		user-select: none;
-	}
-
-	/* Single slide animation - swipe left (for section 0 going to section 1) */
-	@keyframes slideLeft {
-		0% {
-			right: 5px;
-			opacity: 1;
-		}
-		70% {
-			right: calc(100% - 51px);
-			opacity: 1;
-		}
-		100% {
-			right: calc(100% - 51px);
-			opacity: 0.4;
-		}
-	}
-
-	/* Single slide animation - swipe right (for section 1 going to section 0) */
-	@keyframes slideRight {
-		0% {
-			left: 5px;
-			opacity: 1;
-		}
-		70% {
-			left: calc(100% - 51px);
-			opacity: 1;
-		}
-		100% {
-			left: calc(100% - 51px);
-			opacity: 0.4;
-		}
 	}
 
 	/* Fix hamburger z-index */
@@ -2582,7 +2565,7 @@ button:focus-visible {
 		position: fixed;
 		left: 50%;
 		transform: translateX(-50%);
-		bottom: 140px;
+		bottom: 160px;
 		z-index: 290;
 		pointer-events: none;
 		display: flex;
@@ -2591,6 +2574,16 @@ button:focus-visible {
 		font-size: 13px;
 		font-weight: 600;
 		letter-spacing: 1.5px;
+		transition: color 0.3s ease;
+	}
+
+	/* Dark text on light background (Training section) */
+	.mobile-view.mobile-section-0 .section-label {
+		color: rgba(0, 0, 0, 0.7);
+	}
+
+	/* Light text on dark background (Gear section) */
+	.mobile-view.mobile-section-1 .section-label {
 		color: rgba(255, 255, 255, 0.9);
 		text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 	}
@@ -2599,14 +2592,25 @@ button:focus-visible {
 		width: 26px;
 		height: 26px;
 		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.2);
-		border: 2px solid rgba(255, 255, 255, 0.6);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		font-size: 14px;
 		font-weight: 700;
 		backdrop-filter: blur(8px);
+		transition: all 0.3s ease;
+	}
+
+	/* Number badge on light background */
+	.mobile-view.mobile-section-0 .section-label .label-number {
+		background: rgba(0, 0, 0, 0.1);
+		border: 2px solid rgba(0, 0, 0, 0.3);
+	}
+
+	/* Number badge on dark background */
+	.mobile-view.mobile-section-1 .section-label .label-number {
+		background: rgba(255, 255, 255, 0.2);
+		border: 2px solid rgba(255, 255, 255, 0.6);
 	}
 
 	.mobile-view .section-label .label-text {
@@ -2660,26 +2664,27 @@ button:focus-visible {
 	}
 
 	.swipe-hint {
-		bottom: 15px;
+		bottom: 10px;
+		gap: 6px;
+	}
+
+	.swipe-label {
+		font-size: 10px;
 	}
 
 	.swipe-track {
-		width: 160px;
-		height: 40px;
+		width: 55px;
+		height: 30px;
 	}
 
 	.swipe-slider {
-		width: 32px;
-		height: 32px;
+		width: 24px;
+		height: 24px;
 	}
 
 	.swipe-arrow {
-		width: 14px;
-		height: 14px;
-	}
-
-	.swipe-text {
-		font-size: 11px;
+		width: 12px;
+		height: 12px;
 	}
 
 	/* Hide logo in landscape to save space */
