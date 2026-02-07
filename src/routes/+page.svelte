@@ -781,12 +781,6 @@
 				</div>
 			{/if}
 
-			{#if !showTrainingView}
-			<div class="section-label" class:hidden={showQuestionnaire || showTrainingView}>
-				<span class="label-number">1</span>
-				<span class="label-text">DIVE TRAINING</span>
-			</div>
-			{/if}
 		</div>
 	</button>
 
@@ -942,10 +936,6 @@
 				</div>
 			{/if}
 
-			<div class="section-label" class:hidden={showQuestionnaire || showTrainingView}>
-				<span class="label-number">2</span>
-				<span class="label-text">DIVE GEAR</span>
-			</div>
 		</div>
 	</button>
 
@@ -1049,10 +1039,10 @@
 
 		<!-- Swipe Hint - iPhone toggle style -->
 		<div class="swipe-hint" class:swipe-left={currentMobileSection === 1}>
-			<span class="swipe-label">{currentMobileSection === 0 ? 'Slide for Equipment' : 'Slide for Training'}</span>
+			<span class="swipe-label">{currentMobileSection === 0 ? 'Slide for "Equipment"' : 'Slide for "Training"'}</span>
 			<div class="swipe-track">
 				<div class="swipe-slider">
-					<svg class="swipe-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+					<svg class="swipe-arrow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
 						<polyline points="9 18 15 12 9 6"></polyline>
 					</svg>
 				</div>
