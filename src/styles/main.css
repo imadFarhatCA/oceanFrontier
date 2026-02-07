@@ -1162,6 +1162,24 @@ button:focus-visible {
 	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 	letter-spacing: 0.3px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	animation: optionSlideIn 0.5s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+}
+
+/* Staggered animation for options appearing in series */
+.option-button:nth-child(1) { animation-delay: 0.1s; }
+.option-button:nth-child(2) { animation-delay: 0.2s; }
+.option-button:nth-child(3) { animation-delay: 0.3s; }
+.option-button:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes optionSlideIn {
+	0% {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .split-section.right .option-button {
@@ -2376,19 +2394,19 @@ button:focus-visible {
 
 	.mobile-view.mobile-section-0 .split-section.right {
 		transform: translateX(100%) scale(0.9);
-		opacity: 0.5;
+		opacity: 0;
 		z-index: 1;
 		filter: blur(3px);
-		box-shadow: -20px 0 60px rgba(0, 0, 0, 0.4);
+		visibility: hidden;
 	}
 
 	/* When on gear section (1) - right section active */
 	.mobile-view.mobile-section-1 .split-section.left {
 		transform: translateX(-100%) scale(0.9);
-		opacity: 0.5;
+		opacity: 0;
 		z-index: 1;
 		filter: blur(3px);
-		box-shadow: 20px 0 60px rgba(0, 0, 0, 0.4);
+		visibility: hidden;
 	}
 
 	.mobile-view.mobile-section-1 .split-section.right {
@@ -2624,11 +2642,14 @@ button:focus-visible {
 	.mobile-view.mobile-section-0 .split-section.right .section-label,
 	.mobile-view.mobile-section-1 .split-section.left .section-label {
 		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
 	}
 
 	.mobile-view.mobile-section-0 .split-section.left .section-label,
 	.mobile-view.mobile-section-1 .split-section.right .section-label {
 		opacity: 1;
+		visibility: visible;
 	}
 
 	/* Hide section labels when questionnaire or training view is active */
