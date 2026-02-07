@@ -2121,12 +2121,15 @@ button:focus-visible {
 		overflow-y: auto !important;
 	}
 
-	.mobile-view .split-section.left.expanded {
+	.mobile-view .split-section.left.expanded,
+	.mobile-view.mobile-section-0 .split-section.left.expanded,
+	.mobile-view.mobile-section-1 .split-section.left.expanded {
 		position: relative !important;
 		transform: none !important;
 		opacity: 1 !important;
 		filter: none !important;
 		z-index: 400 !important;
+		visibility: visible !important;
 		background: linear-gradient(135deg, #e8e8e8 0%, #f5f5f5 100%) !important;
 		animation: trainingFadeIn 0.4s ease-out !important;
 	}
@@ -2561,12 +2564,12 @@ button:focus-visible {
 		width: 18px;
 		height: 18px;
 		color: rgba(0, 0, 0, 0.5);
-		transform: rotate(0deg);
+		transform: rotate(180deg);
 	}
 
-	/* Flip arrow when on equipment section */
+	/* Flip arrow when on equipment section - point right for training */
 	.swipe-hint.swipe-left .swipe-arrow {
-		transform: rotate(180deg);
+		transform: rotate(0deg);
 	}
 
 	/* Fix hamburger z-index */

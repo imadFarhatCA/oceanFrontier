@@ -386,19 +386,12 @@
 	}
 
 	async function startBetterDiverFlow() {
-		// First message
-		messages = [{ type: 'question', text: '', typing: true }];
+		// Show message with fade in animation (handled by CSS)
 		const questionText = 'Are you an existing diver with any other agency?';
-
-		// Type out the question
-		for (let i = 0; i <= questionText.length; i++) {
-			// Reassign array to trigger reactivity
-			messages = [{ type: 'question', text: questionText.substring(0, i), typing: true }];
-			await new Promise(resolve => setTimeout(resolve, 30));
-		}
-
-		// Mark typing as complete and show options
 		messages = [{ type: 'question', text: questionText, typing: false }];
+
+		// Small delay before showing options
+		await new Promise(resolve => setTimeout(resolve, 400));
 		currentQuestion = 'existing-diver';
 		questionOptions = ['Yes', 'No', 'I am already a GUE certified diver'];
 	}
@@ -465,17 +458,8 @@
 	}
 
 	async function startCCRFlow() {
-		// Show title message
-		messages = [{ type: 'question', text: '', typing: true }];
+		// Show message with fade in animation (handled by CSS)
 		const titleText = 'A modern tool with a purpose, cross into the CCR world as an effective approach for a multitude of diving goals, such as but not limited to, deeper dives, extended ranges, underwater content creation';
-
-		// Type out the description
-		for (let i = 0; i <= titleText.length; i++) {
-			messages = [{ type: 'question', text: titleText.substring(0, i), typing: true }];
-			await new Promise(resolve => setTimeout(resolve, 20));
-		}
-
-		// Mark typing as complete
 		messages = [{ type: 'question', text: titleText, typing: false }];
 
 		// Wait a moment then show products
@@ -492,18 +476,12 @@
 	}
 
 	async function startInstructorFlow() {
-		// First message
-		messages = [{ type: 'question', text: '', typing: true }];
+		// Show message with fade in animation (handled by CSS)
 		const questionText = 'If you see yourself as a GUE Instructor, that\'s your starting point here';
-
-		// Type out the question
-		for (let i = 0; i <= questionText.length; i++) {
-			messages = [{ type: 'question', text: questionText.substring(0, i), typing: true }];
-			await new Promise(resolve => setTimeout(resolve, 30));
-		}
-
-		// Mark typing as complete and show call to action button
 		messages = [{ type: 'question', text: questionText, typing: false }];
+
+		// Small delay before showing CTA
+		await new Promise(resolve => setTimeout(resolve, 400));
 		showCallToAction = true;
 	}
 
