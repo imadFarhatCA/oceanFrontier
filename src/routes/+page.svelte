@@ -99,6 +99,12 @@
 		visibleCourses = courses;
 		document.body.style.overflow = 'auto';
 		document.body.style.height = 'auto';
+
+		// On mobile, ensure we're on training section when opening training view
+		if (isMobile) {
+			currentMobileSection = 0;
+		}
+
 		if (leftSection) leftSection.style.clipPath = 'inset(0 0 0 0)';
 	}
 
@@ -125,6 +131,12 @@
 		activeGearFilter = filter || 'all';
 		document.body.style.overflow = 'auto';
 		document.body.style.height = 'auto';
+
+		// On mobile, ensure we're on gear section when opening gear view
+		if (isMobile) {
+			currentMobileSection = 1;
+		}
+
 		if (rightSection) rightSection.style.clipPath = 'inset(0 0 0 0)';
 	}
 
@@ -880,11 +892,6 @@
 
 				<!-- Gear View Content -->
 				<div class="gear-content">
-					<!-- Brand Logos Strip -->
-					<div class="gear-brands-section">
-						<BrandLogos />
-					</div>
-
 					<!-- Filter Bar -->
 					<nav class="filter-bar">
 						<a href="#all" class="filter-link" class:active={activeGearFilter === 'all'} on:click|preventDefault|stopPropagation={() => activeGearFilter = 'all'}>ALL GEAR</a>
@@ -895,6 +902,11 @@
 						<span class="filter-separator">/</span>
 						<a href="#content" class="filter-link" class:active={activeGearFilter === 'content-creation'} on:click|preventDefault|stopPropagation={() => activeGearFilter = 'content-creation'}>UNDERWATER CONTENT CREATION</a>
 					</nav>
+
+					<!-- Brand Logos Strip -->
+					<div class="gear-brands-section">
+						<BrandLogos />
+					</div>
 				</div>
 			{:else}
 			<div class="cta-container" class:minimized={showQuestionnaire} class:hidden={showTrainingView}>
