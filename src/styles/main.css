@@ -155,9 +155,9 @@ body {
    =================================== */
 .cta-container {
 	position: absolute;
-	top: 58%;
+	bottom: 12%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%);
 	text-align: center;
 	width: 65%;
 	max-width: 500px;
@@ -176,12 +176,12 @@ body {
 .cta-container.hidden {
 	opacity: 0;
 	pointer-events: none;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%);
 }
 
 .cta-item {
 	width: 100%;
-	margin-bottom: 15px;
+	margin-bottom: 8px;
 	opacity: 1;
 	animation: slideInFromBottom 0.8s ease;
 	animation-delay: calc(var(--item-index) * 0.15s);
@@ -2694,7 +2694,7 @@ button:focus-visible {
 
 	/* Make CTAs bigger on mobile */
 	.mobile-view .cta-container {
-		transform: translate(-50%, -50%) scale(1.375) !important;
+		transform: translateX(-50%) scale(1.1) !important;
 		max-width: 90%;
 	}
 
@@ -2825,7 +2825,7 @@ button:focus-visible {
 		overflow: hidden;
 	}
 
-	/* Shimmer/shine sweep effect - light blue */
+	/* Shimmer/shine sweep effect */
 	.swipe-slider::before {
 		content: '';
 		position: absolute;
@@ -2836,11 +2836,11 @@ button:focus-visible {
 		background: linear-gradient(
 			120deg,
 			transparent 0%,
-			transparent 35%,
-			rgba(147, 210, 255, 0.5) 48%,
-			rgba(200, 235, 255, 0.6) 50%,
-			rgba(147, 210, 255, 0.5) 52%,
-			transparent 65%,
+			transparent 30%,
+			rgba(255, 255, 255, 0.3) 44%,
+			rgba(255, 255, 255, 0.85) 50%,
+			rgba(255, 255, 255, 0.3) 56%,
+			transparent 70%,
 			transparent 100%
 		);
 		animation: shimmerSweep 2.5s ease-in-out infinite;
