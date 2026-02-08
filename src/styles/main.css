@@ -155,7 +155,7 @@ body {
    =================================== */
 .cta-container {
 	position: absolute;
-	top: 50%;
+	top: calc(50% + 10px);
 	left: 50%;
 	transform: translate(-50%, -50%);
 	text-align: center;
@@ -355,9 +355,9 @@ body {
 	background: linear-gradient(
 		120deg,
 		transparent 30%,
-		rgba(255, 255, 255, 0.3) 44%,
-		rgba(255, 255, 255, 0.85) 50%,
-		rgba(255, 255, 255, 0.3) 56%,
+		rgba(180, 180, 180, 0.25) 44%,
+		rgba(180, 180, 180, 0.55) 50%,
+		rgba(180, 180, 180, 0.25) 56%,
 		transparent 70%
 	);
 	animation: shimmerSweep 2.5s ease-in-out infinite;
@@ -2956,13 +2956,7 @@ button:focus-visible {
 
 	/* Mobile section labels - numbered indicators above swipe bar */
 	.mobile-view .section-label {
-		position: fixed;
-		left: 50%;
-		transform: translateX(-50%);
-		bottom: 160px;
-		z-index: 290;
-		pointer-events: none;
-		display: flex;
+		display: none;
 		align-items: center;
 		gap: 12px;
 		font-size: 13px;
