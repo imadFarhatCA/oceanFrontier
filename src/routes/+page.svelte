@@ -447,7 +447,7 @@
 	}
 
 	async function startPremiumEquipmentFlow() {
-		messages = [{ type: 'question', text: 'Whether you are starting up or moving up in the level of diving, we should be able to cater for your needs', typing: false }];
+		messages = [{ type: 'question', text: 'WE WILL ONLY SELL YOU WHAT WE USE !\nwhether you are starting up or optimizing your diving path, we will consult you on what is best, modular, and a long term investment for you', typing: false }];
 		await new Promise(resolve => setTimeout(resolve, 400));
 		showGearTypeSelection = true;
 	}
@@ -916,8 +916,9 @@
 												<path d="M152.13,28.53h-2.42v-2.51c0-1.1-.88-1.98-1.98-1.98h-7.05c-1.09,0-1.98.88-1.98,1.98v2.51h-1.96c-1.1,0-1.99.89-1.99,1.98v4.66s-.08-.01-.11-.01h-4.16c-.13,0-.25.01-.36.04v-.46c0-1.09-.89-1.98-1.98-1.98l-10.96-2c-1.09,0-1.98.89-1.98,1.98v10.62c0,1.09.89,1.98,1.98,1.98l10.96-2c1.09,0,1.98-.89,1.98-1.98v-.46c.11.03.24.04.36.04h4.16s.08,0,.11-.01v5.47c0,1.09.89,1.98,1.99,1.98h1.96v.46c0,1.09.89,1.98,1.98,1.98h7.05c1.1,0,1.98-.89,1.98-1.98v-.46h-.08c.03-.08.06-.16.08-.25v.25h2.42c1.1,0,1.98-.89,1.98-1.98v-15.87c0-1.09-.88-1.98-1.98-1.98ZM144.17,43.79c-3.36,0-6.09-2.73-6.09-6.09s2.73-6.09,6.09-6.09,6.09,2.73,6.09,6.09-2.73,6.09-6.09,6.09Z"/>
 											</svg>
 										</div>
-										<span class="gear-type-label">Basic Gear</span>
+										<span class="gear-type-label">Basic</span>
 									</button>
+									<div class="gear-separator"></div>
 									<button class="gear-type-card" on:click|stopPropagation>
 										<div class="gear-type-frame">
 											<svg class="gear-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.46 283.46">
@@ -938,7 +939,7 @@
 												<rect x="132.53" y="42.85" width="16.38" height="2.4"/>
 											</svg>
 										</div>
-										<span class="gear-type-label">Technical Gear</span>
+										<span class="gear-type-label">Technical</span>
 									</button>
 								</div>
 							{/if}
