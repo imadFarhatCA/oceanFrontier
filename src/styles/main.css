@@ -1911,9 +1911,7 @@ button:focus-visible {
 
 .gear-brands-section {
 	width: 100%;
-	background: rgba(255, 255, 255, 0.04);
-	border-radius: 12px;
-	padding: 8px 16px;
+	padding: 16px 0;
 	margin-bottom: 24px;
 }
 
@@ -3093,12 +3091,12 @@ button:focus-visible {
 
 	/* Fix hamburger z-index */
 	.hamburger-button {
-		z-index: 350 !important;
+		z-index: 440 !important;
 	}
 
 	/* Fix close X button z-index */
 	.close-x-button {
-		z-index: 360 !important;
+		z-index: 450 !important;
 	}
 
 	/* Ensure mobile menu has proper z-index */

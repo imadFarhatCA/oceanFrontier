@@ -118,10 +118,10 @@
 		}
 	}
 
-	function openGearView(type: 'basic' | 'technical') {
+	function openGearView(type: 'basic' | 'technical', filter?: GearFilter) {
 		showGearView = true;
 		activeGearType = type;
-		activeGearFilter = 'all';
+		activeGearFilter = filter || 'all';
 		document.body.style.overflow = 'auto';
 		document.body.style.height = 'auto';
 		if (rightSection) rightSection.style.clipPath = 'inset(0 0 0 0)';
@@ -992,7 +992,7 @@
 							<!-- Gear Type Selection -->
 							{#if showGearTypeSelection}
 								<div class="gear-type-selection">
-									<button class="gear-type-card" on:click|stopPropagation={() => { closeQuestionnaire(); openGearView('basic'); }}>
+									<button class="gear-type-card" on:click|stopPropagation={() => { closeQuestionnaire(); openGearView('basic', 'basic'); }}>
 										<div class="gear-type-frame">
 											<svg class="gear-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.46 283.46">
 												<rect x="116.91" y="88.54" width="54.93" height="97.06"/>
@@ -1005,7 +1005,7 @@
 										</div>
 										<span class="gear-type-label">Basic</span>
 									</button>
-									<button class="gear-type-card" on:click|stopPropagation={() => { closeQuestionnaire(); openGearView('technical'); }}>
+									<button class="gear-type-card" on:click|stopPropagation={() => { closeQuestionnaire(); openGearView('technical', 'technical'); }}>
 										<div class="gear-type-frame">
 											<svg class="gear-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.46 283.46">
 												<rect x="82.4" y="107.56" width="54.93" height="48.02"/>
@@ -1189,7 +1189,7 @@
 	{/if}
 
 	<!-- Mobile Pagination Dots -->
-	{#if isMobile && !showTrainingView && !showQuestionnaire}
+	{#if isMobile && !showTrainingView && !showGearView && !showQuestionnaire}
 		<div class="mobile-pagination">
 			<button
 				class="pagination-dot"
