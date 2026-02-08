@@ -5,15 +5,26 @@
 	export let onNavClick: (e: Event, target: string) => void;
 	export let onMobileClose: (() => void) | null = null;
 
-	const navLinks = [
-		{ href: '/', target: 'home', label: 'HOMEPAGE' },
-		{ href: '/training', target: 'training', label: 'TRAINING' },
-		{ href: '/gear', target: 'gear', label: 'GEAR' },
-		{ href: '/community', target: 'community', label: 'COMMUNITY' }
-	];
+	// Dark variant (right section) uses different link order
+	const navLinks = variant === 'dark'
+		? [
+			{ href: '/', target: 'home', label: 'HOMEPAGE' },
+			{ href: '/gear', target: 'gear', label: 'GEAR' },
+			{ href: '/training', target: 'training', label: 'TRAINING' },
+			{ href: '/community', target: 'community', label: 'COMMUNITY', external: true }
+		]
+		: [
+			{ href: '/', target: 'home', label: 'HOMEPAGE' },
+			{ href: '/training', target: 'training', label: 'TRAINING' },
+			{ href: '/gear', target: 'gear', label: 'GEAR' },
+			{ href: '/community', target: 'community', label: 'COMMUNITY', external: true }
+		];
 
-	function handleClick(e: Event, target: string) {
-		onNavClick(e, target);
+	function handleClick(e: Event, target: string, isExternal: boolean | undefined = false) {
+		// Community link is external and should navigate normally
+		if (!isExternal) {
+			onNavClick(e, target);
+		}
 		if (onMobileClose && variant === 'mobile') {
 			onMobileClose();
 		}
@@ -25,7 +36,13 @@
 		<a
 			href={link.href}
 			class:nav-active={activeLink === link.target}
-			on:click|preventDefault|stopPropagation={(e) => handleClick(e, link.target)}
+			on:click={(e) => {
+				if (!link.external) {
+					e.preventDefault();
+					e.stopPropagation();
+				}
+				handleClick(e, link.target, link.external);
+			}}
 		>
 			{link.label}
 		</a>
