@@ -3,6 +3,7 @@
 	import '../styles/main.css';
 	import { onMount } from 'svelte';
 	import BrandLogos from '$lib/components/BrandLogos.svelte';
+	import Nav from '$lib/components/Nav.svelte';
 
 	type Section = 'training' | 'gear';
 	type Message = {
@@ -595,12 +596,7 @@
 			{#if !showTrainingView}
 				<div class="logo">OCEAN FRONTIER</div>
 				<div class="logo-subtitle">CONSULTING</div>
-				<nav class="nav">
-					<a href="/" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'home')}>HOMEPAGE</a>
-					<a href="/training" class:nav-active={showTrainingView} on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'training')}>TRAINING</a>
-					<a href="/gear" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'gear')}>GEAR</a>
-					<a href="/community">COMMUNITY</a>
-				</nav>
+				<Nav variant="light" onNavClick={handleNavClick} activeLink={null} centered={false} onMobileClose={null} />
 			{/if}
 
 			{#if showTrainingView}
@@ -608,12 +604,7 @@
 				<div class="training-header">
 					<div class="logo centered">OCEAN FRONTIER</div>
 					<div class="logo-subtitle centered">CONSULTING</div>
-					<nav class="nav centered">
-						<a href="/" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'home')}>HOMEPAGE</a>
-						<a href="/training" class:nav-active={showTrainingView} on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'training')}>TRAINING</a>
-						<a href="/gear" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'gear')}>GEAR</a>
-						<a href="/community">COMMUNITY</a>
-					</nav>
+					<Nav variant="light" centered={true} activeLink="training" onNavClick={handleNavClick} onMobileClose={null} />
 				</div>
 
 				<!-- Close X Button -->
@@ -861,12 +852,7 @@
 			{#if !showGearView}
 			<div class="logo">OCEAN FRONTIER</div>
 			<div class="logo-subtitle">CONSULTING</div>
-			<nav class="nav">
-				<a href="/" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'home')}>HOMEPAGE</a>
-				<a href="/gear" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'gear')}>GEAR</a>
-				<a href="/training" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'training')}>TRAINING</a>
-				<a href="/community">COMMUNITY</a>
-			</nav>
+			<Nav variant="dark" centered={false} activeLink={null} onNavClick={handleNavClick} onMobileClose={null} />
 			{/if}
 
 			{#if showGearView}
@@ -874,12 +860,7 @@
 				<div class="gear-header">
 					<div class="logo centered">OCEAN FRONTIER</div>
 					<div class="logo-subtitle centered">CONSULTING</div>
-					<nav class="nav centered">
-						<a href="/" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'home')}>HOMEPAGE</a>
-						<a href="/gear" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'gear')}>GEAR</a>
-						<a href="/training" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'training')}>TRAINING</a>
-						<a href="/community">COMMUNITY</a>
-					</nav>
+					<Nav variant="light" centered={true} activeLink="gear" onNavClick={handleNavClick} onMobileClose={null} />
 				</div>
 
 				<!-- Close X Button -->
@@ -1161,12 +1142,7 @@
 	{#if isMobileMenuOpen}
 		<div class="mobile-menu-overlay" on:click={toggleMobileMenu}>
 			<div class="mobile-menu-content" on:click|stopPropagation>
-				<nav class="mobile-nav">
-					<a href="/" on:click|preventDefault={(e) => { handleNavClick(e, 'home'); toggleMobileMenu(); }}>HOMEPAGE</a>
-					<a href="/training" on:click|preventDefault={(e) => { handleNavClick(e, 'training'); toggleMobileMenu(); }}>TRAINING</a>
-					<a href="/gear" on:click|preventDefault={(e) => { handleNavClick(e, 'gear'); toggleMobileMenu(); }}>GEAR</a>
-					<a href="/community" on:click={toggleMobileMenu}>COMMUNITY</a>
-				</nav>
+				<Nav variant="mobile" centered={false} activeLink={null} onNavClick={handleNavClick} onMobileClose={toggleMobileMenu} />
 				<div class="mobile-social">
 					<a href="https://facebook.com" target="_blank" rel="noopener">FB</a>
 					<span> . </span>
