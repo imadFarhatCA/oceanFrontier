@@ -880,8 +880,13 @@ body {
 		display: block;
 	}
 
-	.nav {
+	/* Hide regular nav but keep mobile-nav visible */
+	.nav:not(.mobile-nav) {
 		display: none;
+	}
+
+	.mobile-nav {
+		display: flex !important;
 	}
 
 	.social-links {

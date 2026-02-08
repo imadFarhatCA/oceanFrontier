@@ -21,7 +21,7 @@
 	.brand-logos-strip {
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 		gap: 48px;
 		padding: 20px 0;
 		flex-wrap: wrap;
@@ -35,7 +35,7 @@
 		transition: all 0.3s ease;
 		padding: 8px 12px;
 		border-bottom: 2px solid transparent;
-		min-width: 80px;
+		min-width: 100px;
 	}
 
 	.brand-logo-item:hover {
@@ -45,10 +45,31 @@
 	}
 
 	.brand-logo-item img {
-		height: 50px;
+		height: 55px;
 		width: auto;
-		max-width: 180px;
+		max-width: 200px;
 		object-fit: contain;
 		filter: invert(1) brightness(1.1);
+	}
+
+	/* Make SUEX logo larger to compensate for its square aspect ratio */
+	.brand-logo-item img[alt="SUEX"] {
+		height: 70px;
+		max-width: 220px;
+	}
+
+	@media (max-width: 768px) {
+		.brand-logos-strip {
+			justify-content: center;
+			gap: 32px;
+		}
+
+		.brand-logo-item img {
+			height: 45px;
+		}
+
+		.brand-logo-item img[alt="SUEX"] {
+			height: 58px;
+		}
 	}
 </style>
