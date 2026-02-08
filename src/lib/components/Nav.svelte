@@ -21,12 +21,19 @@
 		];
 
 	function handleClick(e: Event, target: string, isExternal: boolean | undefined = false) {
-		// Community link is external and should navigate normally
-		if (!isExternal) {
+		// Community link is external - let it navigate normally
+		if (isExternal) {
+			// For mobile, still close the menu
+			if (onMobileClose && variant === 'mobile') {
+				onMobileClose();
+			}
+		} else {
+			// Internal link - let handleNavClick handle preventDefault
 			onNavClick(e, target);
-		}
-		if (onMobileClose && variant === 'mobile') {
-			onMobileClose();
+			// Close mobile menu after navigation
+			if (onMobileClose && variant === 'mobile') {
+				onMobileClose();
+			}
 		}
 	}
 </script>
@@ -36,13 +43,7 @@
 		<a
 			href={link.href}
 			class:nav-active={activeLink === link.target}
-			on:click={(e) => {
-				if (!link.external) {
-					e.preventDefault();
-					e.stopPropagation();
-				}
-				handleClick(e, link.target, link.external);
-			}}
+			on:click={(e) => handleClick(e, link.target, link.external)}
 		>
 			{link.label}
 		</a>

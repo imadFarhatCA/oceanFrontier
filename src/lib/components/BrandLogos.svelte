@@ -21,8 +21,9 @@
 	.brand-logos-strip {
 		display: flex;
 		align-items: center;
-		gap: 40px;
-		padding: 0;
+		justify-content: center;
+		gap: 48px;
+		padding: 20px 0;
 		flex-wrap: wrap;
 	}
 
@@ -30,21 +31,24 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		opacity: 0.65;
+		opacity: 0.7;
 		transition: all 0.3s ease;
-		padding-bottom: 6px;
-		border-bottom: 1px solid transparent;
+		padding: 8px 12px;
+		border-bottom: 2px solid transparent;
+		min-width: 80px;
 	}
 
 	.brand-logo-item:hover {
-		opacity: 0.95;
-		border-bottom-color: rgba(255, 255, 255, 0.3);
-		transform: translateY(-2px);
+		opacity: 1;
+		border-bottom-color: rgba(255, 255, 255, 0.4);
+		transform: translateY(-3px);
 	}
 
 	.brand-logo-item img {
-		height: 60px;
+		height: 50px;
 		width: auto;
-		filter: invert(1);
+		max-width: 180px;
+		object-fit: contain;
+		filter: invert(1) brightness(1.1);
 	}
 </style>

@@ -149,9 +149,16 @@
 		e.preventDefault();
 		e.stopPropagation();
 		if (target === 'training') {
-			if (!showTrainingView) openTrainingView();
+			if (!showTrainingView) {
+				// Close gear view if open before opening training
+				if (showGearView) closeGearView();
+				if (showQuestionnaire) closeQuestionnaire();
+				openTrainingView();
+			}
 		} else if (target === 'gear') {
 			if (!showGearView) {
+				// Close training view if open before opening gear
+				if (showTrainingView) closeTrainingView();
 				if (showQuestionnaire) closeQuestionnaire();
 				openGearView('basic');
 			}
