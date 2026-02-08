@@ -1095,7 +1095,7 @@ button:focus-visible {
 }
 
 .bot-message {
-	background: linear-gradient(135deg, #2a2a2a 0%, #3d3d3d 100%);
+	background: #4a4a4a;
 	color: var(--color-white);
 	box-shadow:
 		0 4px 16px rgba(0, 0, 0, 0.15),
@@ -1304,7 +1304,7 @@ button:focus-visible {
 .gear-type-frame {
 	width: 100%;
 	aspect-ratio: 1;
-	background: #3a3a3a;
+	background: #4a4a4a;
 	border-radius: 10px;
 	display: flex;
 	align-items: center;
@@ -1313,7 +1313,7 @@ button:focus-visible {
 }
 
 .gear-type-card:hover .gear-type-frame {
-	background: #484848;
+	background: #5a5a5a;
 }
 
 .gear-icon {
