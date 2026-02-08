@@ -489,19 +489,24 @@
 	function scrollProducts(direction: 'prev' | 'next', grid: HTMLDivElement | null) {
 		if (!grid) return;
 
-		// Update index
 		if (direction === 'next') {
-			currentProductIndex = Math.min(currentProductIndex + 2, products.length - 1);
+			currentProductIndex = Math.min(currentProductIndex + 1, products.length - 1);
 		} else {
-			currentProductIndex = Math.max(currentProductIndex - 2, 0);
+			currentProductIndex = Math.max(currentProductIndex - 1, 0);
 		}
 
-		const scrollAmount = grid.clientWidth / 2;
-		const newScrollPosition = grid.scrollLeft + (direction === 'next' ? scrollAmount : -scrollAmount);
+		const cardWidth = grid.scrollWidth / products.length;
 		grid.scrollTo({
-			left: newScrollPosition,
+			left: currentProductIndex * cardWidth,
 			behavior: 'smooth'
 		});
+	}
+
+	function handleProductScroll(e: Event) {
+		const grid = e.target as HTMLDivElement;
+		if (!grid || !products.length) return;
+		const cardWidth = grid.scrollWidth / products.length;
+		currentProductIndex = Math.max(0, Math.min(Math.round(grid.scrollLeft / cardWidth), products.length - 1));
 	}
 </script>
 
@@ -746,7 +751,7 @@
 												<polyline points="15 18 9 12 15 6"></polyline>
 											</svg>
 										</button>
-										<div class="products-grid" bind:this={productsGridLeft}>
+										<div class="products-grid" bind:this={productsGridLeft} on:scroll={handleProductScroll}>
 											{#each products as product, i}
 												<div class="product-card" style="--product-index: {i}">
 													<div class="product-icon">
@@ -910,7 +915,7 @@
 												<polyline points="15 18 9 12 15 6"></polyline>
 											</svg>
 										</button>
-										<div class="products-grid" bind:this={productsGridRight}>
+										<div class="products-grid" bind:this={productsGridRight} on:scroll={handleProductScroll}>
 											{#each products as product, i}
 												<div class="product-card" style="--product-index: {i}">
 													<div class="product-icon">

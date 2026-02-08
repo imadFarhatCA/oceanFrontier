@@ -1311,6 +1311,7 @@ button:focus-visible {
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	padding: 10px 0;
+	scroll-snap-type: x mandatory;
 	position: relative;
 	mask-image: linear-gradient(
 		to right,
@@ -1385,6 +1386,7 @@ button:focus-visible {
 .product-card {
 	flex: 0 0 calc(50% - 8px);
 	min-width: calc(50% - 8px);
+	scroll-snap-align: start;
 	min-height: 200px;
 	display: flex;
 	flex-direction: column;
