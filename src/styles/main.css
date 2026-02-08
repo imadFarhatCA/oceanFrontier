@@ -155,9 +155,9 @@ body {
    =================================== */
 .cta-container {
 	position: absolute;
-	bottom: 12%;
+	top: 50%;
 	left: 50%;
-	transform: translateX(-50%);
+	transform: translate(-50%, -50%);
 	text-align: center;
 	width: 65%;
 	max-width: 500px;
@@ -176,7 +176,7 @@ body {
 .cta-container.hidden {
 	opacity: 0;
 	pointer-events: none;
-	transform: translateX(-50%);
+	transform: translate(-50%, -50%);
 }
 
 .cta-item {
@@ -315,74 +315,97 @@ body {
 }
 
 .slider-handle {
-	width: 80px;
-	height: 80px;
-	background: var(--color-white);
-	border: 3px solid var(--color-dark);
-	border-radius: 50%;
+	background: transparent;
+	border: none;
 	cursor: grab;
-	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	pointer-events: auto;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 	position: relative;
+	padding: 0;
 }
 
-.slider-handle:hover {
-	transform: scale(1.15);
-	box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+.slider-handle:hover .slider-toggle-track {
+	background: rgba(255, 255, 255, 0.25);
 }
 
 .slider-handle:active {
 	cursor: grabbing;
-	transform: scale(1.0);
 }
 
-/* Triangle arrows inside slider handle */
+.slider-toggle-track {
+	width: 120px;
+	height: 50px;
+	background: rgba(255, 255, 255, 0.15);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border-radius: 25px;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.15);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.3s ease;
+}
+
+.slider-toggle-thumb {
+	width: 42px;
+	height: 42px;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 245, 245, 0.95) 100%);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1);
+	overflow: hidden;
+	position: relative;
+}
+
+/* Shimmer on thumb */
+.slider-toggle-thumb::before {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: linear-gradient(
+		120deg,
+		transparent 30%,
+		rgba(255, 255, 255, 0.3) 44%,
+		rgba(255, 255, 255, 0.85) 50%,
+		rgba(255, 255, 255, 0.3) 56%,
+		transparent 70%
+	);
+	animation: shimmerSweep 2.5s ease-in-out infinite;
+}
+
+/* Subtle breathing */
+.slider-toggle-thumb {
+	animation: subtleBreath 3s ease-in-out infinite;
+}
+
 .slider-arrows {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 8px;
+	gap: 2px;
 	user-select: none;
 	pointer-events: none;
+	position: relative;
+	z-index: 1;
 }
 
-/* Left arrow triangle */
-.arrow-left {
-	width: 0;
-	height: 0;
-	border-top: 8px solid transparent;
-	border-bottom: 8px solid transparent;
-	border-right: 12px solid var(--color-dark);
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.slider-chevron {
+	color: rgba(0, 0, 0, 0.5);
+	transition: color 0.3s ease, transform 0.3s ease;
 }
 
-/* Right arrow triangle */
-.arrow-right {
-	width: 0;
-	height: 0;
-	border-top: 8px solid transparent;
-	border-bottom: 8px solid transparent;
-	border-left: 12px solid var(--color-dark);
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Make triangles bigger and blue based on slider position */
-.arrow-left.active {
-	border-top-width: 12px;
-	border-bottom-width: 12px;
-	border-right-width: 18px;
-	border-right-color: #456476;
-}
-
-.arrow-right.active {
-	border-top-width: 12px;
-	border-bottom-width: 12px;
-	border-left-width: 18px;
-	border-left-color: #456476;
+.slider-chevron.active {
+	color: #456476;
+	transform: scale(1.3);
 }
 
 .slider-line {
@@ -2694,7 +2717,7 @@ button:focus-visible {
 
 	/* Make CTAs bigger on mobile */
 	.mobile-view .cta-container {
-		transform: translateX(-50%) scale(1.1) !important;
+		transform: translate(-50%, -50%) scale(1.375) !important;
 		max-width: 90%;
 	}
 
