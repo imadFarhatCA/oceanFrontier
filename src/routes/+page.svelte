@@ -100,9 +100,10 @@
 		document.body.style.overflow = 'auto';
 		document.body.style.height = 'auto';
 
-		// On mobile, ensure we're on training section when opening training view
+		// On mobile, ensure we're on training section and close mobile menu
 		if (isMobile) {
 			currentMobileSection = 0;
+			isMobileMenuOpen = false;
 		}
 
 		if (leftSection) leftSection.style.clipPath = 'inset(0 0 0 0)';
@@ -132,9 +133,10 @@
 		document.body.style.overflow = 'auto';
 		document.body.style.height = 'auto';
 
-		// On mobile, ensure we're on gear section when opening gear view
+		// On mobile, ensure we're on gear section and close mobile menu
 		if (isMobile) {
 			currentMobileSection = 1;
+			isMobileMenuOpen = false;
 		}
 
 		if (rightSection) rightSection.style.clipPath = 'inset(0 0 0 0)';
