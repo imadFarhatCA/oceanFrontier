@@ -246,6 +246,7 @@
 
 	function handleSliderMouseDown(e: MouseEvent) {
 		e.preventDefault();
+		if (showQuestionnaire) closeQuestionnaire();
 		isDragging = true;
 		updateSliderPosition(e);
 	}
@@ -262,6 +263,7 @@
 	}
 
 	function handleTouchStart(e: TouchEvent) {
+		if (showQuestionnaire) closeQuestionnaire();
 		isDragging = true;
 		const touch = e.touches[0];
 		updateSliderPosition({ clientX: touch.clientX } as MouseEvent);
