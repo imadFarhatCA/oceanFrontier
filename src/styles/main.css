@@ -155,12 +155,12 @@ body {
    =================================== */
 .cta-container {
 	position: absolute;
-	top: 50%;
+	top: 58%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	text-align: center;
-	width: 80%;
-	max-width: 600px;
+	width: 65%;
+	max-width: 500px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -923,18 +923,23 @@ button:focus-visible {
 .questionnaire-panel.active {
 	opacity: 1;
 	pointer-events: auto;
-	animation: panelSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	animation: panelSlideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 /* Smooth panel entrance */
 @keyframes panelSlideIn {
 	0% {
 		opacity: 0;
-		transform: translate(-50%, -50%) scale(0.95);
+		transform: translate(-50%, -50%) scale(0.96);
+		filter: blur(4px);
+	}
+	60% {
+		filter: blur(0);
 	}
 	100% {
 		opacity: 1;
 		transform: translate(-50%, -50%) scale(1);
+		filter: blur(0);
 	}
 }
 
@@ -1015,7 +1020,7 @@ button:focus-visible {
 	margin-bottom: 26px;
 	letter-spacing: -0.03em;
 	line-height: 1.2;
-	animation: smoothFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+	animation: smoothFadeIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s backwards;
 }
 
 .split-section.right .questionnaire-title {
@@ -1032,14 +1037,14 @@ button:focus-visible {
 }
 
 .message {
-	animation: messageFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+	animation: messageFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
 	opacity: 0;
 }
 
 @keyframes smoothFadeIn {
 	0% {
 		opacity: 0;
-		transform: translateY(15px);
+		transform: translateY(12px);
 	}
 	100% {
 		opacity: 1;
@@ -1050,10 +1055,10 @@ button:focus-visible {
 @keyframes messageFadeIn {
 	0% {
 		opacity: 0;
-		transform: translateY(20px);
-		filter: blur(2px);
+		transform: translateY(16px);
+		filter: blur(3px);
 	}
-	40% {
+	30% {
 		filter: blur(0);
 	}
 	100% {
@@ -1174,20 +1179,20 @@ button:focus-visible {
 }
 
 .options-container .option-button {
-	animation: optionFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+	animation: optionFadeIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 	opacity: 0;
 }
 
-.options-container .option-button:nth-child(1) { animation-delay: 0.15s; }
-.options-container .option-button:nth-child(2) { animation-delay: 0.25s; }
-.options-container .option-button:nth-child(3) { animation-delay: 0.35s; }
-.options-container .option-button:nth-child(4) { animation-delay: 0.45s; }
-.options-container .option-button:nth-child(5) { animation-delay: 0.55s; }
+.options-container .option-button:nth-child(1) { animation-delay: 0.55s; }
+.options-container .option-button:nth-child(2) { animation-delay: 0.68s; }
+.options-container .option-button:nth-child(3) { animation-delay: 0.81s; }
+.options-container .option-button:nth-child(4) { animation-delay: 0.94s; }
+.options-container .option-button:nth-child(5) { animation-delay: 1.07s; }
 
 @keyframes optionFadeIn {
 	0% {
 		opacity: 0;
-		transform: translateY(15px);
+		transform: translateY(12px);
 	}
 	100% {
 		opacity: 1;
@@ -1605,17 +1610,22 @@ button:focus-visible {
 	}
 
 	.questionnaire-panel.active {
-		animation: panelSlideInMobile 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		animation: panelSlideInMobile 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 	}
 
 	@keyframes panelSlideInMobile {
 		0% {
 			opacity: 0;
-			transform: translate(-50%, -50%) scale(0.92);
+			transform: translate(-50%, -50%) scale(0.94);
+			filter: blur(3px);
+		}
+		50% {
+			filter: blur(0);
 		}
 		100% {
 			opacity: 1;
 			transform: translate(-50%, -50%) scale(1);
+			filter: blur(0);
 		}
 	}
 
@@ -2815,7 +2825,7 @@ button:focus-visible {
 		overflow: hidden;
 	}
 
-	/* Shimmer/shine sweep effect */
+	/* Shimmer/shine sweep effect - light blue */
 	.swipe-slider::before {
 		content: '';
 		position: absolute;
@@ -2826,9 +2836,11 @@ button:focus-visible {
 		background: linear-gradient(
 			120deg,
 			transparent 0%,
-			transparent 40%,
-			rgba(255, 255, 255, 0.8) 50%,
-			transparent 60%,
+			transparent 35%,
+			rgba(147, 210, 255, 0.5) 48%,
+			rgba(200, 235, 255, 0.6) 50%,
+			rgba(147, 210, 255, 0.5) 52%,
+			transparent 65%,
 			transparent 100%
 		);
 		animation: shimmerSweep 2.5s ease-in-out infinite;
