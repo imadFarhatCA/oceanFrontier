@@ -880,12 +880,18 @@ body {
 		display: block;
 	}
 
-	/* Hide regular nav but keep mobile-nav visible */
-	.nav:not(.mobile-nav) {
+	/* Hide regular nav in normal views but keep mobile-nav and training/gear header nav visible */
+	.section-content > .nav:not(.mobile-nav) {
 		display: none;
 	}
 
 	.mobile-nav {
+		display: flex !important;
+	}
+
+	/* Ensure training and gear header nav stays visible on mobile */
+	.training-header .nav,
+	.gear-header .nav {
 		display: flex !important;
 	}
 
