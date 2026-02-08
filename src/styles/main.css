@@ -1338,6 +1338,10 @@ button:focus-visible {
 	letter-spacing: 0.18em;
 	text-transform: uppercase;
 	color: rgba(255, 255, 255, 0.8);
+	padding-top: 10px;
+	border-top: 1px solid rgba(255, 255, 255, 0.15);
+	width: 100%;
+	text-align: center;
 }
 
 /* Products */
