@@ -1284,8 +1284,7 @@ button:focus-visible {
 /* Gear Type Selection */
 .gear-type-selection {
 	display: flex;
-	align-items: center;
-	gap: 24px;
+	gap: 16px;
 	margin-top: 24px;
 	animation: smoothFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
 }
@@ -1299,7 +1298,6 @@ button:focus-visible {
 	background: transparent;
 	border: none;
 	cursor: pointer;
-	color: rgba(255, 255, 255, 0.9);
 	transition: transform 0.2s ease;
 }
 
@@ -1308,7 +1306,7 @@ button:focus-visible {
 }
 
 .gear-type-frame {
-	width: 98%;
+	width: 100%;
 	aspect-ratio: 1;
 	background: #2c2c2c;
 	border-radius: 16px;
@@ -1316,44 +1314,30 @@ button:focus-visible {
 	align-items: center;
 	justify-content: center;
 	box-shadow:
-		4px 4px 8px #191919,
-		-3px -3px 7px #3a3a3a;
+		3px 3px 6px #1c1c1c,
+		-2px -2px 5px #383838;
 	transition: box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .gear-type-card:hover .gear-type-frame {
 	background: #303030;
 	box-shadow:
-		3px 3px 6px #191919,
-		-2px -2px 5px #3c3c3c;
-}
-
-.gear-separator {
-	align-self: center;
-	flex-shrink: 0;
-	width: 2px;
-	height: 4em;
-	background: repeating-linear-gradient(
-		to bottom,
-		rgba(255, 255, 255, 0.25) 0px,
-		rgba(255, 255, 255, 0.25) 4px,
-		transparent 4px,
-		transparent 10px
-	);
+		2px 2px 4px #1c1c1c,
+		-1px -1px 4px #3a3a3a;
 }
 
 .gear-icon {
-	width: 60%;
-	height: 60%;
-	fill: white;
+	width: 68%;
+	height: 68%;
+	fill: #d0d0d0;
 }
 
 .gear-type-label {
-	font-size: 14px;
-	font-weight: 700;
-	letter-spacing: 0.2em;
+	font-size: 15px;
+	font-weight: 300;
+	letter-spacing: 0.18em;
 	text-transform: uppercase;
-	color: rgba(255, 255, 255, 0.85);
+	color: rgba(255, 255, 255, 0.8);
 }
 
 /* Products */

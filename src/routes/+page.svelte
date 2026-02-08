@@ -918,7 +918,6 @@
 										</div>
 										<span class="gear-type-label">Basic</span>
 									</button>
-									<div class="gear-separator"></div>
 									<button class="gear-type-card" on:click|stopPropagation>
 										<div class="gear-type-frame">
 											<svg class="gear-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.46 283.46">
