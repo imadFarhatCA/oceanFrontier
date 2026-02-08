@@ -657,7 +657,13 @@
 			</div>
 			{/if}
 
-			<!-- Questionnaire Panel for Left Section -->
+			{#if !showTrainingView}
+			<div class="section-label">
+				<span class="label-text">DIVE TRAINING</span>
+			</div>
+		{/if}
+
+		<!-- Questionnaire Panel for Left Section -->
 			{#if showQuestionnaire}
 				<div class="questionnaire-panel" class:active={showQuestionnaire}>
 					<div class="questionnaire-content-wrapper">
@@ -812,7 +818,11 @@
 				{/each}
 			</div>
 
-			<!-- Questionnaire Panel for Right Section -->
+			<div class="section-label">
+				<span class="label-text">DIVE GEAR</span>
+			</div>
+
+		<!-- Questionnaire Panel for Right Section -->
 			{#if showQuestionnaire}
 				<div class="questionnaire-panel" class:active={showQuestionnaire}>
 					<div class="questionnaire-content-wrapper">
@@ -940,16 +950,14 @@
 			on:mousedown={handleSliderMouseDown}
 			on:touchstart={handleTouchStart}
 		>
-			<div class="slider-toggle-track">
-				<div class="slider-toggle-thumb">
-					<div class="slider-arrows">
-						<svg bind:this={arrowLeft} class="slider-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-							<polyline points="15 18 9 12 15 6"></polyline>
-						</svg>
-						<svg bind:this={arrowRight} class="slider-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-							<polyline points="9 18 15 12 9 6"></polyline>
-						</svg>
-					</div>
+			<div class="slider-toggle-thumb">
+				<div class="slider-arrows">
+					<svg bind:this={arrowLeft} class="slider-chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="15 18 9 12 15 6"></polyline>
+					</svg>
+					<svg bind:this={arrowRight} class="slider-chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="9 18 15 12 9 6"></polyline>
+					</svg>
 				</div>
 			</div>
 		</button>
