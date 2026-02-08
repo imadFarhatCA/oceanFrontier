@@ -447,7 +447,7 @@
 	}
 
 	async function startPremiumEquipmentFlow() {
-		messages = [{ type: 'question', text: 'WE ONLY SELL YOU WHAT WE USE !\nwhether you are starting up or optimizing your diving path, we will consult you on what is best, modular, and a long term investment for you', typing: false }];
+		messages = [{ type: 'question', text: 'WE ONLY SELL YOU WHAT WE USE !\n\nwhether you are starting up or optimizing your diving path, we will consult you on what is best, modular, and would serve you as a long term investment', typing: false }];
 		await new Promise(resolve => setTimeout(resolve, 400));
 		showGearTypeSelection = true;
 	}
