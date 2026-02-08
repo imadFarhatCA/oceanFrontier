@@ -149,9 +149,16 @@
 		e.stopPropagation();
 		if (target === 'training') {
 			if (!showTrainingView) openTrainingView();
+		} else if (target === 'gear') {
+			if (!showGearView) {
+				if (showQuestionnaire) closeQuestionnaire();
+				openGearView('basic');
+			}
 		} else if (target === 'home') {
 			if (showTrainingView) {
 				closeTrainingView();
+			} else if (showGearView) {
+				closeGearView();
 			} else if (isMobile) {
 				// On mobile, Homepage always goes to Training section (section 0)
 				currentMobileSection = 0;
@@ -591,7 +598,7 @@
 				<nav class="nav">
 					<a href="/" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'home')}>HOMEPAGE</a>
 					<a href="/training" class:nav-active={showTrainingView} on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'training')}>TRAINING</a>
-					<a href="/gear">GEAR</a>
+					<a href="/gear" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'gear')}>GEAR</a>
 					<a href="/community">COMMUNITY</a>
 				</nav>
 			{/if}
@@ -604,7 +611,7 @@
 					<nav class="nav centered">
 						<a href="/" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'home')}>HOMEPAGE</a>
 						<a href="/training" class:nav-active={showTrainingView} on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'training')}>TRAINING</a>
-						<a href="/gear">GEAR</a>
+						<a href="/gear" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'gear')}>GEAR</a>
 						<a href="/community">COMMUNITY</a>
 					</nav>
 				</div>
@@ -856,7 +863,7 @@
 			<div class="logo-subtitle">CONSULTING</div>
 			<nav class="nav">
 				<a href="/" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'home')}>HOMEPAGE</a>
-				<a href="/gear">GEAR</a>
+				<a href="/gear" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'gear')}>GEAR</a>
 				<a href="/training" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'training')}>TRAINING</a>
 				<a href="/community">COMMUNITY</a>
 			</nav>
@@ -869,7 +876,7 @@
 					<div class="logo-subtitle centered">CONSULTING</div>
 					<nav class="nav centered">
 						<a href="/" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'home')}>HOMEPAGE</a>
-						<a href="/gear">GEAR</a>
+						<a href="/gear" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'gear')}>GEAR</a>
 						<a href="/training" on:click|preventDefault|stopPropagation={(e) => handleNavClick(e, 'training')}>TRAINING</a>
 						<a href="/community">COMMUNITY</a>
 					</nav>
@@ -1157,7 +1164,7 @@
 				<nav class="mobile-nav">
 					<a href="/" on:click|preventDefault={(e) => { handleNavClick(e, 'home'); toggleMobileMenu(); }}>HOMEPAGE</a>
 					<a href="/training" on:click|preventDefault={(e) => { handleNavClick(e, 'training'); toggleMobileMenu(); }}>TRAINING</a>
-					<a href="/gear" on:click={toggleMobileMenu}>GEAR</a>
+					<a href="/gear" on:click|preventDefault={(e) => { handleNavClick(e, 'gear'); toggleMobileMenu(); }}>GEAR</a>
 					<a href="/community" on:click={toggleMobileMenu}>COMMUNITY</a>
 				</nav>
 				<div class="mobile-social">
