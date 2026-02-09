@@ -7,97 +7,73 @@
 		{ name: 'JJCCR', file: 'jjccr.svg' },
 		{ name: 'SUEX', file: 'suex.svg' }
 	];
-
-	// Duplicate brands for seamless infinite scroll
-	const duplicatedBrands = [...brands, ...brands, ...brands];
 </script>
 
-<div class="carousel-container">
-	<div class="brand-logos-strip">
-		{#each duplicatedBrands as brand, i}
-			<div class="brand-logo-item">
-				<img src="/images/brands/{brand.file}" alt="{brand.name}-{i}" />
-			</div>
-		{/each}
-	</div>
+<div class="brands-row">
+	{#each brands as brand, i}
+		<div class="brand-item" style="--i: {i}">
+			<img src="/images/brands/{brand.file}" alt={brand.name} />
+		</div>
+	{/each}
 </div>
 
 <style>
-	.carousel-container {
-		width: 100%;
-		overflow: hidden;
-		padding: 20px 0;
-		position: relative;
-	}
-
-	.brand-logos-strip {
+	.brands-row {
 		display: flex;
 		align-items: center;
-		gap: 60px;
-		animation: scroll 30s linear infinite;
-		will-change: transform;
+		justify-content: flex-start;
+		gap: 48px;
+		padding: 16px 0;
+		width: 100%;
 	}
 
-	@keyframes scroll {
+	@keyframes brandFadeIn {
 		0% {
-			transform: translateX(0);
+			opacity: 0;
+			transform: translateY(12px);
 		}
 		100% {
-			transform: translateX(calc(-100% / 3));
+			opacity: 0.55;
+			transform: translateY(0);
 		}
 	}
 
-	/* Pause animation on hover */
-	.carousel-container:hover .brand-logos-strip {
-		animation-play-state: paused;
-	}
-
-	.brand-logo-item {
+	.brand-item {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		flex-shrink: 0;
-		opacity: 0.7;
-		transition: opacity 0.3s ease;
-		height: 60px;
-		min-width: 120px;
-	}
-
-	.brand-logo-item:hover {
-		opacity: 1;
-	}
-
-	.brand-logo-item img {
 		height: 50px;
+		opacity: 0;
+		animation: brandFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		animation-delay: calc(0.3s + var(--i) * 0.08s);
+		transition: opacity 0.3s ease;
+	}
+
+	.brand-item:hover {
+		opacity: 1 !important;
+	}
+
+	.brand-item img {
+		height: 40px;
 		width: auto;
 		max-width: none;
 		object-fit: contain;
 		filter: invert(1) brightness(1.1);
 	}
 
-	/* SUEX logo - same height but can be wider */
-	.brand-logo-item img[alt^="SUEX"] {
-		height: 50px;
-		width: auto;
-	}
-
 	@media (max-width: 768px) {
-		.brand-logos-strip {
-			gap: 40px;
-			animation: scroll 20s linear infinite;
+		.brands-row {
+			gap: 24px;
+			flex-wrap: wrap;
+			justify-content: center;
 		}
 
-		.brand-logo-item {
-			height: 50px;
-			min-width: 80px;
-		}
-
-		.brand-logo-item img {
+		.brand-item {
 			height: 40px;
 		}
 
-		.brand-logo-item img[alt^="SUEX"] {
-			height: 40px;
+		.brand-item img {
+			height: 30px;
 		}
 	}
 </style>
