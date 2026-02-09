@@ -3140,9 +3140,9 @@ button:focus-visible {
 		z-index: 450 !important;
 	}
 
-	/* Ensure mobile menu has proper z-index */
+	/* Ensure mobile menu has highest z-index to appear above all content */
 	.mobile-menu-overlay {
-		z-index: 340 !important;
+		z-index: 500 !important;
 	}
 
 	/* Hide logo when questionnaire is active */
