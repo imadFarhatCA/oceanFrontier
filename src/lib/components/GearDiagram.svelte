@@ -111,6 +111,7 @@
 			>
 				<span class="hotspot-pulse"></span>
 				<span class="hotspot-dot"></span>
+				<span class="hotspot-icon">{item.icon}</span>
 			</button>
 
 			{#if activeHotspot === item.id}
@@ -136,9 +137,9 @@
 <style>
 	.gear-diagram-container {
 		width: 100%;
-		padding: 60px 0;
+		padding: 60px 0 60px 10%;
 		display: flex;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
 		animation: chunkFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.6s backwards;
 	}
@@ -146,7 +147,7 @@
 	.diagram-wrapper {
 		position: relative;
 		width: 100%;
-		max-width: 900px;
+		max-width: 700px;
 		aspect-ratio: 16 / 10;
 	}
 
@@ -190,6 +191,22 @@
 		background: white;
 		border-color: rgba(0, 162, 255, 1);
 		transform: translate(-50%, -50%) scale(1.3);
+	}
+
+	.hotspot-icon {
+		position: absolute;
+		top: 50%;
+		left: calc(100% + 8px);
+		transform: translateY(-50%);
+		font-size: 16px;
+		opacity: 0.7;
+		pointer-events: none;
+		transition: opacity 0.3s ease;
+	}
+
+	.hotspot:hover .hotspot-icon,
+	.hotspot.active .hotspot-icon {
+		opacity: 1;
 	}
 
 	.hotspot-pulse {
@@ -302,6 +319,15 @@
 		padding: 16px;
 		max-width: 320px;
 		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+		pointer-events: auto;
+		cursor: default;
+		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.label-content:hover {
+		background: rgba(20, 20, 20, 0.95);
+		border-color: rgba(0, 162, 255, 0.6);
+		box-shadow: 0 8px 32px rgba(0, 162, 255, 0.2);
 	}
 
 	.label-icon {
@@ -341,12 +367,16 @@
 
 	@media (max-width: 768px) {
 		.gear-diagram-container {
-			padding: 40px 0;
+			padding: 40px 20px 40px 5%;
 		}
 
 		.diagram-wrapper {
 			max-width: 100%;
-			padding: 0 20px;
+		}
+
+		.hotspot-icon {
+			font-size: 14px;
+			left: calc(100% + 6px);
 		}
 
 		.label-content {
