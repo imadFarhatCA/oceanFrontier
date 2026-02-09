@@ -1947,6 +1947,7 @@ button:focus-visible {
 	margin: 0 0 20px 0;
 	letter-spacing: -0.02em;
 	line-height: 1.2;
+	text-align: left;
 }
 
 .gear-description-text {
@@ -1956,6 +1957,7 @@ button:focus-visible {
 	margin: 0;
 	font-weight: 400;
 	max-width: 800px;
+	text-align: left;
 }
 
 .split-section.left.expanded {
