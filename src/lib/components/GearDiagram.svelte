@@ -47,7 +47,7 @@
 			subtitle: 'Buoyancy Compensator',
 			description: 'Doughnut shaped wings are used for different configurations and lift capacities',
 			icon: '/images/gear-icons/wing.svg',
-			position: { x: 29, y: 32 },
+			position: { x: 29, y: 31 },
 			labelPosition: 'left'
 		},
 		{
@@ -56,7 +56,7 @@
 			subtitle: 'Submersible Pressure Gauge',
 			description: 'Submersible pressure gauges big in size, clear and can come in Imperial or Metric formats',
 			icon: '/images/gear-icons/gauge.svg',
-			position: { x: 71, y: 40 },
+			position: { x: 71, y: 44 },
 			labelPosition: 'right'
 		},
 		{
@@ -65,7 +65,7 @@
 			subtitle: 'GAUGE or DIVE COMPUTER',
 			description: 'Whether a depth gauge or dive computer, it is an essential tool to give the diver the ability to read the parameters of the dive',
 			icon: '/images/gear-icons/dive-computer.svg',
-			position: { x: 29, y: 48 },
+			position: { x: 28, y: 48 },
 			labelPosition: 'left'
 		},
 		{
@@ -74,7 +74,7 @@
 			subtitle: 'MAGNETIC OR DIGITAL',
 			description: 'Any type of magnetic or digital compass, used for underwater navigation & bearing allocation. Some dive computers have a digital compass embedded.',
 			icon: '/images/gear-icons/compass.svg',
-			position: { x: 71, y: 53 },
+			position: { x: 71, y: 48 },
 			labelPosition: 'right'
 		},
 		{
@@ -83,7 +83,7 @@
 			subtitle: 'Storage & Tools',
 			description: 'Pockets and accessories for carrying essential tools, slates, reels, and other dive accessories',
 			icon: '/images/gear-icons/compass.svg',
-			position: { x: 71, y: 67 },
+			position: { x: 71, y: 66 },
 			labelPosition: 'right'
 		},
 		{
