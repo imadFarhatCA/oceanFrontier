@@ -15,6 +15,7 @@
 		{#each brands as brand, i}
 			<div class="brand-cell" style="--i: {i}">
 				<img src="/images/brands/{brand.file}" alt={brand.name} class={brand.name === 'SUEX' ? 'suex' : ''} />
+				<span class="brand-name">{brand.name}</span>
 			</div>
 		{/each}
 	</div>
@@ -23,17 +24,16 @@
 <style>
 	.brands-strip {
 		position: relative;
-		padding: 24px 0 16px;
+		padding: 20px 0 0;
 		width: 100%;
 	}
 
 	/* Animated top line that sweeps across */
 	.brands-line {
-		position: absolute;
-		top: 0;
-		left: 0;
+		position: relative;
 		height: 1px;
 		width: 0;
+		margin-bottom: 20px;
 		background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
 		animation: lineSweep 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
 	}
@@ -62,6 +62,9 @@
 	}
 
 	.brand-cell {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		opacity: 0;
 		animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 		animation-delay: calc(0.5s + var(--i) * 0.07s);
@@ -103,6 +106,21 @@
 		transform: translateY(-2px);
 	}
 
+	.brand-name {
+		font-size: 8px;
+		letter-spacing: 2px;
+		text-transform: uppercase;
+		color: white;
+		opacity: 0;
+		margin-top: 8px;
+		font-weight: 300;
+		transition: opacity 0.3s ease;
+	}
+
+	.brand-cell:hover .brand-name {
+		opacity: 0.5;
+	}
+
 	@media (max-width: 768px) {
 		.brands-items {
 			flex-wrap: wrap;
@@ -116,6 +134,11 @@
 
 		.brand-cell img.suex {
 			height: 12px;
+		}
+
+		.brand-name {
+			font-size: 7px;
+			margin-top: 6px;
 		}
 	}
 </style>
