@@ -20,7 +20,7 @@
 			subtitle: 'LOW VOLUME',
 			description: 'Any low volume mask with a single or dual lense profile permitting for minimal use of gas to clear it out',
 			icon: '/images/gear-icons/mask.svg',
-			position: { x: 29, y: 8 },
+			position: { x: 35, y: 8 },
 			labelPosition: 'left'
 		},
 		{
@@ -29,7 +29,7 @@
 			subtitle: 'Backup & Primary',
 			description: 'A secondary regulator on a bungee necklace to be reachable and used as backup. Primary connected via 1.5-2m hose.',
 			icon: '/images/gear-icons/regulator.svg',
-			position: { x: 71, y: 16 },
+			position: { x: 68, y: 16 },
 			labelPosition: 'right'
 		},
 		{
@@ -83,7 +83,7 @@
 			subtitle: 'Storage & Tools',
 			description: 'Pockets and accessories for carrying essential tools, slates, reels, and other dive accessories',
 			icon: '/images/gear-icons/compass.svg',
-			position: { x: 71, y: 66 },
+			position: { x: 69, y: 63 },
 			labelPosition: 'right'
 		},
 		{
@@ -92,7 +92,7 @@
 			subtitle: 'RIGID RUBBER',
 			description: 'Rigid rubber compound fins facilitating finning technics, while minimizing effort. Heel springs for ease of use, wide stiff blade for better backward frog kick control',
 			icon: '/images/gear-icons/fins.svg',
-			position: { x: 29, y: 92 },
+			position: { x: 32, y: 92 },
 			labelPosition: 'left'
 		}
 	];
