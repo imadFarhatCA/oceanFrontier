@@ -28,12 +28,9 @@
 				onMobileClose();
 			}
 		} else {
-			// Internal link - let handleNavClick handle preventDefault
+			// Internal link - handleNavClick manages menu state internally
 			onNavClick(e, target);
-			// Close mobile menu after navigation
-			if (onMobileClose && variant === 'mobile') {
-				onMobileClose();
-			}
+			// Don't call onMobileClose here - openTrainingView/openGearView handle it
 		}
 	}
 </script>

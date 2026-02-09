@@ -184,6 +184,7 @@
 			} else if (isMobile) {
 				// On mobile, Homepage always goes to Training section (section 0)
 				currentMobileSection = 0;
+				isMobileMenuOpen = false;
 			}
 		}
 	}
@@ -1153,7 +1154,7 @@
 	</div>
 
 	<!-- Mobile Hamburger Button -->
-	<button class="hamburger-button" on:click={toggleMobileMenu} class:open={isMobileMenuOpen} aria-label="Toggle menu">
+	<button class="hamburger-button" class:hidden={showTrainingView || showGearView} on:click={toggleMobileMenu} class:open={isMobileMenuOpen} aria-label="Toggle menu">
 		<span></span>
 		<span></span>
 		<span></span>

@@ -690,14 +690,15 @@ body {
 }
 
 .hamburger-button.open {
-	background: #2a2a2a;
-	border-color: #2a2a2a;
-	transform: rotate(90deg);
-	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+	background: white !important;
+	border: 2px solid white !important;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(255, 255, 255, 1) !important;
+	opacity: 1 !important;
+	visibility: visible !important;
 }
 
 .hamburger-button.open span {
-	background: white;
+	background: #2a2a2a;
 }
 
 .hamburger-button.open span:nth-child(1) {
@@ -711,6 +712,12 @@ body {
 
 .hamburger-button.open span:nth-child(3) {
 	transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.hamburger-button.hidden {
+	opacity: 0;
+	pointer-events: none;
+	transform: scale(0.8);
 }
 
 .mobile-menu-overlay {
@@ -1865,6 +1872,7 @@ button:focus-visible {
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
+	transition: none !important;
 }
 
 .split-section.right.expanded .section-content {
@@ -1935,6 +1943,7 @@ button:focus-visible {
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
+	transition: none !important;
 }
 
 @keyframes trainingSlideIn {
@@ -3130,9 +3139,11 @@ button:focus-visible {
 		transform: rotate(0deg);
 	}
 
-	/* Fix hamburger z-index */
+	/* Fix hamburger z-index - must be above overlay to remain visible as X */
 	.hamburger-button {
-		z-index: 440 !important;
+		z-index: 9999 !important;
+		position: fixed !important;
+		display: flex !important;
 	}
 
 	/* Fix close X button z-index */
@@ -3140,7 +3151,7 @@ button:focus-visible {
 		z-index: 450 !important;
 	}
 
-	/* Ensure mobile menu has highest z-index to appear above all content */
+	/* Ensure mobile menu has highest z-index to appear above all content except hamburger */
 	.mobile-menu-overlay {
 		z-index: 500 !important;
 	}
