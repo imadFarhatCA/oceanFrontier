@@ -15,30 +15,48 @@
 
 	const gearItems: GearItem[] = [
 		{
+			id: 'mask',
+			title: 'MASK',
+			subtitle: 'LOW VOLUME',
+			description: 'Any low volume mask with a single or dual lense profile permitting for minimal use of gas to clear it out',
+			icon: '/images/gear-icons/mask.svg',
+			position: { x: 51, y: 9 },
+			labelPosition: 'left'
+		},
+		{
 			id: 'regulators',
 			title: 'REGULATORS',
 			subtitle: 'Backup & Primary',
 			description: 'A secondary regulator on a bungee necklace to be reachable and used as backup. Primary connected via 1.5-2m hose.',
-			icon: '🔧',
-			position: { x: 45, y: 25 },
-			labelPosition: 'left'
+			icon: '/images/gear-icons/regulator.svg',
+			position: { x: 56, y: 18 },
+			labelPosition: 'right'
 		},
 		{
-			id: 'tank',
-			title: 'TANK',
-			subtitle: 'SCUBA Cylinder',
-			description: 'Tanks used can be of different compounds and sizes',
-			icon: '🪂',
-			position: { x: 55, y: 15 },
+			id: 'suit',
+			title: 'EXPOSURE SUIT',
+			subtitle: 'Wet / Dry',
+			description: 'Thermal protection suited to the dive environment. Wet suits for warm water, dry suits for cold water diving.',
+			icon: '/images/gear-icons/mask.svg',
+			position: { x: 55, y: 26 },
 			labelPosition: 'right'
 		},
 		{
 			id: 'wing',
-			title: 'WING',
+			title: 'WING / BACKPLATE',
 			subtitle: 'Buoyancy Compensator',
 			description: 'Doughnut shaped wings are used for different configurations and lift capacities',
-			icon: '🎈',
-			position: { x: 58, y: 35 },
+			icon: '/images/gear-icons/wing.svg',
+			position: { x: 41, y: 37 },
+			labelPosition: 'left'
+		},
+		{
+			id: 'gauge',
+			title: 'GAUGE',
+			subtitle: 'Submersible Pressure Gauge',
+			description: 'Submersible pressure gauges big in size, clear and can come in Imperial or Metric formats',
+			icon: '/images/gear-icons/gauge.svg',
+			position: { x: 54, y: 43 },
 			labelPosition: 'right'
 		},
 		{
@@ -46,26 +64,8 @@
 			title: 'DIVE COMPUTER',
 			subtitle: 'GAUGE or DIVE COMPUTER',
 			description: 'Whether a depth gauge or dive computer, it is an essential tool to give the diver the ability to read the parameters of the dive',
-			icon: '⌚',
-			position: { x: 35, y: 45 },
-			labelPosition: 'left'
-		},
-		{
-			id: 'spg',
-			title: 'SPG',
-			subtitle: 'Submersible Pressure Gauge',
-			description: 'Submersible pressure gauges big in size, clear and can come in Imperial or Metric formats',
-			icon: '📊',
-			position: { x: 62, y: 48 },
-			labelPosition: 'right'
-		},
-		{
-			id: 'mask',
-			title: 'MASK',
-			subtitle: 'LOW VOLUME',
-			description: 'Any low volume mask with a single or dual lense profile permitting for minimal use of gas to clear it out',
-			icon: '🥽',
-			position: { x: 48, y: 58 },
+			icon: '/images/gear-icons/dive-computer.svg',
+			position: { x: 41, y: 53 },
 			labelPosition: 'left'
 		},
 		{
@@ -73,8 +73,17 @@
 			title: 'COMPASS',
 			subtitle: 'MAGNETIC OR DIGITAL',
 			description: 'Any type of magnetic or digital compass, used for underwater navigation & bearing allocation. Some dive computers have a digital compass embedded.',
-			icon: '🧭',
-			position: { x: 55, y: 65 },
+			icon: '/images/gear-icons/compass.svg',
+			position: { x: 53, y: 58 },
+			labelPosition: 'right'
+		},
+		{
+			id: 'pockets',
+			title: 'POCKETS ACCESSORIES',
+			subtitle: 'Storage & Tools',
+			description: 'Pockets and accessories for carrying essential tools, slates, reels, and other dive accessories',
+			icon: '/images/gear-icons/compass.svg',
+			position: { x: 53, y: 70 },
 			labelPosition: 'right'
 		},
 		{
@@ -82,8 +91,8 @@
 			title: 'FINS',
 			subtitle: 'RIGID RUBBER',
 			description: 'Rigid rubber compound fins facilitating finning technics, while minimizing effort. Heel springs for ease of use, wide stiff blade for better backward frog kick control',
-			icon: '🦭',
-			position: { x: 48, y: 85 },
+			icon: '/images/gear-icons/fins.svg',
+			position: { x: 46, y: 90 },
 			labelPosition: 'left'
 		}
 	];
@@ -113,7 +122,7 @@
 			>
 				<span class="hotspot-pulse"></span>
 				<span class="hotspot-dot"></span>
-				<span class="hotspot-icon">{item.icon}</span>
+				<img class="hotspot-icon" src={item.icon} alt={item.title} />
 			</button>
 
 			{#if activeHotspot === item.id}
@@ -134,7 +143,7 @@
 <style>
 	.gear-diagram-container {
 		width: 100%;
-		padding: 60px 0 60px 10%;
+		padding: 60px 0 60px 50px;
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
@@ -195,10 +204,12 @@
 		top: 50%;
 		left: calc(100% + 8px);
 		transform: translateY(-50%);
-		font-size: 16px;
+		width: 20px;
+		height: 20px;
 		opacity: 0.7;
 		pointer-events: none;
 		transition: opacity 0.3s ease;
+		filter: invert(1);
 	}
 
 	.hotspot:hover .hotspot-icon,
@@ -250,7 +261,8 @@
 		}
 
 		.hotspot-icon {
-			font-size: 14px;
+			width: 16px;
+			height: 16px;
 			left: calc(100% + 6px);
 		}
 	}

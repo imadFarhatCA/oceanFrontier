@@ -14,7 +14,7 @@
 >
 	<div class="popup-connector"></div>
 	<div class="popup-content">
-		<div class="popup-icon">{icon}</div>
+		<img class="popup-icon" src={icon} alt={title} />
 		<div class="popup-text">
 			<h3 class="popup-title">{title}</h3>
 			<p class="popup-subtitle">{subtitle}</p>
@@ -109,9 +109,10 @@
 	}
 
 	.popup-icon {
-		font-size: 32px;
-		line-height: 1;
+		width: 32px;
+		height: 32px;
 		flex-shrink: 0;
+		filter: invert(1);
 	}
 
 	.popup-text {
@@ -155,7 +156,8 @@
 		}
 
 		.popup-icon {
-			font-size: 24px;
+			width: 24px;
+			height: 24px;
 		}
 
 		.popup-title {
