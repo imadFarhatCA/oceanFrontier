@@ -1928,55 +1928,34 @@ button:focus-visible {
 	animation: chunkFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
 }
 
-.gear-hero-section {
-	display: flex;
-	gap: 60px;
+.gear-brands-section {
 	width: 100%;
-	margin-bottom: 60px;
-	animation: chunkFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
+	padding: 16px 0;
+	margin-bottom: 32px;
 }
 
-.gear-hero-left {
-	flex: 1;
-	max-width: 50%;
+.gear-description-section {
+	width: 100%;
+	padding: 32px 0;
+	animation: chunkFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
 }
 
-.gear-hero-title {
-	font-size: 32px;
+.gear-description-title {
+	font-size: 28px;
 	font-weight: 700;
-	color: #2a2a2a;
+	color: white;
 	margin: 0 0 20px 0;
 	letter-spacing: -0.02em;
 	line-height: 1.2;
 }
 
-.gear-hero-description {
+.gear-description-text {
 	font-size: 15px;
 	line-height: 1.7;
-	color: #6b6b6b;
+	color: rgba(255, 255, 255, 0.7);
 	margin: 0;
 	font-weight: 400;
-}
-
-.gear-hero-right {
-	flex: 0 0 200px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.diver-silhouette {
-	width: 100%;
-	height: auto;
-	stroke: #2a2a2a;
-	opacity: 0.6;
-	animation: chunkFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s backwards;
-}
-
-.gear-brands-section {
-	width: 100%;
-	padding: 16px 0;
-	margin-bottom: 24px;
+	max-width: 800px;
 }
 
 .split-section.left.expanded {
@@ -2691,34 +2670,18 @@ button:focus-visible {
 		font-size: 9px;
 	}
 
-	.gear-hero-section {
-		flex-direction: column;
-		gap: 32px;
-		margin-bottom: 40px;
+	.gear-description-section {
+		padding: 24px 0;
 	}
 
-	.gear-hero-left {
-		max-width: 100%;
-	}
-
-	.gear-hero-title {
-		font-size: 24px;
+	.gear-description-title {
+		font-size: 22px;
 		margin-bottom: 16px;
 	}
 
-	.gear-hero-description {
-		font-size: 14px;
+	.gear-description-text {
+		font-size: 13px;
 		line-height: 1.6;
-	}
-
-	.gear-hero-right {
-		flex: 0 0 auto;
-		align-self: center;
-	}
-
-	.diver-silhouette {
-		width: 120px;
-		height: auto;
 	}
 
 	.training-main-layout {
