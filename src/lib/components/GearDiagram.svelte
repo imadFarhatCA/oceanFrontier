@@ -20,7 +20,7 @@
 			subtitle: 'LOW VOLUME',
 			description: 'Any low volume mask with a single or dual lense profile permitting for minimal use of gas to clear it out',
 			icon: '/images/gear-icons/mask.svg',
-			position: { x: 51, y: 9 },
+			position: { x: 43, y: 9 },
 			labelPosition: 'left'
 		},
 		{
@@ -29,7 +29,7 @@
 			subtitle: 'Backup & Primary',
 			description: 'A secondary regulator on a bungee necklace to be reachable and used as backup. Primary connected via 1.5-2m hose.',
 			icon: '/images/gear-icons/regulator.svg',
-			position: { x: 56, y: 18 },
+			position: { x: 63, y: 18 },
 			labelPosition: 'right'
 		},
 		{
@@ -38,7 +38,7 @@
 			subtitle: 'Wet / Dry',
 			description: 'Thermal protection suited to the dive environment. Wet suits for warm water, dry suits for cold water diving.',
 			icon: '/images/gear-icons/mask.svg',
-			position: { x: 55, y: 26 },
+			position: { x: 64, y: 26 },
 			labelPosition: 'right'
 		},
 		{
@@ -47,7 +47,7 @@
 			subtitle: 'Buoyancy Compensator',
 			description: 'Doughnut shaped wings are used for different configurations and lift capacities',
 			icon: '/images/gear-icons/wing.svg',
-			position: { x: 41, y: 37 },
+			position: { x: 35, y: 37 },
 			labelPosition: 'left'
 		},
 		{
@@ -56,7 +56,7 @@
 			subtitle: 'Submersible Pressure Gauge',
 			description: 'Submersible pressure gauges big in size, clear and can come in Imperial or Metric formats',
 			icon: '/images/gear-icons/gauge.svg',
-			position: { x: 54, y: 43 },
+			position: { x: 64, y: 43 },
 			labelPosition: 'right'
 		},
 		{
@@ -65,7 +65,7 @@
 			subtitle: 'GAUGE or DIVE COMPUTER',
 			description: 'Whether a depth gauge or dive computer, it is an essential tool to give the diver the ability to read the parameters of the dive',
 			icon: '/images/gear-icons/dive-computer.svg',
-			position: { x: 41, y: 53 },
+			position: { x: 35, y: 53 },
 			labelPosition: 'left'
 		},
 		{
@@ -74,7 +74,7 @@
 			subtitle: 'MAGNETIC OR DIGITAL',
 			description: 'Any type of magnetic or digital compass, used for underwater navigation & bearing allocation. Some dive computers have a digital compass embedded.',
 			icon: '/images/gear-icons/compass.svg',
-			position: { x: 53, y: 58 },
+			position: { x: 63, y: 58 },
 			labelPosition: 'right'
 		},
 		{
@@ -83,7 +83,7 @@
 			subtitle: 'Storage & Tools',
 			description: 'Pockets and accessories for carrying essential tools, slates, reels, and other dive accessories',
 			icon: '/images/gear-icons/compass.svg',
-			position: { x: 53, y: 70 },
+			position: { x: 63, y: 70 },
 			labelPosition: 'right'
 		},
 		{
@@ -92,7 +92,7 @@
 			subtitle: 'RIGID RUBBER',
 			description: 'Rigid rubber compound fins facilitating finning technics, while minimizing effort. Heel springs for ease of use, wide stiff blade for better backward frog kick control',
 			icon: '/images/gear-icons/fins.svg',
-			position: { x: 46, y: 90 },
+			position: { x: 44, y: 90 },
 			labelPosition: 'left'
 		}
 	];
@@ -122,7 +122,6 @@
 			>
 				<span class="hotspot-pulse"></span>
 				<span class="hotspot-dot"></span>
-				<img class="hotspot-icon" src={item.icon} alt={item.title} />
 			</button>
 
 			{#if activeHotspot === item.id}
@@ -143,7 +142,7 @@
 <style>
 	.gear-diagram-container {
 		width: 100%;
-		padding: 60px 0 60px 50px;
+		padding: 60px 0 60px 20px;
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
@@ -199,25 +198,7 @@
 		transform: translate(-50%, -50%) scale(1.3);
 	}
 
-	.hotspot-icon {
-		position: absolute;
-		top: 50%;
-		left: calc(100% + 8px);
-		transform: translateY(-50%);
-		width: 20px;
-		height: 20px;
-		opacity: 0.7;
-		pointer-events: none;
-		transition: opacity 0.3s ease;
-		filter: invert(1);
-	}
-
-	.hotspot:hover .hotspot-icon,
-	.hotspot.active .hotspot-icon {
-		opacity: 1;
-	}
-
-	.hotspot-pulse {
+.hotspot-pulse {
 		position: absolute;
 		top: 50%;
 		left: 50%;
@@ -260,10 +241,5 @@
 			max-width: 100%;
 		}
 
-		.hotspot-icon {
-			width: 16px;
-			height: 16px;
-			left: calc(100% + 6px);
-		}
 	}
 </style>
