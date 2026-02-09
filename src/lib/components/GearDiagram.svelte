@@ -91,7 +91,7 @@
 			title: 'POCKETS ACCESSORIES',
 			subtitle: 'Storage & Tools',
 			description: 'Pockets and accessories for carrying essential tools, slates, reels, and other dive accessories',
-			icon: '/images/gear-icons/compass.svg',
+			icon: '/images/gear-icons/accessories.svg',
 			position: { x: 69, y: 63 },
 			labelPosition: 'right'
 		},
