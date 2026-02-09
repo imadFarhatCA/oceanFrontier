@@ -15,6 +15,15 @@
 
 	const gearItems: GearItem[] = [
 		{
+			id: 'hood',
+			title: 'HOOD',
+			subtitle: 'THERMAL PROTECTION',
+			description: 'A neoprene hood to protect the head from cold water exposure and maintain core body temperature during dives',
+			icon: '/images/gear-icons/hood.svg',
+			position: { x: 62, y: 3 },
+			labelPosition: 'right'
+		},
+		{
 			id: 'mask',
 			title: 'MASK',
 			subtitle: 'LOW VOLUME',
@@ -37,7 +46,7 @@
 			title: 'EXPOSURE SUIT',
 			subtitle: 'Wet / Dry',
 			description: 'Thermal protection suited to the dive environment. Wet suits for warm water, dry suits for cold water diving.',
-			icon: '/images/gear-icons/mask.svg',
+			icon: '/images/gear-icons/drysuit.svg',
 			position: { x: 71, y: 26 },
 			labelPosition: 'right'
 		},
