@@ -1,4 +1,6 @@
 <script lang="ts">
+	import HotspotPopup from './HotspotPopup.svelte';
+
 	let activeHotspot: string | null = null;
 
 	interface GearItem {
@@ -115,20 +117,15 @@
 			</button>
 
 			{#if activeHotspot === item.id}
-				<div
-					class="gear-label {item.labelPosition}"
-					style="--x: {item.position.x}%; --y: {item.position.y}%;"
-				>
-					<div class="label-connector"></div>
-					<div class="label-content">
-						<div class="label-icon">{item.icon}</div>
-						<div class="label-text">
-							<h3 class="label-title">{item.title}</h3>
-							<p class="label-subtitle">{item.subtitle}</p>
-							<p class="label-description">{item.description}</p>
-						</div>
-					</div>
-				</div>
+				<HotspotPopup
+					icon={item.icon}
+					title={item.title}
+					subtitle={item.subtitle}
+					description={item.description}
+					side={item.labelPosition}
+					x={item.position.x}
+					y={item.position.y}
+				/>
 			{/if}
 		{/each}
 	</div>
@@ -243,128 +240,6 @@
 		}
 	}
 
-	/* Gear Label */
-	.gear-label {
-		position: absolute;
-		z-index: 20;
-		pointer-events: none;
-		animation: labelSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-	}
-
-	.gear-label.left {
-		right: calc(100% - var(--x));
-		top: var(--y);
-		transform: translateY(-50%);
-		padding-right: 24px;
-	}
-
-	.gear-label.right {
-		left: var(--x);
-		top: var(--y);
-		transform: translateY(-50%);
-		padding-left: 24px;
-	}
-
-	@keyframes labelSlideIn {
-		from {
-			opacity: 0;
-			transform: translateY(-50%) translateX(-16px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(-50%) translateX(0);
-		}
-	}
-
-	.gear-label.right {
-		animation-name: labelSlideInRight;
-	}
-
-	@keyframes labelSlideInRight {
-		from {
-			opacity: 0;
-			transform: translateY(-50%) translateX(16px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(-50%) translateX(0);
-		}
-	}
-
-	.label-connector {
-		position: absolute;
-		top: 50%;
-		height: 1px;
-		background: linear-gradient(90deg, transparent, rgba(0, 162, 255, 0.6), rgba(0, 162, 255, 0.6), transparent);
-	}
-
-	.gear-label.left .label-connector {
-		right: 0;
-		width: 24px;
-	}
-
-	.gear-label.right .label-connector {
-		left: 0;
-		width: 24px;
-	}
-
-	.label-content {
-		display: flex;
-		gap: 12px;
-		align-items: flex-start;
-		background: rgba(0, 0, 0, 0.85);
-		backdrop-filter: blur(12px);
-		border: 1px solid rgba(0, 162, 255, 0.3);
-		border-radius: 8px;
-		padding: 16px;
-		max-width: 320px;
-		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-		pointer-events: auto;
-		cursor: default;
-		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.label-content:hover {
-		background: rgba(20, 20, 20, 0.95);
-		border-color: rgba(0, 162, 255, 0.6);
-		box-shadow: 0 8px 32px rgba(0, 162, 255, 0.2);
-	}
-
-	.label-icon {
-		font-size: 32px;
-		line-height: 1;
-		flex-shrink: 0;
-	}
-
-	.label-text {
-		flex: 1;
-	}
-
-	.label-title {
-		font-size: 16px;
-		font-weight: 700;
-		color: rgba(0, 162, 255, 1);
-		margin: 0 0 4px 0;
-		letter-spacing: 0.5px;
-	}
-
-	.label-subtitle {
-		font-size: 11px;
-		font-weight: 600;
-		color: rgba(255, 255, 255, 0.6);
-		margin: 0 0 8px 0;
-		letter-spacing: 1px;
-		text-transform: uppercase;
-	}
-
-	.label-description {
-		font-size: 13px;
-		line-height: 1.5;
-		color: rgba(255, 255, 255, 0.75);
-		margin: 0;
-		font-weight: 400;
-	}
-
 	@media (max-width: 768px) {
 		.gear-diagram-container {
 			padding: 40px 20px 40px 5%;
@@ -377,29 +252,6 @@
 		.hotspot-icon {
 			font-size: 14px;
 			left: calc(100% + 6px);
-		}
-
-		.label-content {
-			max-width: 240px;
-			padding: 12px;
-			gap: 10px;
-		}
-
-		.label-icon {
-			font-size: 24px;
-		}
-
-		.label-title {
-			font-size: 14px;
-		}
-
-		.label-subtitle {
-			font-size: 10px;
-			margin-bottom: 6px;
-		}
-
-		.label-description {
-			font-size: 12px;
 		}
 	}
 </style>
