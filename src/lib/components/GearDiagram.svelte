@@ -155,7 +155,8 @@
 		width: 100%;
 		height: 100%;
 		object-fit: contain;
-		opacity: 0.85;
+		opacity: 1;
+		filter: brightness(0) invert(1);
 	}
 
 	/* Hotspot Button */
