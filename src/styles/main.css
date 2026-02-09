@@ -2494,9 +2494,12 @@ button:focus-visible {
 
 /* Training View Responsive */
 @media (max-width: 768px) {
-	/* Fix training view on mobile */
-	.mobile-view.training-active {
+	/* Fix training and gear views on mobile */
+	.mobile-view.training-active,
+	.mobile-view.gear-active {
 		overflow-y: auto !important;
+		height: auto !important;
+		min-height: 100vh;
 	}
 
 	.mobile-view .split-section.left.expanded,

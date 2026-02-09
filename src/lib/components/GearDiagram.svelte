@@ -20,7 +20,7 @@
 			subtitle: 'LOW VOLUME',
 			description: 'Any low volume mask with a single or dual lense profile permitting for minimal use of gas to clear it out',
 			icon: '/images/gear-icons/mask.svg',
-			position: { x: 38, y: 8 },
+			position: { x: 29, y: 8 },
 			labelPosition: 'left'
 		},
 		{
@@ -29,7 +29,7 @@
 			subtitle: 'Backup & Primary',
 			description: 'A secondary regulator on a bungee necklace to be reachable and used as backup. Primary connected via 1.5-2m hose.',
 			icon: '/images/gear-icons/regulator.svg',
-			position: { x: 65, y: 16 },
+			position: { x: 71, y: 16 },
 			labelPosition: 'right'
 		},
 		{
@@ -38,7 +38,7 @@
 			subtitle: 'Wet / Dry',
 			description: 'Thermal protection suited to the dive environment. Wet suits for warm water, dry suits for cold water diving.',
 			icon: '/images/gear-icons/mask.svg',
-			position: { x: 67, y: 24 },
+			position: { x: 71, y: 26 },
 			labelPosition: 'right'
 		},
 		{
@@ -47,7 +47,7 @@
 			subtitle: 'Buoyancy Compensator',
 			description: 'Doughnut shaped wings are used for different configurations and lift capacities',
 			icon: '/images/gear-icons/wing.svg',
-			position: { x: 33, y: 35 },
+			position: { x: 29, y: 32 },
 			labelPosition: 'left'
 		},
 		{
@@ -56,7 +56,7 @@
 			subtitle: 'Submersible Pressure Gauge',
 			description: 'Submersible pressure gauges big in size, clear and can come in Imperial or Metric formats',
 			icon: '/images/gear-icons/gauge.svg',
-			position: { x: 66, y: 42 },
+			position: { x: 71, y: 40 },
 			labelPosition: 'right'
 		},
 		{
@@ -65,7 +65,7 @@
 			subtitle: 'GAUGE or DIVE COMPUTER',
 			description: 'Whether a depth gauge or dive computer, it is an essential tool to give the diver the ability to read the parameters of the dive',
 			icon: '/images/gear-icons/dive-computer.svg',
-			position: { x: 33, y: 52 },
+			position: { x: 29, y: 48 },
 			labelPosition: 'left'
 		},
 		{
@@ -74,7 +74,7 @@
 			subtitle: 'MAGNETIC OR DIGITAL',
 			description: 'Any type of magnetic or digital compass, used for underwater navigation & bearing allocation. Some dive computers have a digital compass embedded.',
 			icon: '/images/gear-icons/compass.svg',
-			position: { x: 65, y: 57 },
+			position: { x: 71, y: 53 },
 			labelPosition: 'right'
 		},
 		{
@@ -83,7 +83,7 @@
 			subtitle: 'Storage & Tools',
 			description: 'Pockets and accessories for carrying essential tools, slates, reels, and other dive accessories',
 			icon: '/images/gear-icons/compass.svg',
-			position: { x: 64, y: 69 },
+			position: { x: 71, y: 67 },
 			labelPosition: 'right'
 		},
 		{
@@ -92,7 +92,7 @@
 			subtitle: 'RIGID RUBBER',
 			description: 'Rigid rubber compound fins facilitating finning technics, while minimizing effort. Heel springs for ease of use, wide stiff blade for better backward frog kick control',
 			icon: '/images/gear-icons/fins.svg',
-			position: { x: 42, y: 92 },
+			position: { x: 29, y: 92 },
 			labelPosition: 'left'
 		}
 	];
@@ -233,13 +233,14 @@
 
 	@media (max-width: 768px) {
 		.gear-diagram-container {
-			padding: 40px 0 100px 0;
+			padding: 20px 0 160px 0;
 			justify-content: center;
+			overflow: visible;
 		}
 
 		.diagram-wrapper {
-			width: 85vw;
-			max-width: 400px;
+			width: 70vw;
+			max-width: 320px;
 		}
 	}
 </style>
