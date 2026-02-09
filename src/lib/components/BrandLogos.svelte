@@ -9,136 +9,113 @@
 	];
 </script>
 
-<div class="brands-row">
-	{#each brands as brand, i}
-		<div class="brand-item" style="--i: {i}">
-			<div class="brand-line"></div>
-			<img src="/images/brands/{brand.file}" alt={brand.name} class={brand.name === 'SUEX' ? 'suex' : ''} />
-			<span class="brand-name">{brand.name}</span>
-		</div>
-	{/each}
+<div class="brands-strip">
+	<div class="brands-line"></div>
+	<div class="brands-items">
+		{#each brands as brand, i}
+			<div class="brand-cell" style="--i: {i}">
+				<img src="/images/brands/{brand.file}" alt={brand.name} class={brand.name === 'SUEX' ? 'suex' : ''} />
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style>
-	.brands-row {
-		display: flex;
-		align-items: center;
-		justify-content: flex-start;
-		gap: 0;
-		padding: 20px 0;
+	.brands-strip {
+		position: relative;
+		padding: 24px 0 16px;
 		width: 100%;
 	}
 
-	@keyframes brandReveal {
+	/* Animated top line that sweeps across */
+	.brands-line {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 1px;
+		width: 0;
+		background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+		animation: lineSweep 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+	}
+
+	@keyframes lineSweep {
+		0% { width: 0; }
+		100% { width: 100%; }
+	}
+
+	.brands-items {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 40px;
+	}
+
+	@keyframes slideIn {
 		0% {
 			opacity: 0;
-			transform: scale(0.85);
-			filter: blur(4px);
+			transform: translateX(-16px);
 		}
 		100% {
 			opacity: 1;
-			transform: scale(1);
-			filter: blur(0);
+			transform: translateX(0);
 		}
 	}
 
-	@keyframes lineGrow {
-		0% { height: 0; opacity: 0; }
-		100% { height: 24px; opacity: 0.15; }
-	}
-
-	.brand-item {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		flex: 1;
-		padding: 12px 8px;
+	.brand-cell {
 		opacity: 0;
-		animation: brandReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-		animation-delay: calc(0.4s + var(--i) * 0.1s);
-		cursor: default;
+		animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		animation-delay: calc(0.5s + var(--i) * 0.07s);
 		position: relative;
+		padding: 8px 0;
 	}
 
-	.brand-line {
+	.brand-cell::after {
+		content: '';
 		position: absolute;
-		right: 0;
-		top: 50%;
-		transform: translateY(-50%);
-		width: 1px;
-		height: 0;
-		background: white;
-		opacity: 0;
-		animation: lineGrow 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-		animation-delay: calc(0.7s + var(--i) * 0.1s);
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0;
+		height: 1px;
+		background: rgba(255,255,255,0.4);
+		transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	.brand-item:last-child .brand-line {
-		display: none;
+	.brand-cell:hover::after {
+		width: 100%;
 	}
 
-	.brand-item img {
-		height: 36px;
+	.brand-cell img {
+		height: 32px;
 		width: auto;
-		max-width: none;
 		object-fit: contain;
 		filter: invert(1) brightness(1.1);
-		opacity: 0.5;
-		transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+		opacity: 0.4;
+		transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	.brand-item img.suex {
-		height: 18px;
+	.brand-cell img.suex {
+		height: 16px;
 	}
 
-	.brand-item:hover img {
-		opacity: 1;
-		transform: scale(1.08);
-	}
-
-	.brand-name {
-		font-size: 8px;
-		letter-spacing: 2px;
-		text-transform: uppercase;
-		color: white;
-		opacity: 0;
-		margin-top: 8px;
-		font-weight: 300;
-		transition: opacity 0.3s ease;
-	}
-
-	.brand-item:hover .brand-name {
-		opacity: 0.5;
+	.brand-cell:hover img {
+		opacity: 0.9;
+		transform: translateY(-2px);
 	}
 
 	@media (max-width: 768px) {
-		.brands-row {
+		.brands-items {
 			flex-wrap: wrap;
 			justify-content: center;
-			gap: 0;
+			gap: 20px 28px;
 		}
 
-		.brand-item {
-			flex: 0 0 33.33%;
-			padding: 10px 4px;
+		.brand-cell img {
+			height: 24px;
 		}
 
-		.brand-line {
-			display: none;
-		}
-
-		.brand-item img {
-			height: 28px;
-		}
-
-		.brand-item img.suex {
-			height: 14px;
-		}
-
-		.brand-name {
-			font-size: 7px;
-			margin-top: 6px;
+		.brand-cell img.suex {
+			height: 12px;
 		}
 	}
 </style>
