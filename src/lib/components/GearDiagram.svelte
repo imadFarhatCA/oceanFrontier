@@ -56,7 +56,7 @@
 			subtitle: 'Submersible Pressure Gauge',
 			description: 'Submersible pressure gauges big in size, clear and can come in Imperial or Metric formats',
 			icon: '/images/gear-icons/gauge.svg',
-			position: { x: 72, y: 40 },
+			position: { x: 70, y: 42 },
 			labelPosition: 'right'
 		},
 		{
