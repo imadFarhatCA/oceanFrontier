@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let icon: string;
 	export let title: string;
@@ -10,6 +10,8 @@
 	const dispatch = createEventDispatcher();
 
 	let productsGrid: HTMLDivElement;
+	let currentPage = 0;
+	let totalPages = 0;
 
 	function close() {
 		dispatch('close');
@@ -19,16 +21,42 @@
 		if (e.target === e.currentTarget) close();
 	}
 
-	function scrollCarousel(direction: 'prev' | 'next') {
+	function updatePagination() {
 		if (!productsGrid) return;
 		const cardWidth = productsGrid.firstElementChild
 			? (productsGrid.firstElementChild as HTMLElement).offsetWidth + 12
 			: 150;
+		const visibleWidth = productsGrid.clientWidth;
+		const totalWidth = productsGrid.scrollWidth;
+		totalPages = Math.ceil(totalWidth / visibleWidth);
+		currentPage = Math.round(productsGrid.scrollLeft / visibleWidth);
+	}
+
+	function scrollCarousel(direction: 'prev' | 'next') {
+		if (!productsGrid) return;
+		const visibleWidth = productsGrid.clientWidth;
 		productsGrid.scrollBy({
-			left: direction === 'next' ? cardWidth : -cardWidth,
+			left: direction === 'next' ? visibleWidth : -visibleWidth,
 			behavior: 'smooth'
 		});
 	}
+
+	function goToPage(page: number) {
+		if (!productsGrid) return;
+		const visibleWidth = productsGrid.clientWidth;
+		productsGrid.scrollTo({
+			left: page * visibleWidth,
+			behavior: 'smooth'
+		});
+	}
+
+	onMount(() => {
+		if (productsGrid) {
+			updatePagination();
+			productsGrid.addEventListener('scroll', updatePagination);
+			return () => productsGrid?.removeEventListener('scroll', updatePagination);
+		}
+	});
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -44,10 +72,8 @@
 
 		<div class="modal-header">
 			<img class="modal-icon" src={icon} alt={title} />
-			<div class="modal-info">
-				<h3 class="modal-title">{title}</h3>
-				<p class="modal-subtitle">{subtitle}</p>
-			</div>
+			<h3 class="modal-title">{title}</h3>
+			<p class="modal-subtitle">{subtitle}</p>
 		</div>
 
 		<p class="modal-description">{description}</p>
@@ -76,6 +102,19 @@
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
 					</button>
 				</div>
+
+				{#if totalPages > 1}
+					<div class="pagination-dots">
+						{#each Array(totalPages) as _, i}
+							<button
+								class="dot"
+								class:active={i === currentPage}
+								on:click={() => goToPage(i)}
+								aria-label="Go to page {i + 1}"
+							></button>
+						{/each}
+					</div>
+				{/if}
 			</div>
 		{/if}
 	</div>
@@ -109,7 +148,7 @@
 		background: rgba(42, 42, 42, 0.98);
 		backdrop-filter: blur(20px);
 		border-radius: 24px;
-		padding: 44px 36px;
+		padding: 48px 36px;
 		max-width: 500px;
 		width: 100%;
 		position: relative;
@@ -118,7 +157,8 @@
 			0 8px 24px rgba(0, 0, 0, 0.2),
 			inset 0 1px 0 rgba(255, 255, 255, 0.1);
 		animation: modalSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-		max-height: 85vh;
+		max-height: 90vh;
+		min-height: 420px;
 		overflow-y: auto;
 		scrollbar-width: none;
 	}
@@ -166,30 +206,29 @@
 		transform: scale(1.1) rotate(90deg);
 	}
 
-	/* Header */
+	/* Header — centered vertically */
 	.modal-header {
 		display: flex;
-		gap: 16px;
+		flex-direction: column;
 		align-items: center;
-		margin-bottom: 16px;
+		text-align: center;
+		margin-bottom: 20px;
+		gap: 8px;
 	}
 
 	.modal-icon {
-		width: 40px;
-		height: 40px;
+		width: 48px;
+		height: 48px;
 		flex-shrink: 0;
 		filter: invert(1);
-	}
-
-	.modal-info {
-		flex: 1;
+		margin-bottom: 4px;
 	}
 
 	.modal-title {
-		font-size: 20px;
+		font-size: 22px;
 		font-weight: 700;
 		color: rgba(0, 162, 255, 1);
-		margin: 0 0 4px 0;
+		margin: 0;
 		letter-spacing: 0.5px;
 	}
 
@@ -202,18 +241,19 @@
 		text-transform: uppercase;
 	}
 
-	/* Description */
+	/* Description — centered */
 	.modal-description {
 		font-size: 14px;
 		line-height: 1.6;
 		color: rgba(255, 255, 255, 0.7);
-		margin: 0 0 24px 0;
+		margin: 0 0 28px 0;
+		text-align: center;
 	}
 
 	/* Carousel section */
 	.carousel-section {
 		border-top: 1px solid rgba(255, 255, 255, 0.08);
-		padding-top: 20px;
+		padding-top: 24px;
 	}
 
 	.carousel-wrapper {
@@ -264,36 +304,53 @@
 	.carousel-btn.prev { left: -16px; }
 	.carousel-btn.next { right: -16px; }
 
-	/* Product cards */
+	/* Product cards — CTA button style */
 	.product-card {
-		flex: 0 0 120px;
+		flex: 0 0 130px;
 		scroll-snap-align: start;
-		border-radius: 12px;
-		padding: 12px;
+		border-radius: 8px;
+		padding: 14px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 8px;
+		gap: 10px;
 		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 		cursor: default;
+		position: relative;
 	}
 
 	.product-card:hover {
-		transform: translateY(-3px);
+		transform: translateY(-4px);
 	}
 
-	/* Basic category — greyish */
+	/* Basic category — matching CTA style, light grey */
 	.product-card.basic {
-		background: rgba(180, 180, 180, 0.15);
-		border: 1px solid rgba(255, 255, 255, 0.06);
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+		background: rgba(200, 200, 200, 0.12);
+		border: 1px solid rgba(255, 255, 255, 0.08);
 	}
 
-	/* Technical category — black */
+	/* Technical category — matching CTA style, dark/black */
 	.product-card.technical {
-		background: rgba(20, 20, 20, 0.8);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		background: rgba(10, 10, 10, 0.85);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	/* Hover underline effect matching CTA */
+	.product-name::after {
+		content: '';
+		position: absolute;
+		bottom: 8px;
+		left: 50%;
+		transform: translateX(-50%) scaleX(0);
+		width: 30%;
+		height: 1px;
+		background: currentColor;
+		transition: transform 0.3s ease;
+		opacity: 0.8;
+	}
+
+	.product-card:hover .product-name::after {
+		transform: translateX(-50%) scaleX(1);
 	}
 
 	.product-image-placeholder {
@@ -316,23 +373,54 @@
 
 	.product-name {
 		font-size: 11px;
-		font-weight: 500;
-		color: rgba(255, 255, 255, 0.7);
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.8);
 		text-align: center;
 		line-height: 1.3;
+		letter-spacing: 0.3px;
+		position: relative;
+	}
+
+	/* Instagram-style pagination dots */
+	.pagination-dots {
+		display: flex;
+		justify-content: center;
+		gap: 8px;
+		margin-top: 16px;
+	}
+
+	.dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		border: none;
+		background: rgba(255, 255, 255, 0.25);
+		cursor: pointer;
+		padding: 0;
+		transition: all 0.3s ease;
+	}
+
+	.dot.active {
+		background: rgba(0, 162, 255, 1);
+		transform: scale(1.2);
+	}
+
+	.dot:hover:not(.active) {
+		background: rgba(255, 255, 255, 0.5);
 	}
 
 	@media (max-width: 768px) {
 		.modal-card {
-			padding: 32px 24px;
+			padding: 36px 24px;
 			max-width: 92vw;
 			border-radius: 20px;
-			max-height: 80vh;
+			max-height: 85vh;
+			min-height: 360px;
 		}
 
 		.modal-icon {
-			width: 32px;
-			height: 32px;
+			width: 40px;
+			height: 40px;
 		}
 
 		.modal-title {
@@ -344,7 +432,7 @@
 		}
 
 		.product-card {
-			flex: 0 0 100px;
+			flex: 0 0 110px;
 			padding: 10px;
 		}
 

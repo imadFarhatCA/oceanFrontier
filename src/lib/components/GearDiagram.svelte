@@ -267,8 +267,8 @@
 	}
 
 	.hotspot:hover .hotspot-dot {
-		transform: translate(-50%, -50%) scale(1.5);
-		box-shadow: 0 2px 12px rgba(0, 162, 255, 0.6);
+		transform: translate(-50%, -50%) scale(2);
+		box-shadow: 0 2px 16px rgba(0, 162, 255, 0.7);
 	}
 
 	.hotspot.active .hotspot-dot {
