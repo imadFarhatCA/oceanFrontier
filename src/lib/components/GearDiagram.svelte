@@ -3,14 +3,21 @@
 
 	let activeHotspot: string | null = null;
 
+	interface Product {
+		name: string;
+		image: string;
+		category: 'basic' | 'technical';
+	}
+
 	interface GearItem {
 		id: string;
 		title: string;
 		subtitle: string;
 		description: string;
 		icon: string;
-		position: { x: number; y: number }; // percentage positions
+		position: { x: number; y: number };
 		labelPosition: 'left' | 'right';
+		products: Product[];
 	}
 
 	const gearItems: GearItem[] = [
@@ -21,7 +28,12 @@
 			description: 'A neoprene hood to protect the head from cold water exposure and maintain core body temperature during dives',
 			icon: '/images/gear-icons/hood.svg',
 			position: { x: 62, y: 3 },
-			labelPosition: 'right'
+			labelPosition: 'right',
+			products: [
+				{ name: 'Waterproof H1 5/7mm', image: '', category: 'basic' },
+				{ name: 'Fourth Element 5mm', image: '', category: 'basic' },
+				{ name: 'Santi Flex 2.0', image: '', category: 'technical' }
+			]
 		},
 		{
 			id: 'mask',
@@ -30,7 +42,13 @@
 			description: 'Any low volume mask with a single or dual lense profile permitting for minimal use of gas to clear it out',
 			icon: '/images/gear-icons/mask.svg',
 			position: { x: 35, y: 8 },
-			labelPosition: 'left'
+			labelPosition: 'left',
+			products: [
+				{ name: 'Omer Alien', image: '', category: 'basic' },
+				{ name: 'Cressi Nano', image: '', category: 'basic' },
+				{ name: 'OMS Tattoo', image: '', category: 'technical' },
+				{ name: 'Halcyon H-View', image: '', category: 'technical' }
+			]
 		},
 		{
 			id: 'regulators',
@@ -39,7 +57,13 @@
 			description: 'A secondary regulator on a bungee necklace to be reachable and used as backup. Primary connected via 1.5-2m hose.',
 			icon: '/images/gear-icons/regulator.svg',
 			position: { x: 68, y: 16 },
-			labelPosition: 'right'
+			labelPosition: 'right',
+			products: [
+				{ name: 'Apeks XTX50', image: '', category: 'basic' },
+				{ name: 'Hollis 150LX', image: '', category: 'basic' },
+				{ name: 'Halcyon H-75P', image: '', category: 'technical' },
+				{ name: 'Apeks XTX200', image: '', category: 'technical' }
+			]
 		},
 		{
 			id: 'suit',
@@ -48,7 +72,13 @@
 			description: 'Thermal protection suited to the dive environment. Wet suits for warm water, dry suits for cold water diving.',
 			icon: '/images/gear-icons/drysuit.svg',
 			position: { x: 71, y: 26 },
-			labelPosition: 'right'
+			labelPosition: 'right',
+			products: [
+				{ name: 'Mares Rover 5mm', image: '', category: 'basic' },
+				{ name: 'Waterproof W4 5mm', image: '', category: 'basic' },
+				{ name: 'Santi E.Lite', image: '', category: 'technical' },
+				{ name: 'DUI CF200X', image: '', category: 'technical' }
+			]
 		},
 		{
 			id: 'wing',
@@ -57,7 +87,13 @@
 			description: 'Doughnut shaped wings are used for different configurations and lift capacities',
 			icon: '/images/gear-icons/wing.svg',
 			position: { x: 29, y: 31 },
-			labelPosition: 'left'
+			labelPosition: 'left',
+			products: [
+				{ name: 'OMS SS Backplate', image: '', category: 'basic' },
+				{ name: 'Halcyon Evolve 40', image: '', category: 'basic' },
+				{ name: 'Halcyon Eclipse 40', image: '', category: 'technical' },
+				{ name: 'OMS Double Wing 60lb', image: '', category: 'technical' }
+			]
 		},
 		{
 			id: 'gauge',
@@ -66,7 +102,12 @@
 			description: 'Submersible pressure gauges big in size, clear and can come in Imperial or Metric formats',
 			icon: '/images/gear-icons/gauge.svg',
 			position: { x: 64, y: 46 },
-			labelPosition: 'right'
+			labelPosition: 'right',
+			products: [
+				{ name: 'OMS SPG', image: '', category: 'basic' },
+				{ name: 'Halcyon Master SPG', image: '', category: 'technical' },
+				{ name: 'Suunto SM-36', image: '', category: 'basic' }
+			]
 		},
 		{
 			id: 'computer',
@@ -75,7 +116,13 @@
 			description: 'Whether a depth gauge or dive computer, it is an essential tool to give the diver the ability to read the parameters of the dive',
 			icon: '/images/gear-icons/dive-computer.svg',
 			position: { x: 24, y: 48 },
-			labelPosition: 'left'
+			labelPosition: 'left',
+			products: [
+				{ name: 'Shearwater Peregrine', image: '', category: 'basic' },
+				{ name: 'Garmin Descent Mk3', image: '', category: 'basic' },
+				{ name: 'Shearwater Perdix 2', image: '', category: 'technical' },
+				{ name: 'Shearwater Petrel 3', image: '', category: 'technical' }
+			]
 		},
 		{
 			id: 'compass',
@@ -84,7 +131,12 @@
 			description: 'Any type of magnetic or digital compass, used for underwater navigation & bearing allocation. Some dive computers have a digital compass embedded.',
 			icon: '/images/gear-icons/compass.svg',
 			position: { x: 75, y: 48 },
-			labelPosition: 'right'
+			labelPosition: 'right',
+			products: [
+				{ name: 'Suunto SK-8', image: '', category: 'basic' },
+				{ name: 'OMS Compass', image: '', category: 'basic' },
+				{ name: 'Halcyon Compass', image: '', category: 'technical' }
+			]
 		},
 		{
 			id: 'pockets',
@@ -93,7 +145,13 @@
 			description: 'Pockets and accessories for carrying essential tools, slates, reels, and other dive accessories',
 			icon: '/images/gear-icons/accessories.svg',
 			position: { x: 69, y: 63 },
-			labelPosition: 'right'
+			labelPosition: 'right',
+			products: [
+				{ name: 'OMS Utility Pocket', image: '', category: 'basic' },
+				{ name: 'Halcyon Bellows Pocket', image: '', category: 'technical' },
+				{ name: 'OMS Safety Reel', image: '', category: 'technical' },
+				{ name: 'Halcyon Slate', image: '', category: 'technical' }
+			]
 		},
 		{
 			id: 'fins',
@@ -102,7 +160,13 @@
 			description: 'Rigid rubber compound fins facilitating finning technics, while minimizing effort. Heel springs for ease of use, wide stiff blade for better backward frog kick control',
 			icon: '/images/gear-icons/fins.svg',
 			position: { x: 32, y: 92 },
-			labelPosition: 'left'
+			labelPosition: 'left',
+			products: [
+				{ name: 'OMS Slipstream', image: '', category: 'basic' },
+				{ name: 'Hollis F1', image: '', category: 'basic' },
+				{ name: 'Halcyon Flextreme', image: '', category: 'technical' },
+				{ name: 'Deep6 Eddy Fin', image: '', category: 'technical' }
+			]
 		}
 	];
 
@@ -133,15 +197,17 @@
 				<span class="hotspot-dot"></span>
 			</button>
 
+			{/each}
+
+		{#each gearItems as item}
 			{#if activeHotspot === item.id}
 				<HotspotPopup
 					icon={item.icon}
 					title={item.title}
 					subtitle={item.subtitle}
 					description={item.description}
-					side={item.labelPosition}
-					x={item.position.x}
-					y={item.position.y}
+					products={item.products}
+					on:close={() => activeHotspot = null}
 				/>
 			{/if}
 		{/each}
@@ -200,10 +266,20 @@
 		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
+	.hotspot:hover .hotspot-dot {
+		transform: translate(-50%, -50%) scale(1.5);
+		box-shadow: 0 2px 12px rgba(0, 162, 255, 0.6);
+	}
+
 	.hotspot.active .hotspot-dot {
 		background: white;
 		border-color: rgba(0, 162, 255, 1);
 		transform: translate(-50%, -50%) scale(1.3);
+	}
+
+	.hotspot:hover .hotspot-pulse {
+		animation: none;
+		opacity: 0;
 	}
 
 .hotspot-pulse {

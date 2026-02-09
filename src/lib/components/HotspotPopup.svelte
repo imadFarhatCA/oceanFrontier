@@ -1,176 +1,364 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
+
 	export let icon: string;
 	export let title: string;
 	export let subtitle: string;
 	export let description: string;
-	export let side: 'left' | 'right' = 'right';
-	export let x: number;
-	export let y: number;
+	export let products: { name: string; image: string; category: 'basic' | 'technical' }[] = [];
+
+	const dispatch = createEventDispatcher();
+
+	let productsGrid: HTMLDivElement;
+
+	function close() {
+		dispatch('close');
+	}
+
+	function handleOverlayClick(e: MouseEvent) {
+		if (e.target === e.currentTarget) close();
+	}
+
+	function scrollCarousel(direction: 'prev' | 'next') {
+		if (!productsGrid) return;
+		const cardWidth = productsGrid.firstElementChild
+			? (productsGrid.firstElementChild as HTMLElement).offsetWidth + 12
+			: 150;
+		productsGrid.scrollBy({
+			left: direction === 'next' ? cardWidth : -cardWidth,
+			behavior: 'smooth'
+		});
+	}
 </script>
 
-<div
-	class="hotspot-popup {side}"
-	style="--x: {x}%; --y: {y}%;"
->
-	<div class="popup-connector"></div>
-	<div class="popup-content">
-		<img class="popup-icon" src={icon} alt={title} />
-		<div class="popup-text">
-			<h3 class="popup-title">{title}</h3>
-			<p class="popup-subtitle">{subtitle}</p>
-			<p class="popup-description">{description}</p>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div class="modal-overlay" on:click={handleOverlayClick}>
+	<div class="modal-card">
+		<button class="close-button" on:click={close} aria-label="Close">
+			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<line x1="18" y1="6" x2="6" y2="18"></line>
+				<line x1="6" y1="6" x2="18" y2="18"></line>
+			</svg>
+		</button>
+
+		<div class="modal-header">
+			<img class="modal-icon" src={icon} alt={title} />
+			<div class="modal-info">
+				<h3 class="modal-title">{title}</h3>
+				<p class="modal-subtitle">{subtitle}</p>
+			</div>
 		</div>
+
+		<p class="modal-description">{description}</p>
+
+		{#if products.length > 0}
+			<div class="carousel-section">
+				<div class="carousel-wrapper">
+					<button class="carousel-btn prev" on:click={() => scrollCarousel('prev')} aria-label="Previous">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+					</button>
+					<div class="carousel-grid" bind:this={productsGrid}>
+						{#each products as product, i}
+							<div class="product-card {product.category}" style="--idx: {i}">
+								<div class="product-image-placeholder">
+									{#if product.image}
+										<img src={product.image} alt={product.name} />
+									{:else}
+										<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+									{/if}
+								</div>
+								<span class="product-name">{product.name}</span>
+							</div>
+						{/each}
+					</div>
+					<button class="carousel-btn next" on:click={() => scrollCarousel('next')} aria-label="Next">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+					</button>
+				</div>
+			</div>
+		{/if}
 	</div>
 </div>
 
 <style>
-	.hotspot-popup {
-		position: absolute;
-		z-index: 20;
-		pointer-events: none;
-		animation: popupSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-	}
-
-	.hotspot-popup.left {
-		right: calc(100% - var(--x));
-		top: var(--y);
-		transform: translateY(-50%);
-		padding-right: 24px;
-	}
-
-	.hotspot-popup.right {
-		left: var(--x);
-		top: var(--y);
-		transform: translateY(-50%);
-		padding-left: 24px;
-		animation-name: popupSlideInRight;
-	}
-
-	@keyframes popupSlideIn {
-		from {
-			opacity: 0;
-			transform: translateY(-50%) translateX(-16px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(-50%) translateX(0);
-		}
-	}
-
-	@keyframes popupSlideInRight {
-		from {
-			opacity: 0;
-			transform: translateY(-50%) translateX(16px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(-50%) translateX(0);
-		}
-	}
-
-	/* Connector line */
-	.popup-connector {
-		position: absolute;
-		top: 50%;
-		height: 1px;
-		background: linear-gradient(90deg, transparent, rgba(0, 162, 255, 0.6), rgba(0, 162, 255, 0.6), transparent);
-	}
-
-	.hotspot-popup.left .popup-connector {
-		right: 0;
-		width: 24px;
-	}
-
-	.hotspot-popup.right .popup-connector {
+	/* Full-screen overlay */
+	.modal-overlay {
+		position: fixed;
+		top: 0;
 		left: 0;
-		width: 24px;
-	}
-
-	/* Card */
-	.popup-content {
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.7);
+		backdrop-filter: blur(4px);
+		z-index: 500;
 		display: flex;
-		gap: 12px;
-		align-items: flex-start;
-		background: rgba(30, 40, 50, 0.65);
-		backdrop-filter: blur(12px);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		border-radius: 8px;
-		padding: 16px;
-		max-width: 320px;
-		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-		pointer-events: auto;
-		cursor: default;
+		align-items: center;
+		justify-content: center;
+		animation: overlayFadeIn 0.3s ease forwards;
+		padding: 20px;
+	}
+
+	@keyframes overlayFadeIn {
+		from { opacity: 0; }
+		to { opacity: 1; }
+	}
+
+	/* Modal card */
+	.modal-card {
+		background: rgba(42, 42, 42, 0.98);
+		backdrop-filter: blur(20px);
+		border-radius: 24px;
+		padding: 44px 36px;
+		max-width: 500px;
+		width: 100%;
+		position: relative;
+		box-shadow:
+			0 20px 60px rgba(0, 0, 0, 0.3),
+			0 8px 24px rgba(0, 0, 0, 0.2),
+			inset 0 1px 0 rgba(255, 255, 255, 0.1);
+		animation: modalSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+		max-height: 85vh;
+		overflow-y: auto;
+		scrollbar-width: none;
+	}
+
+	.modal-card::-webkit-scrollbar {
+		display: none;
+	}
+
+	@keyframes modalSlideIn {
+		0% {
+			opacity: 0;
+			transform: scale(0.96);
+			filter: blur(4px);
+		}
+		60% { filter: blur(0); }
+		100% {
+			opacity: 1;
+			transform: scale(1);
+			filter: blur(0);
+		}
+	}
+
+	/* Close button */
+	.close-button {
+		position: absolute;
+		top: 16px;
+		right: 16px;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		border: none;
+		background: rgba(255, 255, 255, 0.08);
+		color: rgba(255, 255, 255, 0.6);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+		z-index: 10;
 	}
 
-	.popup-content:hover {
-		background: rgba(35, 45, 55, 0.75);
-		border-color: rgba(255, 255, 255, 0.12);
+	.close-button:hover {
+		background: rgba(255, 255, 255, 0.15);
+		color: white;
+		transform: scale(1.1) rotate(90deg);
 	}
 
-	.popup-icon {
-		width: 32px;
-		height: 32px;
+	/* Header */
+	.modal-header {
+		display: flex;
+		gap: 16px;
+		align-items: center;
+		margin-bottom: 16px;
+	}
+
+	.modal-icon {
+		width: 40px;
+		height: 40px;
 		flex-shrink: 0;
 		filter: invert(1);
 	}
 
-	.popup-text {
+	.modal-info {
 		flex: 1;
-		text-align: left;
 	}
 
-	.popup-title {
-		font-size: 16px;
+	.modal-title {
+		font-size: 20px;
 		font-weight: 700;
 		color: rgba(0, 162, 255, 1);
 		margin: 0 0 4px 0;
 		letter-spacing: 0.5px;
-		text-align: left;
 	}
 
-	.popup-subtitle {
+	.modal-subtitle {
 		font-size: 11px;
 		font-weight: 600;
-		color: rgba(255, 255, 255, 0.6);
-		margin: 0 0 8px 0;
+		color: rgba(255, 255, 255, 0.5);
+		margin: 0;
 		letter-spacing: 1px;
 		text-transform: uppercase;
-		text-align: left;
 	}
 
-	.popup-description {
-		font-size: 13px;
-		line-height: 1.5;
-		color: rgba(255, 255, 255, 0.75);
-		margin: 0;
-		font-weight: 400;
-		text-align: left;
+	/* Description */
+	.modal-description {
+		font-size: 14px;
+		line-height: 1.6;
+		color: rgba(255, 255, 255, 0.7);
+		margin: 0 0 24px 0;
+	}
+
+	/* Carousel section */
+	.carousel-section {
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+		padding-top: 20px;
+	}
+
+	.carousel-wrapper {
+		position: relative;
+	}
+
+	.carousel-grid {
+		display: flex;
+		gap: 12px;
+		overflow-x: auto;
+		scroll-behavior: smooth;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		scroll-snap-type: x mandatory;
+		padding: 4px 0;
+		mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+	}
+
+	.carousel-grid::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Carousel nav buttons */
+	.carousel-btn {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		background: rgba(255, 255, 255, 0.06);
+		color: rgba(255, 255, 255, 0.6);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 5;
+		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.carousel-btn:hover {
+		background: rgba(255, 255, 255, 0.15);
+		color: white;
+		transform: translateY(-50%) scale(1.1);
+	}
+
+	.carousel-btn.prev { left: -16px; }
+	.carousel-btn.next { right: -16px; }
+
+	/* Product cards */
+	.product-card {
+		flex: 0 0 120px;
+		scroll-snap-align: start;
+		border-radius: 12px;
+		padding: 12px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+		cursor: default;
+	}
+
+	.product-card:hover {
+		transform: translateY(-3px);
+	}
+
+	/* Basic category — greyish */
+	.product-card.basic {
+		background: rgba(180, 180, 180, 0.15);
+		border: 1px solid rgba(255, 255, 255, 0.06);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	}
+
+	/* Technical category — black */
+	.product-card.technical {
+		background: rgba(20, 20, 20, 0.8);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	}
+
+	.product-image-placeholder {
+		width: 80px;
+		height: 80px;
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.04);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: rgba(255, 255, 255, 0.2);
+		overflow: hidden;
+	}
+
+	.product-image-placeholder img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.product-name {
+		font-size: 11px;
+		font-weight: 500;
+		color: rgba(255, 255, 255, 0.7);
+		text-align: center;
+		line-height: 1.3;
 	}
 
 	@media (max-width: 768px) {
-		.popup-content {
-			max-width: 240px;
-			padding: 12px;
-			gap: 10px;
+		.modal-card {
+			padding: 32px 24px;
+			max-width: 92vw;
+			border-radius: 20px;
+			max-height: 80vh;
 		}
 
-		.popup-icon {
-			width: 24px;
-			height: 24px;
+		.modal-icon {
+			width: 32px;
+			height: 32px;
 		}
 
-		.popup-title {
-			font-size: 14px;
+		.modal-title {
+			font-size: 18px;
 		}
 
-		.popup-subtitle {
+		.modal-description {
+			font-size: 13px;
+		}
+
+		.product-card {
+			flex: 0 0 100px;
+			padding: 10px;
+		}
+
+		.product-image-placeholder {
+			width: 64px;
+			height: 64px;
+		}
+
+		.product-name {
 			font-size: 10px;
-			margin-bottom: 6px;
 		}
 
-		.popup-description {
-			font-size: 12px;
+		.carousel-btn {
+			display: none;
 		}
 	}
 </style>
