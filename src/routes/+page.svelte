@@ -895,6 +895,39 @@
 
 				<!-- Gear View Content -->
 				<div class="gear-content">
+					<!-- Gear Hero Section -->
+					<div class="gear-hero-section">
+						<div class="gear-hero-left">
+							<h2 class="gear-hero-title">We Only Sell You What We Personally Use</h2>
+							<p class="gear-hero-description">Our approach to Gear purchasing is a modular system that allows growth and adaptation to further and future developments. It is the most honest path into owning expensive and reliable diving gear to prevent unnecessary loss of funds, resources, and energy. Whether you want Basic, Technical or Underwater Content Creation equipment, I believe that we can help you make Sustainable Choices</p>
+						</div>
+						<div class="gear-hero-right">
+							<svg class="diver-silhouette" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" fill="none" stroke="currentColor" stroke-width="2">
+								<!-- Head -->
+								<ellipse cx="100" cy="35" rx="25" ry="30"/>
+								<!-- Neck -->
+								<line x1="100" y1="65" x2="100" y2="85"/>
+								<!-- Shoulders -->
+								<path d="M 70 95 Q 100 85 130 95"/>
+								<!-- Torso -->
+								<path d="M 75 100 L 75 200 Q 75 220 85 230"/>
+								<path d="M 125 100 L 125 200 Q 125 220 115 230"/>
+								<!-- Left Arm -->
+								<path d="M 70 100 L 55 140 L 45 190"/>
+								<path d="M 45 190 L 35 210"/>
+								<!-- Right Arm -->
+								<path d="M 130 100 L 145 140 L 155 190"/>
+								<path d="M 155 190 L 165 210"/>
+								<!-- Left Leg -->
+								<path d="M 85 230 L 80 300 L 75 380"/>
+								<ellipse cx="75" cy="390" rx="10" ry="8"/>
+								<!-- Right Leg -->
+								<path d="M 115 230 L 120 300 L 125 380"/>
+								<ellipse cx="125" cy="390" rx="10" ry="8"/>
+							</svg>
+						</div>
+					</div>
+
 					<!-- Filter Bar -->
 					<nav class="filter-bar">
 						<a href="#all" class="filter-link" class:active={activeGearFilter === 'all'} on:click|preventDefault|stopPropagation={() => activeGearFilter = 'all'}>ALL GEAR</a>
