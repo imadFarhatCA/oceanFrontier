@@ -7,69 +7,97 @@
 		{ name: 'JJCCR', file: 'jjccr.svg' },
 		{ name: 'SUEX', file: 'suex.svg' }
 	];
+
+	// Duplicate brands for seamless infinite scroll
+	const duplicatedBrands = [...brands, ...brands, ...brands];
 </script>
 
-<div class="brand-logos-strip">
-	{#each brands as brand}
-		<div class="brand-logo-item">
-			<img src="/images/brands/{brand.file}" alt={brand.name} />
-		</div>
-	{/each}
+<div class="carousel-container">
+	<div class="brand-logos-strip">
+		{#each duplicatedBrands as brand, i}
+			<div class="brand-logo-item">
+				<img src="/images/brands/{brand.file}" alt="{brand.name}-{i}" />
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style>
+	.carousel-container {
+		width: 100%;
+		overflow: hidden;
+		padding: 20px 0;
+		position: relative;
+	}
+
 	.brand-logos-strip {
 		display: flex;
 		align-items: center;
-		justify-content: flex-start;
-		gap: 48px;
-		padding: 20px 0;
-		flex-wrap: wrap;
+		gap: 60px;
+		animation: scroll 30s linear infinite;
+		will-change: transform;
+	}
+
+	@keyframes scroll {
+		0% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(calc(-100% / 3));
+		}
+	}
+
+	/* Pause animation on hover */
+	.carousel-container:hover .brand-logos-strip {
+		animation-play-state: paused;
 	}
 
 	.brand-logo-item {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		flex-shrink: 0;
 		opacity: 0.7;
-		transition: all 0.3s ease;
-		padding: 8px 12px;
-		border-bottom: 2px solid transparent;
-		min-width: 100px;
+		transition: opacity 0.3s ease;
+		height: 60px;
+		min-width: 120px;
 	}
 
 	.brand-logo-item:hover {
 		opacity: 1;
-		border-bottom-color: rgba(255, 255, 255, 0.4);
-		transform: translateY(-3px);
 	}
 
 	.brand-logo-item img {
-		height: 55px;
+		height: 50px;
 		width: auto;
-		max-width: 200px;
+		max-width: none;
 		object-fit: contain;
 		filter: invert(1) brightness(1.1);
 	}
 
-	/* Make SUEX logo larger to compensate for its square aspect ratio */
-	.brand-logo-item img[alt="SUEX"] {
-		height: 70px;
-		max-width: 220px;
+	/* SUEX logo - same height but can be wider */
+	.brand-logo-item img[alt^="SUEX"] {
+		height: 50px;
+		width: auto;
 	}
 
 	@media (max-width: 768px) {
 		.brand-logos-strip {
-			justify-content: center;
-			gap: 32px;
+			gap: 40px;
+			animation: scroll 20s linear infinite;
+		}
+
+		.brand-logo-item {
+			height: 50px;
+			min-width: 80px;
 		}
 
 		.brand-logo-item img {
-			height: 45px;
+			height: 40px;
 		}
 
-		.brand-logo-item img[alt="SUEX"] {
-			height: 58px;
+		.brand-logo-item img[alt^="SUEX"] {
+			height: 40px;
 		}
 	}
 </style>
