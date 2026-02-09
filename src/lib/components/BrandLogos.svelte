@@ -28,7 +28,6 @@
 		width: 100%;
 	}
 
-	/* Animated top line that sweeps across */
 	.brands-line {
 		position: relative;
 		height: 1px;
@@ -47,7 +46,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
-		gap: 40px;
+		gap: 24px;
 	}
 
 	@keyframes slideIn {
@@ -69,7 +68,7 @@
 		animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 		animation-delay: calc(0.5s + var(--i) * 0.07s);
 		position: relative;
-		padding: 8px 0;
+		padding: 8px 0 20px;
 	}
 
 	.brand-cell::after {
@@ -98,7 +97,7 @@
 	}
 
 	.brand-cell img.suex {
-		height: 16px;
+		height: 18px;
 	}
 
 	.brand-cell:hover img {
@@ -112,7 +111,11 @@
 		text-transform: uppercase;
 		color: white;
 		opacity: 0;
-		margin-top: 8px;
+		position: absolute;
+		bottom: 4px;
+		left: 50%;
+		transform: translateX(-50%);
+		white-space: nowrap;
 		font-weight: 300;
 		transition: opacity 0.3s ease;
 	}
@@ -124,8 +127,12 @@
 	@media (max-width: 768px) {
 		.brands-items {
 			flex-wrap: wrap;
-			justify-content: center;
-			gap: 20px 28px;
+			justify-content: flex-start;
+			gap: 16px 20px;
+		}
+
+		.brand-cell {
+			padding: 6px 0 18px;
 		}
 
 		.brand-cell img {
@@ -133,12 +140,12 @@
 		}
 
 		.brand-cell img.suex {
-			height: 12px;
+			height: 14px;
 		}
 
 		.brand-name {
 			font-size: 7px;
-			margin-top: 6px;
+			bottom: 2px;
 		}
 	}
 </style>
