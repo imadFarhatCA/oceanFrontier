@@ -65,7 +65,7 @@
 			subtitle: 'GAUGE or DIVE COMPUTER',
 			description: 'Whether a depth gauge or dive computer, it is an essential tool to give the diver the ability to read the parameters of the dive',
 			icon: '/images/gear-icons/dive-computer.svg',
-			position: { x: 28, y: 48 },
+			position: { x: 24, y: 48 },
 			labelPosition: 'left'
 		},
 		{
@@ -74,7 +74,7 @@
 			subtitle: 'MAGNETIC OR DIGITAL',
 			description: 'Any type of magnetic or digital compass, used for underwater navigation & bearing allocation. Some dive computers have a digital compass embedded.',
 			icon: '/images/gear-icons/compass.svg',
-			position: { x: 71, y: 48 },
+			position: { x: 75, y: 48 },
 			labelPosition: 'right'
 		},
 		{
