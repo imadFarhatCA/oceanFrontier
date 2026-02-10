@@ -3,7 +3,7 @@
   <defs>
     <style>
       .st0 {
-        stroke-width: 6px;
+        stroke-width: 3px;
       }
 
       .st0, .st1 {
@@ -13,7 +13,7 @@
       }
 
       .st1 {
-        stroke-width: 8px;
+        stroke-width: 4px;
       }
     </style>
   </defs>

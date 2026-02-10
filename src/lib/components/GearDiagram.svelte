@@ -31,8 +31,7 @@
 			position: { x: 62, y: 3 },
 			labelPosition: 'right',
 			products: [
-				{ name: 'Fourth Element 5mm', image: '', category: 'basic' },
-				{ name: 'Santi Flex 2.0', image: '', category: 'technical' }
+				{ name: 'YRVA Hood', image: '/images/gear-products/YRVA hoods.jpg', category: 'technical' }
 			],
 			brands: []
 		},
@@ -45,10 +44,8 @@
 			position: { x: 35, y: 8 },
 			labelPosition: 'left',
 			products: [
-				{ name: 'Omer Alien', image: '', category: 'basic' },
-				{ name: 'Cressi Nano', image: '', category: 'basic' },
-				{ name: 'OMS Tattoo', image: '', category: 'technical' },
-				{ name: 'Halcyon H-View', image: '', category: 'technical' }
+				{ name: 'Halcyon Omnis Mask', image: '/images/gear-products/Halcyon Omnis Mask.jpg', category: 'technical' },
+				{ name: 'Fourth Element Seeker Mask', image: '/images/gear-products/fourthElement Seeker Mask.jpg', category: 'basic' }
 			],
 			brands: ['halcyon.svg', 'fourth-element.svg']
 		},
@@ -61,10 +58,9 @@
 			position: { x: 68, y: 16 },
 			labelPosition: 'right',
 			products: [
-				{ name: 'Apeks XTX50', image: '', category: 'basic' },
-				{ name: 'Hollis 150LX', image: '', category: 'basic' },
-				{ name: 'Halcyon H-75P', image: '', category: 'technical' },
-				{ name: 'Apeks XTX200', image: '', category: 'technical' }
+				{ name: 'Halcyon H-50 Regulator', image: '/images/gear-products/Halcyon H50 Regulators 001.jpg', category: 'basic' },
+				{ name: 'Halcyon Single Tank Regulator', image: '/images/gear-products/Halcyon Regulators singleTank.jpg', category: 'basic' },
+				{ name: 'Halcyon Deco Regulator', image: '/images/gear-products/Halcyon decoReg.jpg', category: 'technical' }
 			],
 			brands: ['halcyon.svg']
 		},
@@ -91,12 +87,7 @@
 			icon: '/images/gear-icons/wing.svg',
 			position: { x: 29, y: 31 },
 			labelPosition: 'left',
-			products: [
-				{ name: 'OMS SS Backplate', image: '', category: 'basic' },
-				{ name: 'Halcyon Evolve 40', image: '', category: 'basic' },
-				{ name: 'Halcyon Eclipse 40', image: '', category: 'technical' },
-				{ name: 'OMS Double Wing 60lb', image: '', category: 'technical' }
-			],
+			products: [],
 			brands: ['halcyon.svg']
 		},
 		{
@@ -108,9 +99,7 @@
 			position: { x: 63, y: 44 },
 			labelPosition: 'right',
 			products: [
-				{ name: 'OMS SPG', image: '', category: 'basic' },
-				{ name: 'Halcyon Master SPG', image: '', category: 'technical' },
-				{ name: 'Suunto SM-36', image: '', category: 'basic' }
+				{ name: 'Halcyon Master SPG', image: '/images/gear-products/Halcyon SPG big.jpg', category: 'technical' }
 			],
 			brands: ['halcyon.svg']
 		},
@@ -123,10 +112,9 @@
 			position: { x: 24, y: 48 },
 			labelPosition: 'left',
 			products: [
-				{ name: 'Shearwater Peregrine', image: '', category: 'basic' },
-				{ name: 'Garmin Descent Mk3', image: '', category: 'basic' },
-				{ name: 'Shearwater Perdix 2', image: '', category: 'technical' },
-				{ name: 'Shearwater Petrel 3', image: '', category: 'technical' }
+				{ name: 'Halcyon Dive Computer HUD', image: '/images/gear-products/halcyon diveComputer HUD.jpg', category: 'technical' },
+				{ name: 'Halcyon Dive Computer Handset', image: '/images/gear-products/halcyon diveComputer Handset.jpg', category: 'technical' },
+				{ name: 'Halcyon Dive Computer POD', image: '/images/gear-products/halcyon diveComputer POD.jpg', category: 'technical' }
 			],
 			brands: ['halcyon.svg']
 		},
@@ -139,9 +127,8 @@
 			position: { x: 75, y: 48 },
 			labelPosition: 'right',
 			products: [
-				{ name: 'Suunto SK-8', image: '', category: 'basic' },
-				{ name: 'OMS Compass', image: '', category: 'basic' },
-				{ name: 'Halcyon Compass', image: '', category: 'technical' }
+				{ name: 'Suunto SK-8', image: '/images/gear-products/Suunto Compass.jpg', category: 'basic' },
+				{ name: 'DGX Compass', image: '/images/gear-products/DGX Compass.jpg', category: 'basic' }
 			],
 			brands: []
 		},
@@ -153,12 +140,7 @@
 			icon: '/images/gear-icons/accessories.svg',
 			position: { x: 69, y: 63 },
 			labelPosition: 'right',
-			products: [
-				{ name: 'OMS Utility Pocket', image: '', category: 'basic' },
-				{ name: 'Halcyon Bellows Pocket', image: '', category: 'technical' },
-				{ name: 'OMS Safety Reel', image: '', category: 'technical' },
-				{ name: 'Halcyon Slate', image: '', category: 'technical' }
-			],
+			products: [],
 			brands: ['halcyon.svg']
 		},
 		{
@@ -170,10 +152,8 @@
 			position: { x: 32, y: 92 },
 			labelPosition: 'left',
 			products: [
-				{ name: 'OMS Slipstream', image: '', category: 'basic' },
-				{ name: 'Hollis F1', image: '', category: 'basic' },
-				{ name: 'Halcyon Flextreme', image: '', category: 'technical' },
-				{ name: 'Deep6 Eddy Fin', image: '', category: 'technical' }
+				{ name: 'Halcyon Vector Fins', image: '/images/gear-products/Halcyon vectorFins.jpg', category: 'technical' },
+				{ name: 'ScubaPro Jet Fins', image: '/images/gear-products/scubaPro JetFins.jpg', category: 'basic' }
 			],
 			brands: ['halcyon.svg']
 		}
