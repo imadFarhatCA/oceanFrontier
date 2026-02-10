@@ -119,7 +119,7 @@
 				{#if brands.length > 0}
 					<div class="modal-brands">
 						{#each brands as brand}
-							<img src="/images/brands/{brand}" alt={brand.replace('.svg', '')} class="modal-brand-logo" />
+							<img src="/images/brands/{brand}" alt={brand.replace('.svg', '')} class="modal-brand-logo {brand.includes('suunto') ? 'suunto-logo' : ''}" />
 						{/each}
 					</div>
 				{/if}
@@ -332,6 +332,10 @@
 		object-fit: contain;
 		filter: invert(1) brightness(1.1);
 		opacity: 0.28;
+	}
+
+	.modal-brand-logo.suunto-logo {
+		height: 84px;
 	}
 
 	.carousel-section {

@@ -120,7 +120,7 @@
 			products: [
 				{ name: 'Halcyon Master SPG', image: '/images/gear-products/Halcyon SPG big.jpg', category: 'technical' }
 			],
-			brands: ['halcyon.svg']
+			brands: ['halcyon.svg', 'suunto.svg']
 		},
 		{
 			id: 'lights',
