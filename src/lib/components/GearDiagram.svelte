@@ -164,7 +164,7 @@
 				{ name: 'Suunto SK-8', image: '/images/gear-products/Suunto Compass.jpg', category: 'basic' },
 				{ name: 'DGX Compass', image: '/images/gear-products/DGX Compass.jpg', category: 'basic' }
 			],
-			brands: []
+			brands: ['suunto.svg']
 		},
 		{
 			id: 'pockets',
