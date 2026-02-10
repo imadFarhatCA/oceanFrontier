@@ -431,10 +431,6 @@
 		}
 
 		.hotspot[data-id="lights"] {
-			margin-top: -50px;
-		}
-
-		.hotspot[data-id="computer"] {
 			margin-top: -10px;
 		}
 
