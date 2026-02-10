@@ -294,23 +294,29 @@
 		color: rgba(255, 255, 255, 0.7);
 		pointer-events: none;
 		opacity: 0;
-		animation: hotspotFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		animation: labelFadeIn 0.4s ease forwards;
 		animation-delay: calc(1s + var(--delay));
+		transition: color 0.25s ease;
 	}
 
 	.hotspot-label.right {
-		left: calc(100% + 10px);
+		left: calc(100% + 12px);
 	}
 
 	.hotspot-label.left {
-		right: calc(100% + 10px);
+		right: calc(100% + 12px);
 	}
 
 	.hotspot:hover .hotspot-label {
 		color: rgba(255, 255, 255, 1);
 	}
 
-.hotspot-pulse {
+	@keyframes labelFadeIn {
+		from { opacity: 0; }
+		to { opacity: 1; }
+	}
+
+	.hotspot-pulse {
 		position: absolute;
 		top: 50%;
 		left: 50%;
