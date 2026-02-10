@@ -92,10 +92,7 @@
 				{#if brands.length > 0}
 					<div class="modal-brands">
 						{#each brands as brand}
-							<div class="modal-brand-item">
-								<img src="/images/brands/{brand}" alt={brand.replace('.svg', '')} class="modal-brand-logo" />
-								<div class="modal-brand-line"></div>
-							</div>
+							<img src="/images/brands/{brand}" alt={brand.replace('.svg', '')} class="modal-brand-logo" />
 						{/each}
 					</div>
 				{/if}
@@ -277,20 +274,13 @@
 		text-align: center;
 	}
 
-	/* Brand logos strip — below separator line */
+	/* Brand logos strip */
 	.modal-brands {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: center;
 		gap: 32px;
 		margin-bottom: 24px;
-	}
-
-	.modal-brand-item {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 8px;
 	}
 
 	.modal-brand-logo {
@@ -301,26 +291,10 @@
 		opacity: 0.28;
 	}
 
-	.modal-brand-line {
-		width: 24px;
-		height: 1px;
-		background: rgba(255, 255, 255, 0.25);
-	}
-
-	/* Carousel section — separator line 50% narrower */
 	.carousel-section {
 		border-top: none;
 		padding-top: 0;
 		position: relative;
-	}
-
-	.carousel-section::before {
-		content: '';
-		display: block;
-		width: 50%;
-		height: 1px;
-		background: rgba(255, 255, 255, 0.08);
-		margin: 0 auto 24px auto;
 	}
 
 	.carousel-wrapper {
