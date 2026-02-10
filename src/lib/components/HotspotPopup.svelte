@@ -269,7 +269,7 @@
 		-ms-overflow-style: none;
 		scroll-snap-type: x mandatory;
 		padding: 4px 0;
-		mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+		mask-image: linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%);
 	}
 
 	.carousel-grid::-webkit-scrollbar {
@@ -306,7 +306,7 @@
 
 	/* Product item wrapper — card + name below */
 	.product-item {
-		flex: 0 0 120px;
+		flex: 0 0 156px;
 		scroll-snap-align: start;
 		display: flex;
 		flex-direction: column;
@@ -322,10 +322,10 @@
 
 	/* Product card — image fills the whole square */
 	.product-card {
-		width: 120px;
-		height: 120px;
-		min-height: 120px;
-		max-height: 120px;
+		width: 156px;
+		height: 156px;
+		min-height: 156px;
+		max-height: 156px;
 		flex-shrink: 0;
 		border-radius: 10px;
 		overflow: hidden;
@@ -363,7 +363,7 @@
 		text-align: center;
 		line-height: 1.3;
 		letter-spacing: 0.3px;
-		max-width: 120px;
+		max-width: 156px;
 	}
 
 	/* Instagram-style pagination dots */
