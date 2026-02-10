@@ -172,7 +172,11 @@
 			icon: '/images/gear-icons/accessories.svg',
 			position: { x: 69, y: 63 },
 			labelPosition: 'right',
-			products: [],
+			products: [
+				{ name: 'Halcyon SMB', image: '/images/gear-products/Halcyon SMB.jpg', category: 'basic' },
+				{ name: 'Halcyon Spools', image: '/images/gear-products/Halcyon Spools.jpg', category: 'basic' },
+				{ name: 'Halcyon Wet Notes', image: '/images/gear-products/Halcyon wetNotes.jpg', category: 'basic' }
+			],
 			brands: ['halcyon.svg']
 		},
 		{
@@ -184,9 +188,6 @@
 			position: { x: 31, y: 63 },
 			labelPosition: 'left',
 			products: [
-				{ name: 'Halcyon SMB', image: '/images/gear-products/Halcyon SMB.jpg', category: 'basic' },
-				{ name: 'Halcyon Spools', image: '/images/gear-products/Halcyon Spools.jpg', category: 'basic' },
-				{ name: 'Halcyon Wet Notes', image: '/images/gear-products/Halcyon wetNotes.jpg', category: 'basic' },
 				{ name: 'Halcyon Pathfinder Reel', image: '/images/gear-products/Halcyon PathfinderReel.jpg', category: 'technical' }
 			],
 			brands: ['halcyon.svg']
