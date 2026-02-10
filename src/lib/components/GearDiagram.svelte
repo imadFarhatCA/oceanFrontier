@@ -99,7 +99,7 @@
 			subtitle: 'Submersible Pressure Gauge',
 			description: 'Submersible pressure gauges big in size, clear and can come in Imperial or Metric formats',
 			icon: '/images/gear-icons/gauge.svg',
-			position: { x: 64, y: 46 },
+			position: { x: 64, y: 44 },
 			labelPosition: 'right',
 			products: [
 				{ name: 'OMS SPG', image: '', category: 'basic' },
