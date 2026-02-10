@@ -15,6 +15,9 @@
 	let productsGrid: HTMLDivElement;
 	let overlayEl: HTMLDivElement;
 	let activeIndex = 0;
+	let needsScrolling = false;
+	let isAtStart = true;
+	let isAtEnd = false;
 
 	function close() {
 		dispatch('close');
@@ -24,6 +27,24 @@
 		if (e.target === e.currentTarget) close();
 	}
 
+	function checkScrollability() {
+		if (!productsGrid) return;
+		const scrollWidth = productsGrid.scrollWidth;
+		const clientWidth = productsGrid.clientWidth;
+		needsScrolling = scrollWidth > clientWidth + 5; // 5px tolerance
+		updateScrollPosition();
+	}
+
+	function updateScrollPosition() {
+		if (!productsGrid) return;
+		const scrollLeft = productsGrid.scrollLeft;
+		const scrollWidth = productsGrid.scrollWidth;
+		const clientWidth = productsGrid.clientWidth;
+
+		isAtStart = scrollLeft <= 5;
+		isAtEnd = scrollLeft >= scrollWidth - clientWidth - 5;
+	}
+
 	function updateActiveIndex() {
 		if (!productsGrid || !productsGrid.children.length) return;
 		const children = Array.from(productsGrid.children) as HTMLElement[];
@@ -31,10 +52,11 @@
 		const itemWidth = children[0].offsetWidth + 12;
 		activeIndex = Math.round(scrollLeft / itemWidth);
 		activeIndex = Math.max(0, Math.min(activeIndex, products.length - 1));
+		updateScrollPosition();
 	}
 
 	function scrollCarousel(direction: 'prev' | 'next') {
-		if (!productsGrid) return;
+		if (!productsGrid || !needsScrolling) return;
 		const next = direction === 'next' ? activeIndex + 1 : activeIndex - 1;
 		goToItem(Math.max(0, Math.min(next, products.length - 1)));
 	}
@@ -57,11 +79,14 @@
 
 		if (productsGrid) {
 			updateActiveIndex();
+			checkScrollability();
 			productsGrid.addEventListener('scroll', updateActiveIndex);
+			window.addEventListener('resize', checkScrollability);
 		}
 
 		return () => {
 			productsGrid?.removeEventListener('scroll', updateActiveIndex);
+			window.removeEventListener('resize', checkScrollability);
 			if (overlayEl?.parentNode) {
 				overlayEl.parentNode.removeChild(overlayEl);
 			}
@@ -99,10 +124,18 @@
 					</div>
 				{/if}
 				<div class="carousel-wrapper">
-					<button class="carousel-btn prev" on:click={() => scrollCarousel('prev')} aria-label="Previous">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-					</button>
-					<div class="carousel-grid" bind:this={productsGrid}>
+					{#if needsScrolling}
+						<button
+							class="carousel-btn prev"
+							class:disabled={isAtStart}
+							on:click={() => scrollCarousel('prev')}
+							aria-label="Previous"
+							disabled={isAtStart}
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+						</button>
+					{/if}
+					<div class="carousel-grid" class:centered={!needsScrolling} bind:this={productsGrid}>
 						{#each products as product, i}
 							<div class="product-item" style="--idx: {i}">
 								<div class="product-card {product.category}">
@@ -117,9 +150,17 @@
 							</div>
 						{/each}
 					</div>
-					<button class="carousel-btn next" on:click={() => scrollCarousel('next')} aria-label="Next">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-					</button>
+					{#if needsScrolling}
+						<button
+							class="carousel-btn next"
+							class:disabled={isAtEnd}
+							on:click={() => scrollCarousel('next')}
+							aria-label="Next"
+							disabled={isAtEnd}
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+						</button>
+					{/if}
 				</div>
 
 				{#if products.length > 1}
@@ -316,6 +357,12 @@
 		align-items: flex-start;
 	}
 
+	.carousel-grid.centered {
+		justify-content: center;
+		overflow-x: visible;
+		mask-image: none;
+	}
+
 	.carousel-grid::-webkit-scrollbar {
 		display: none;
 	}
@@ -339,10 +386,16 @@
 		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	.carousel-btn:hover {
+	.carousel-btn:hover:not(:disabled) {
 		background: rgba(255, 255, 255, 0.15);
 		color: white;
 		transform: translateY(-50%) scale(1.1);
+	}
+
+	.carousel-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+		pointer-events: none;
 	}
 
 	.carousel-btn.prev { left: -16px; }
