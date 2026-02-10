@@ -532,11 +532,11 @@
 		}
 
 		.modal-title.lights-title {
-			margin-top: -50px;
+			transform: translateY(-50px);
 		}
 
 		.modal-title.computer-title {
-			margin-top: -10px;
+			transform: translateY(-10px);
 		}
 
 		.modal-description {
