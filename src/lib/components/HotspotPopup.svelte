@@ -74,7 +74,7 @@
 			<p class="modal-subtitle">{subtitle}</p>
 		</div>
 
-		<p class="modal-description">{description}</p>
+		<p class="modal-description">{@html description}</p>
 
 		{#if products.length > 0}
 			<div class="carousel-section">

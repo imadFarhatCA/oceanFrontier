@@ -68,7 +68,7 @@
 			id: 'suit',
 			title: 'EXPOSURE SUIT',
 			subtitle: 'Wet / Dry',
-			description: 'Exposure Suits chosen for specific environmental parameters, whether you go for a drysuit or a wetsuit, the below products are rugged and recommended to handle the work we have put them through. Get in touch with us for more details and information about the specifications that make these suits a selected choice in our opinion, and what are the leverage points of strength that made us adopt these products.',
+			description: 'Exposure Suits chosen for specific environmental parameters, whether you go for a drysuit or a wetsuit, the below products are rugged and recommended to handle the work we have put them through.<br><br>Get in touch with us for more details and information about the specifications that make these suits a selected choice in our opinion, and what are the leverage points of strength that made us adopt these products.',
 			icon: '/images/gear-icons/drysuit.svg',
 			position: { x: 71, y: 26 },
 			labelPosition: 'right',
@@ -199,20 +199,21 @@
 
 			{/each}
 
-		{#each gearItems as item}
-			{#if activeHotspot === item.id}
-				<HotspotPopup
-					icon={item.icon}
-					title={item.title}
-					subtitle={item.subtitle}
-					description={item.description}
-					products={item.products}
-					on:close={() => activeHotspot = null}
-				/>
-			{/if}
-		{/each}
 	</div>
 </div>
+
+{#each gearItems as item}
+	{#if activeHotspot === item.id}
+		<HotspotPopup
+			icon={item.icon}
+			title={item.title}
+			subtitle={item.subtitle}
+			description={item.description}
+			products={item.products}
+			on:close={() => activeHotspot = null}
+		/>
+	{/if}
+{/each}
 
 <style>
 	.gear-diagram-container {
@@ -302,7 +303,7 @@
 		letter-spacing: 1px;
 		text-transform: uppercase;
 		color: rgba(255, 255, 255, 0.7);
-		pointer-events: none;
+		cursor: pointer;
 		opacity: 0;
 		animation: labelFadeIn 0.4s ease forwards;
 		animation-delay: calc(1s + var(--delay));
@@ -320,8 +321,10 @@
 		right: calc(100% + 12px);
 	}
 
-	.hotspot:hover .hotspot-label {
+	.hotspot:hover .hotspot-label,
+	.hotspot-label:hover {
 		color: rgba(255, 255, 255, 1);
+		background: rgba(0, 0, 0, 0.55);
 	}
 
 	@keyframes labelFadeIn {
