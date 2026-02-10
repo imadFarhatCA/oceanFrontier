@@ -103,7 +103,9 @@
 			position: { x: 29, y: 31 },
 			labelPosition: 'left',
 			products: [
-				{ name: 'Halcyon Single Tank Wings', image: '/images/gear-products/Halcyon singleWings.jpg', category: 'basic' }
+				{ name: 'Halcyon Single Tank Wings', image: '/images/gear-products/Halcyon singleWings.jpg', category: 'basic' },
+				{ name: 'Halcyon Doubles Wing', image: '/images/gear-products/Halcyon DoublesWing.jpg', category: 'technical' },
+				{ name: 'Halcyon CCR Wing', image: '/images/gear-products/Halcyon CCRWing.jpg', category: 'technical' }
 			],
 			brands: ['halcyon.svg']
 		},
@@ -188,7 +190,9 @@
 			position: { x: 31, y: 63 },
 			labelPosition: 'left',
 			products: [
-				{ name: 'Halcyon Pathfinder Reel', image: '/images/gear-products/Halcyon PathfinderReel.jpg', category: 'technical' }
+				{ name: 'Halcyon Pathfinder Reel', image: '/images/gear-products/Halcyon PathfinderReel.jpg', category: 'technical' },
+				{ name: 'Gramper GPS', image: '/images/gear-products/gramperGPS.jpg', category: 'technical' },
+				{ name: 'SUEX DPV', image: '/images/gear-products/SUEX DPV.jpg', category: 'technical' }
 			],
 			brands: ['halcyon.svg']
 		},
