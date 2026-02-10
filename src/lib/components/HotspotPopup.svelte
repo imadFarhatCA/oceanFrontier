@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount, afterUpdate } from 'svelte';
 
+	export let id: string;
 	export let icon: string;
 	export let title: string;
 	export let subtitle: string;
@@ -108,7 +109,7 @@
 		<div class="modal-header">
 			<img class="modal-icon" src={icon} alt={title} />
 			<div class="icon-line"></div>
-			<h3 class="modal-title">{cleanTitle}</h3>
+			<h3 class="modal-title" class:lights-title={id === 'lights'}>{cleanTitle}</h3>
 			<p class="modal-subtitle">{subtitle}</p>
 		</div>
 
@@ -119,7 +120,7 @@
 				{#if brands.length > 0}
 					<div class="modal-brands">
 						{#each brands as brand}
-							<img src="/images/brands/{brand}" alt={brand.replace('.svg', '')} class="modal-brand-logo {brand.includes('suunto') ? 'suunto-logo' : ''}" />
+							<img src="/images/brands/{brand}" alt={brand.replace('.svg', '')} class="modal-brand-logo {brand.includes('suunto') ? 'suunto-logo' : ''} {brand.includes('suex') ? 'suex-logo' : ''}" />
 						{/each}
 					</div>
 				{/if}
@@ -338,6 +339,10 @@
 		height: 84px;
 	}
 
+	.modal-brand-logo.suex-logo {
+		height: 28px;
+	}
+
 	.carousel-section {
 		border-top: none;
 		padding-top: 0;
@@ -524,6 +529,10 @@
 
 		.modal-title {
 			font-size: 18px;
+		}
+
+		.modal-title.lights-title {
+			margin-top: -5px;
 		}
 
 		.modal-description {

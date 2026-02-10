@@ -249,6 +249,7 @@
 {#each gearItems as item}
 	{#if activeHotspot === item.id}
 		<HotspotPopup
+			id={item.id}
 			icon={item.icon}
 			title={item.title}
 			subtitle={item.subtitle}
