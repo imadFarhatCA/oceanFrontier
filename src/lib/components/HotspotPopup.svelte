@@ -86,8 +86,8 @@
 					</button>
 					<div class="carousel-grid" bind:this={productsGrid}>
 						{#each products as product, i}
-							<div class="product-card {product.category}" style="--idx: {i}">
-								<div class="product-image-placeholder">
+							<div class="product-item" style="--idx: {i}">
+								<div class="product-card {product.category}">
 									{#if product.image}
 										<img src={product.image} alt={product.name} />
 									{:else}
@@ -304,73 +304,53 @@
 	.carousel-btn.prev { left: -16px; }
 	.carousel-btn.next { right: -16px; }
 
-	/* Product cards — CTA button style */
-	.product-card {
-		flex: 0 0 130px;
+	/* Product item wrapper — card + name below */
+	.product-item {
+		flex: 0 0 120px;
 		scroll-snap-align: start;
-		border-radius: 8px;
-		padding: 14px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 10px;
+		gap: 8px;
 		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 		cursor: default;
-		position: relative;
 	}
 
-	.product-card:hover {
+	.product-item:hover {
 		transform: translateY(-4px);
 	}
 
-	/* Basic category — matching CTA style, light grey */
-	.product-card.basic {
-		background: rgba(200, 200, 200, 0.12);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-	}
-
-	/* Technical category — matching CTA style, dark/black */
-	.product-card.technical {
-		background: rgba(10, 10, 10, 0.85);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-	}
-
-	/* Hover underline effect matching CTA */
-	.product-name::after {
-		content: '';
-		position: absolute;
-		bottom: 8px;
-		left: 50%;
-		transform: translateX(-50%) scaleX(0);
-		width: 30%;
-		height: 1px;
-		background: currentColor;
-		transition: transform 0.3s ease;
-		opacity: 0.8;
-	}
-
-	.product-card:hover .product-name::after {
-		transform: translateX(-50%) scaleX(1);
-	}
-
-	.product-image-placeholder {
-		width: 80px;
-		height: 80px;
-		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.04);
+	/* Product card — image fills the whole square */
+	.product-card {
+		width: 120px;
+		height: 120px;
+		border-radius: 10px;
+		overflow: hidden;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		color: rgba(255, 255, 255, 0.2);
-		overflow: hidden;
 	}
 
-	.product-image-placeholder img {
+	.product-card img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
 	}
 
+	/* Basic category — light grey */
+	.product-card.basic {
+		background: rgba(200, 200, 200, 0.12);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+	/* Technical category — dark/black */
+	.product-card.technical {
+		background: rgba(10, 10, 10, 0.85);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	/* Name outside the card */
 	.product-name {
 		font-size: 11px;
 		font-weight: 600;
@@ -378,7 +358,7 @@
 		text-align: center;
 		line-height: 1.3;
 		letter-spacing: 0.3px;
-		position: relative;
+		max-width: 120px;
 	}
 
 	/* Instagram-style pagination dots */
@@ -431,18 +411,18 @@
 			font-size: 13px;
 		}
 
-		.product-card {
-			flex: 0 0 110px;
-			padding: 10px;
+		.product-item {
+			flex: 0 0 100px;
 		}
 
-		.product-image-placeholder {
-			width: 64px;
-			height: 64px;
+		.product-card {
+			width: 100px;
+			height: 100px;
 		}
 
 		.product-name {
 			font-size: 10px;
+			max-width: 100px;
 		}
 
 		.carousel-btn {
