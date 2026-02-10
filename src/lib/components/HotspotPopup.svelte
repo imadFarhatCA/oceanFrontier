@@ -23,11 +23,12 @@
 	function updateActiveIndex() {
 		if (!productsGrid || !productsGrid.children.length) return;
 		const children = Array.from(productsGrid.children) as HTMLElement[];
-		const scrollLeft = productsGrid.scrollLeft;
+		const scrollCenter = productsGrid.scrollLeft + productsGrid.clientWidth / 2;
 		let closest = 0;
 		let minDist = Infinity;
 		for (let i = 0; i < children.length; i++) {
-			const dist = Math.abs(children[i].offsetLeft - scrollLeft);
+			const childCenter = children[i].offsetLeft + children[i].offsetWidth / 2;
+			const dist = Math.abs(childCenter - scrollCenter);
 			if (dist < minDist) {
 				minDist = dist;
 				closest = i;
@@ -55,6 +56,7 @@
 
 	onMount(() => {
 		if (productsGrid) {
+			updateActiveIndex();
 			productsGrid.addEventListener('scroll', updateActiveIndex);
 			return () => productsGrid?.removeEventListener('scroll', updateActiveIndex);
 		}
@@ -74,6 +76,7 @@
 
 		<div class="modal-header">
 			<img class="modal-icon" src={icon} alt={title} />
+			<div class="icon-line"></div>
 			<h3 class="modal-title">{title}</h3>
 			<p class="modal-subtitle">{subtitle}</p>
 		</div>
@@ -223,7 +226,14 @@
 		height: 48px;
 		flex-shrink: 0;
 		filter: invert(1);
-		margin-bottom: 4px;
+	}
+
+	/* 20px line under icon */
+	.icon-line {
+		width: 20px;
+		height: 1px;
+		background: rgba(255, 255, 255, 0.3);
+		margin: 4px 0;
 	}
 
 	.modal-title {
@@ -252,10 +262,20 @@
 		text-align: center;
 	}
 
-	/* Carousel section */
+	/* Carousel section — separator line 50% narrower */
 	.carousel-section {
-		border-top: 1px solid rgba(255, 255, 255, 0.08);
-		padding-top: 24px;
+		border-top: none;
+		padding-top: 0;
+		position: relative;
+	}
+
+	.carousel-section::before {
+		content: '';
+		display: block;
+		width: 50%;
+		height: 1px;
+		background: rgba(255, 255, 255, 0.08);
+		margin: 0 auto 24px auto;
 	}
 
 	.carousel-wrapper {
@@ -308,12 +328,12 @@
 
 	/* Product item wrapper — card + name below */
 	.product-item {
-		flex: 0 0 188px;
+		flex: 0 0 207px;
 		scroll-snap-align: start;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 8px;
+		gap: 0;
 		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 		cursor: default;
 	}
@@ -324,10 +344,10 @@
 
 	/* Product card — image fills the whole square */
 	.product-card {
-		width: 188px;
-		height: 188px;
-		min-height: 188px;
-		max-height: 188px;
+		width: 207px;
+		height: 207px;
+		min-height: 207px;
+		max-height: 207px;
 		flex-shrink: 0;
 		border-radius: 10px;
 		overflow: hidden;
@@ -357,15 +377,34 @@
 		background: rgba(10, 10, 10, 0.85);
 	}
 
-	/* Name outside the card */
+	/* Hover underline between image and name */
+	.product-card::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%) scaleX(0);
+		width: 60%;
+		height: 1px;
+		background: rgba(255, 255, 255, 0.5);
+		transition: transform 0.3s ease;
+		z-index: 2;
+	}
+
+	.product-item:hover .product-card::after {
+		transform: translateX(-50%) scaleX(1);
+	}
+
+	/* Name outside the card — align to top */
 	.product-name {
-		font-size: 11px;
-		font-weight: 600;
+		font-size: 13px;
+		font-weight: 400;
 		color: rgba(255, 255, 255, 0.8);
 		text-align: center;
 		line-height: 1.3;
 		letter-spacing: 0.3px;
-		max-width: 188px;
+		max-width: 207px;
+		padding-top: 10px;
 	}
 
 	/* Instagram-style pagination dots */
@@ -401,8 +440,8 @@
 			padding: 36px 24px;
 			max-width: 92vw;
 			border-radius: 20px;
-			max-height: 85vh;
-			min-height: 360px;
+			max-height: 90vh;
+			min-height: 480px;
 		}
 
 		.modal-icon {
@@ -419,19 +458,19 @@
 		}
 
 		.product-item {
-			flex: 0 0 130px;
+			flex: 0 0 156px;
 		}
 
 		.product-card {
-			width: 130px;
-			height: 130px;
-			min-height: 130px;
-			max-height: 130px;
+			width: 156px;
+			height: 156px;
+			min-height: 156px;
+			max-height: 156px;
 		}
 
 		.product-name {
-			font-size: 10px;
-			max-width: 130px;
+			font-size: 11px;
+			max-width: 156px;
 		}
 
 		.carousel-btn {

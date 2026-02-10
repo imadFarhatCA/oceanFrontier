@@ -30,7 +30,6 @@
 			position: { x: 62, y: 3 },
 			labelPosition: 'right',
 			products: [
-				{ name: 'Waterproof H1 5/7mm', image: '', category: 'basic' },
 				{ name: 'Fourth Element 5mm', image: '', category: 'basic' },
 				{ name: 'Santi Flex 2.0', image: '', category: 'technical' }
 			]
@@ -76,7 +75,7 @@
 			products: [
 				{ name: 'Ursuit Cordura Grey', image: '/images/gear-products/ursuit-cordura-grey.jpg', category: 'technical' },
 				{ name: 'Fourth Element Argonaut 3.0', image: '/images/gear-products/fourth-element-argonaut.jpg', category: 'technical' },
-				{ name: 'Fourth Element Wetsuits', image: '/images/gear-products/fourth-element-argonaut.jpg', category: 'basic' }
+				{ name: 'Fourth Element Proteus II', image: '/images/gear-products/fourth-element-argonaut.jpg', category: 'basic' }
 			]
 		},
 		{
