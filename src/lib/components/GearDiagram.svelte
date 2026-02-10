@@ -297,6 +297,9 @@
 		animation: labelFadeIn 0.4s ease forwards;
 		animation-delay: calc(1s + var(--delay));
 		transition: color 0.25s ease;
+		background: rgba(0, 0, 0, 0.4);
+		padding: 3px 8px;
+		border-radius: 4px;
 	}
 
 	.hotspot-label.right {
