@@ -76,8 +76,7 @@
 			products: [
 				{ name: 'Ursuit Cordura Grey', image: '/images/gear-products/ursuit-cordura-grey.jpg', category: 'technical' },
 				{ name: 'Fourth Element Argonaut 3.0', image: '/images/gear-products/fourth-element-argonaut.jpg', category: 'technical' },
-				{ name: 'Fourth Element Wetsuits', image: '', category: 'basic' },
-				{ name: 'Waterproof W4 5mm', image: '', category: 'basic' }
+				{ name: 'Fourth Element Wetsuits', image: '/images/gear-products/fourth-element-argonaut.jpg', category: 'basic' }
 			]
 		},
 		{

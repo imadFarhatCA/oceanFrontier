@@ -10,8 +10,7 @@
 	const dispatch = createEventDispatcher();
 
 	let productsGrid: HTMLDivElement;
-	let currentPage = 0;
-	let totalPages = 0;
+	let activeIndex = 0;
 
 	function close() {
 		dispatch('close');
@@ -21,40 +20,43 @@
 		if (e.target === e.currentTarget) close();
 	}
 
-	function updatePagination() {
-		if (!productsGrid) return;
-		const cardWidth = productsGrid.firstElementChild
-			? (productsGrid.firstElementChild as HTMLElement).offsetWidth + 12
-			: 150;
-		const visibleWidth = productsGrid.clientWidth;
-		const totalWidth = productsGrid.scrollWidth;
-		totalPages = Math.ceil(totalWidth / visibleWidth);
-		currentPage = Math.round(productsGrid.scrollLeft / visibleWidth);
+	function updateActiveIndex() {
+		if (!productsGrid || !productsGrid.children.length) return;
+		const children = Array.from(productsGrid.children) as HTMLElement[];
+		const scrollLeft = productsGrid.scrollLeft;
+		let closest = 0;
+		let minDist = Infinity;
+		for (let i = 0; i < children.length; i++) {
+			const dist = Math.abs(children[i].offsetLeft - scrollLeft);
+			if (dist < minDist) {
+				minDist = dist;
+				closest = i;
+			}
+		}
+		activeIndex = closest;
 	}
 
 	function scrollCarousel(direction: 'prev' | 'next') {
 		if (!productsGrid) return;
-		const visibleWidth = productsGrid.clientWidth;
-		productsGrid.scrollBy({
-			left: direction === 'next' ? visibleWidth : -visibleWidth,
-			behavior: 'smooth'
-		});
+		const next = direction === 'next' ? activeIndex + 1 : activeIndex - 1;
+		goToItem(Math.max(0, Math.min(next, products.length - 1)));
 	}
 
-	function goToPage(page: number) {
+	function goToItem(index: number) {
 		if (!productsGrid) return;
-		const visibleWidth = productsGrid.clientWidth;
-		productsGrid.scrollTo({
-			left: page * visibleWidth,
-			behavior: 'smooth'
-		});
+		const children = Array.from(productsGrid.children) as HTMLElement[];
+		if (children[index]) {
+			productsGrid.scrollTo({
+				left: children[index].offsetLeft,
+				behavior: 'smooth'
+			});
+		}
 	}
 
 	onMount(() => {
 		if (productsGrid) {
-			updatePagination();
-			productsGrid.addEventListener('scroll', updatePagination);
-			return () => productsGrid?.removeEventListener('scroll', updatePagination);
+			productsGrid.addEventListener('scroll', updateActiveIndex);
+			return () => productsGrid?.removeEventListener('scroll', updateActiveIndex);
 		}
 	});
 </script>
@@ -103,14 +105,14 @@
 					</button>
 				</div>
 
-				{#if totalPages > 1}
+				{#if products.length > 1}
 					<div class="pagination-dots">
-						{#each Array(totalPages) as _, i}
+						{#each products as _, i}
 							<button
 								class="dot"
-								class:active={i === currentPage}
-								on:click={() => goToPage(i)}
-								aria-label="Go to page {i + 1}"
+								class:active={i === activeIndex}
+								on:click={() => goToItem(i)}
+								aria-label="Go to item {i + 1}"
 							></button>
 						{/each}
 					</div>
@@ -149,7 +151,7 @@
 		backdrop-filter: blur(20px);
 		border-radius: 24px;
 		padding: 48px 36px;
-		max-width: 500px;
+		max-width: 560px;
 		width: 100%;
 		position: relative;
 		box-shadow:
@@ -306,7 +308,7 @@
 
 	/* Product item wrapper — card + name below */
 	.product-item {
-		flex: 0 0 156px;
+		flex: 0 0 188px;
 		scroll-snap-align: start;
 		display: flex;
 		flex-direction: column;
@@ -322,10 +324,10 @@
 
 	/* Product card — image fills the whole square */
 	.product-card {
-		width: 156px;
-		height: 156px;
-		min-height: 156px;
-		max-height: 156px;
+		width: 188px;
+		height: 188px;
+		min-height: 188px;
+		max-height: 188px;
 		flex-shrink: 0;
 		border-radius: 10px;
 		overflow: hidden;
@@ -363,7 +365,7 @@
 		text-align: center;
 		line-height: 1.3;
 		letter-spacing: 0.3px;
-		max-width: 156px;
+		max-width: 188px;
 	}
 
 	/* Instagram-style pagination dots */
@@ -417,16 +419,19 @@
 		}
 
 		.product-item {
-			flex: 0 0 100px;
+			flex: 0 0 130px;
 		}
 
 		.product-card {
-			width: 100px;
+			width: 130px;
+			height: 130px;
+			min-height: 130px;
+			max-height: 130px;
 		}
 
 		.product-name {
 			font-size: 10px;
-			max-width: 100px;
+			max-width: 130px;
 		}
 
 		.carousel-btn {
