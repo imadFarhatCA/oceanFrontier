@@ -59,6 +59,7 @@
 			labelPosition: 'right',
 			products: [
 				{ name: 'Halcyon H-50 Regulator', image: '/images/gear-products/Halcyon H50 Regulators 001.jpg', category: 'basic' },
+				{ name: 'Halcyon H-75 Regulator', image: '/images/gear-products/Halcyon H75 Regulators.jpg', category: 'basic' },
 				{ name: 'Halcyon Single Tank Regulator', image: '/images/gear-products/Halcyon Regulators singleTank.jpg', category: 'basic' },
 				{ name: 'Halcyon Deco Regulator', image: '/images/gear-products/Halcyon decoReg.jpg', category: 'technical' }
 			],
