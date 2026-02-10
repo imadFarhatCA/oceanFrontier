@@ -532,7 +532,7 @@
 		}
 
 		.modal-title.lights-title {
-			margin-top: -30px;
+			margin-top: -50px;
 		}
 
 		.modal-title.computer-title {
