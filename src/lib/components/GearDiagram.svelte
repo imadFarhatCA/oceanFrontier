@@ -194,7 +194,7 @@
 				{ name: 'Gramper GPS', image: '/images/gear-products/gramperGPS.jpg', category: 'technical' },
 				{ name: 'SUEX DPV', image: '/images/gear-products/SUEX DPV.jpg', category: 'technical' }
 			],
-			brands: ['halcyon.svg']
+			brands: ['halcyon.svg', 'suex.svg']
 		},
 		{
 			id: 'fins',
@@ -208,7 +208,7 @@
 				{ name: 'Halcyon Vector Fins', image: '/images/gear-products/Halcyon vectorFins.jpg', category: 'technical' },
 				{ name: 'ScubaPro Jet Fins', image: '/images/gear-products/scubaPro JetFins.jpg', category: 'basic' }
 			],
-			brands: ['halcyon.svg']
+			brands: ['halcyon.svg', 'scubaPro.svg']
 		}
 	];
 
