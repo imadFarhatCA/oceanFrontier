@@ -324,9 +324,12 @@
 	.product-card {
 		width: 120px;
 		height: 120px;
+		min-height: 120px;
+		max-height: 120px;
 		flex-shrink: 0;
 		border-radius: 10px;
 		overflow: hidden;
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -334,6 +337,9 @@
 	}
 
 	.product-card img {
+		position: absolute;
+		top: 0;
+		left: 0;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
