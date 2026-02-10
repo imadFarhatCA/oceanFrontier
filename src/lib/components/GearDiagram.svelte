@@ -72,8 +72,12 @@
 			icon: '/images/gear-icons/undergarments gearIcon.svg',
 			position: { x: 32, y: 16 },
 			labelPosition: 'left',
-			products: [],
-			brands: []
+			products: [
+				{ name: 'Fourth Element Xerotherm', image: '/images/gear-products/Xerotherm fourthElement.jpg', category: 'basic' },
+				{ name: 'Fourth Element Arctic', image: '/images/gear-products/Arctic fourthElement.jpg', category: 'basic' },
+				{ name: 'Fourth Element J2', image: '/images/gear-products/J2 fourthElement.jpg', category: 'technical' }
+			],
+			brands: ['fourth-element.svg']
 		},
 		{
 			id: 'suit',
@@ -98,7 +102,9 @@
 			icon: '/images/gear-icons/wing.svg',
 			position: { x: 29, y: 31 },
 			labelPosition: 'left',
-			products: [],
+			products: [
+				{ name: 'Halcyon Single Tank Wings', image: '/images/gear-products/Halcyon singleWings.jpg', category: 'basic' }
+			],
 			brands: ['halcyon.svg']
 		},
 		{
@@ -122,8 +128,12 @@
 			icon: '/images/gear-icons/lights gearIcon.svg',
 			position: { x: 37, y: 44 },
 			labelPosition: 'left',
-			products: [],
-			brands: []
+			products: [
+				{ name: 'Halcyon Photon Backup Light', image: '/images/gear-products/Halcyon Photon backupLight.jpg', category: 'basic' },
+				{ name: 'Halcyon Focus Light', image: '/images/gear-products/Halcyon Focus Light.jpg', category: 'technical' },
+				{ name: 'Halcyon Expedition Light', image: '/images/gear-products/Halcyon Expedition Light.jpg', category: 'technical' }
+			],
+			brands: ['halcyon.svg']
 		},
 		{
 			id: 'computer',
@@ -173,8 +183,13 @@
 			icon: '/images/gear-icons/DPV gearIcon.svg',
 			position: { x: 31, y: 63 },
 			labelPosition: 'left',
-			products: [],
-			brands: []
+			products: [
+				{ name: 'Halcyon SMB', image: '/images/gear-products/Halcyon SMB.jpg', category: 'basic' },
+				{ name: 'Halcyon Spools', image: '/images/gear-products/Halcyon Spools.jpg', category: 'basic' },
+				{ name: 'Halcyon Wet Notes', image: '/images/gear-products/Halcyon wetNotes.jpg', category: 'basic' },
+				{ name: 'Halcyon Pathfinder Reel', image: '/images/gear-products/Halcyon PathfinderReel.jpg', category: 'technical' }
+			],
+			brands: ['halcyon.svg']
 		},
 		{
 			id: 'fins',
