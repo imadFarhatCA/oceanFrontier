@@ -109,7 +109,7 @@
 		<div class="modal-header">
 			<img class="modal-icon" src={icon} alt={title} />
 			<div class="icon-line"></div>
-			<h3 class="modal-title" class:lights-title={id === 'lights'}>{cleanTitle}</h3>
+			<h3 class="modal-title" class:lights-title={id === 'lights'} class:computer-title={id === 'computer'}>{cleanTitle}</h3>
 			<p class="modal-subtitle">{subtitle}</p>
 		</div>
 
@@ -532,7 +532,11 @@
 		}
 
 		.modal-title.lights-title {
-			margin-top: -20px;
+			margin-top: -30px;
+		}
+
+		.modal-title.computer-title {
+			margin-top: -10px;
 		}
 
 		.modal-description {
