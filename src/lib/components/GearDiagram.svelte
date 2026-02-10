@@ -34,7 +34,7 @@
 				{ name: 'Fourth Element 5mm', image: '', category: 'basic' },
 				{ name: 'Santi Flex 2.0', image: '', category: 'technical' }
 			],
-			brands: ['fourth-element.svg']
+			brands: []
 		},
 		{
 			id: 'mask',
@@ -50,7 +50,7 @@
 				{ name: 'OMS Tattoo', image: '', category: 'technical' },
 				{ name: 'Halcyon H-View', image: '', category: 'technical' }
 			],
-			brands: ['halcyon.svg']
+			brands: ['halcyon.svg', 'fourth-element.svg']
 		},
 		{
 			id: 'regulators',
@@ -128,7 +128,7 @@
 				{ name: 'Shearwater Perdix 2', image: '', category: 'technical' },
 				{ name: 'Shearwater Petrel 3', image: '', category: 'technical' }
 			],
-			brands: []
+			brands: ['halcyon.svg']
 		},
 		{
 			id: 'compass',
@@ -143,7 +143,7 @@
 				{ name: 'OMS Compass', image: '', category: 'basic' },
 				{ name: 'Halcyon Compass', image: '', category: 'technical' }
 			],
-			brands: ['halcyon.svg']
+			brands: []
 		},
 		{
 			id: 'pockets',
