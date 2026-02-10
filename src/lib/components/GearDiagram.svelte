@@ -18,6 +18,7 @@
 		position: { x: number; y: number };
 		labelPosition: 'left' | 'right';
 		products: Product[];
+		brands: string[];
 	}
 
 	const gearItems: GearItem[] = [
@@ -32,7 +33,8 @@
 			products: [
 				{ name: 'Fourth Element 5mm', image: '', category: 'basic' },
 				{ name: 'Santi Flex 2.0', image: '', category: 'technical' }
-			]
+			],
+			brands: ['fourth-element.svg']
 		},
 		{
 			id: 'mask',
@@ -47,7 +49,8 @@
 				{ name: 'Cressi Nano', image: '', category: 'basic' },
 				{ name: 'OMS Tattoo', image: '', category: 'technical' },
 				{ name: 'Halcyon H-View', image: '', category: 'technical' }
-			]
+			],
+			brands: ['halcyon.svg']
 		},
 		{
 			id: 'regulators',
@@ -62,7 +65,8 @@
 				{ name: 'Hollis 150LX', image: '', category: 'basic' },
 				{ name: 'Halcyon H-75P', image: '', category: 'technical' },
 				{ name: 'Apeks XTX200', image: '', category: 'technical' }
-			]
+			],
+			brands: ['halcyon.svg']
 		},
 		{
 			id: 'suit',
@@ -76,7 +80,8 @@
 				{ name: 'Ursuit Cordura Grey', image: '/images/gear-products/ursuit-cordura-grey.jpg', category: 'technical' },
 				{ name: 'Fourth Element Argonaut 3.0', image: '/images/gear-products/fourth-element-argonaut.jpg', category: 'technical' },
 				{ name: 'Fourth Element Proteus II', image: '/images/gear-products/fourth-element-proteus.jpg', category: 'basic' }
-			]
+			],
+			brands: ['ursuit.svg', 'fourth-element.svg']
 		},
 		{
 			id: 'wing',
@@ -91,7 +96,8 @@
 				{ name: 'Halcyon Evolve 40', image: '', category: 'basic' },
 				{ name: 'Halcyon Eclipse 40', image: '', category: 'technical' },
 				{ name: 'OMS Double Wing 60lb', image: '', category: 'technical' }
-			]
+			],
+			brands: ['halcyon.svg']
 		},
 		{
 			id: 'gauge',
@@ -105,7 +111,8 @@
 				{ name: 'OMS SPG', image: '', category: 'basic' },
 				{ name: 'Halcyon Master SPG', image: '', category: 'technical' },
 				{ name: 'Suunto SM-36', image: '', category: 'basic' }
-			]
+			],
+			brands: ['halcyon.svg']
 		},
 		{
 			id: 'computer',
@@ -120,7 +127,8 @@
 				{ name: 'Garmin Descent Mk3', image: '', category: 'basic' },
 				{ name: 'Shearwater Perdix 2', image: '', category: 'technical' },
 				{ name: 'Shearwater Petrel 3', image: '', category: 'technical' }
-			]
+			],
+			brands: []
 		},
 		{
 			id: 'compass',
@@ -134,7 +142,8 @@
 				{ name: 'Suunto SK-8', image: '', category: 'basic' },
 				{ name: 'OMS Compass', image: '', category: 'basic' },
 				{ name: 'Halcyon Compass', image: '', category: 'technical' }
-			]
+			],
+			brands: ['halcyon.svg']
 		},
 		{
 			id: 'pockets',
@@ -149,7 +158,8 @@
 				{ name: 'Halcyon Bellows Pocket', image: '', category: 'technical' },
 				{ name: 'OMS Safety Reel', image: '', category: 'technical' },
 				{ name: 'Halcyon Slate', image: '', category: 'technical' }
-			]
+			],
+			brands: ['halcyon.svg']
 		},
 		{
 			id: 'fins',
@@ -164,7 +174,8 @@
 				{ name: 'Hollis F1', image: '', category: 'basic' },
 				{ name: 'Halcyon Flextreme', image: '', category: 'technical' },
 				{ name: 'Deep6 Eddy Fin', image: '', category: 'technical' }
-			]
+			],
+			brands: ['halcyon.svg']
 		}
 	];
 
@@ -210,6 +221,7 @@
 			subtitle={item.subtitle}
 			description={item.description}
 			products={item.products}
+			brands={item.brands}
 			on:close={() => activeHotspot = null}
 		/>
 	{/if}

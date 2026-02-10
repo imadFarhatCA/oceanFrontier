@@ -6,6 +6,7 @@
 	export let subtitle: string;
 	export let description: string;
 	export let products: { name: string; image: string; category: 'basic' | 'technical' }[] = [];
+	export let brands: string[] = [];
 
 	const dispatch = createEventDispatcher();
 
@@ -85,6 +86,14 @@
 		</div>
 
 		<p class="modal-description">{@html description}</p>
+
+		{#if brands.length > 0}
+			<div class="modal-brands">
+				{#each brands as brand}
+					<img src="/images/brands/{brand}" alt={brand.replace('.svg', '')} class="modal-brand-logo" />
+				{/each}
+			</div>
+		{/if}
 
 		{#if products.length > 0}
 			<div class="carousel-section">
@@ -264,6 +273,23 @@
 		color: rgba(255, 255, 255, 0.7);
 		margin: 0 0 28px 0;
 		text-align: center;
+	}
+
+	/* Brand logos strip */
+	.modal-brands {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 24px;
+		margin-bottom: 24px;
+	}
+
+	.modal-brand-logo {
+		height: 24px;
+		width: auto;
+		object-fit: contain;
+		filter: invert(1) brightness(1.1);
+		opacity: 0.35;
 	}
 
 	/* Carousel section — separator line 50% narrower */
