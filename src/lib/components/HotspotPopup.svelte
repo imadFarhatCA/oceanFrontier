@@ -10,6 +10,7 @@
 	const dispatch = createEventDispatcher();
 
 	let productsGrid: HTMLDivElement;
+	let overlayEl: HTMLDivElement;
 	let activeIndex = 0;
 
 	function close() {
@@ -48,17 +49,26 @@
 	}
 
 	onMount(() => {
+		// Portal to body so position:fixed works regardless of parent transforms
+		document.body.appendChild(overlayEl);
+
 		if (productsGrid) {
 			updateActiveIndex();
 			productsGrid.addEventListener('scroll', updateActiveIndex);
-			return () => productsGrid?.removeEventListener('scroll', updateActiveIndex);
 		}
+
+		return () => {
+			productsGrid?.removeEventListener('scroll', updateActiveIndex);
+			if (overlayEl?.parentNode) {
+				overlayEl.parentNode.removeChild(overlayEl);
+			}
+		};
 	});
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="modal-overlay" on:click={handleOverlayClick}>
+<div class="modal-overlay" bind:this={overlayEl} on:click={handleOverlayClick}>
 	<div class="modal-card">
 		<button class="close-button" on:click={close} aria-label="Close">
 			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
