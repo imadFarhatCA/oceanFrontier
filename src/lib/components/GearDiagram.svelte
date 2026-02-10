@@ -65,6 +65,17 @@
 			brands: ['halcyon.svg']
 		},
 		{
+			id: 'undergarments',
+			title: 'UNDERGARMENTS',
+			subtitle: 'Thermal Insulation',
+			description: 'Thermal undergarments worn beneath drysuits to provide insulation and maintain body temperature during cold water dives',
+			icon: '/images/gear-icons/drysuit.svg',
+			position: { x: 32, y: 16 },
+			labelPosition: 'left',
+			products: [],
+			brands: []
+		},
+		{
 			id: 'suit',
 			title: 'EXPOSURE SUIT',
 			subtitle: 'Wet / Dry',
@@ -102,6 +113,17 @@
 				{ name: 'Halcyon Master SPG', image: '/images/gear-products/Halcyon SPG big.jpg', category: 'technical' }
 			],
 			brands: ['halcyon.svg']
+		},
+		{
+			id: 'lights',
+			title: 'LIGHTS',
+			subtitle: 'Primary & Backup',
+			description: 'Dive lights for visibility, communication, and safety. Includes primary canister lights and backup lights for redundancy',
+			icon: '/images/gear-icons/accessories.svg',
+			position: { x: 37, y: 44 },
+			labelPosition: 'left',
+			products: [],
+			brands: []
 		},
 		{
 			id: 'computer',
@@ -142,6 +164,17 @@
 			labelPosition: 'right',
 			products: [],
 			brands: ['halcyon.svg']
+		},
+		{
+			id: 'diving-accessories',
+			title: 'DIVING<br>ACCESSORIES',
+			subtitle: 'Essential Tools',
+			description: 'Essential diving accessories including cutting tools, reels, SMBs, slates, and other safety equipment',
+			icon: '/images/gear-icons/accessories.svg',
+			position: { x: 31, y: 63 },
+			labelPosition: 'left',
+			products: [],
+			brands: []
 		},
 		{
 			id: 'fins',
