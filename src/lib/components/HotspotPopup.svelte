@@ -85,21 +85,20 @@
 			<p class="modal-subtitle">{subtitle}</p>
 		</div>
 
-		{#if brands.length > 0}
-			<div class="modal-brands">
-				{#each brands as brand}
-					<div class="modal-brand-item">
-						<img src="/images/brands/{brand}" alt={brand.replace('.svg', '')} class="modal-brand-logo" />
-						<div class="modal-brand-line"></div>
-					</div>
-				{/each}
-			</div>
-		{/if}
-
 		<p class="modal-description">{@html description}</p>
 
 		{#if products.length > 0}
 			<div class="carousel-section">
+				{#if brands.length > 0}
+					<div class="modal-brands">
+						{#each brands as brand}
+							<div class="modal-brand-item">
+								<img src="/images/brands/{brand}" alt={brand.replace('.svg', '')} class="modal-brand-logo" />
+								<div class="modal-brand-line"></div>
+							</div>
+						{/each}
+					</div>
+				{/if}
 				<div class="carousel-wrapper">
 					<button class="carousel-btn prev" on:click={() => scrollCarousel('prev')} aria-label="Previous">
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
@@ -278,13 +277,13 @@
 		text-align: center;
 	}
 
-	/* Brand logos strip — above description */
+	/* Brand logos strip — below separator line */
 	.modal-brands {
 		display: flex;
 		align-items: flex-start;
 		justify-content: center;
 		gap: 32px;
-		margin-bottom: 20px;
+		margin-bottom: 24px;
 	}
 
 	.modal-brand-item {
@@ -295,11 +294,11 @@
 	}
 
 	.modal-brand-logo {
-		height: 52px;
+		height: 42px;
 		width: auto;
 		object-fit: contain;
 		filter: invert(1) brightness(1.1);
-		opacity: 0.35;
+		opacity: 0.28;
 	}
 
 	.modal-brand-line {
