@@ -532,7 +532,7 @@
 		}
 
 		.modal-title.lights-title {
-			margin-top: -5px;
+			margin-top: -10px;
 		}
 
 		.modal-description {
