@@ -68,14 +68,14 @@
 			id: 'suit',
 			title: 'EXPOSURE SUIT',
 			subtitle: 'Wet / Dry',
-			description: 'Thermal protection suited to the dive environment. Wet suits for warm water, dry suits for cold water diving.',
+			description: 'Exposure Suits chosen for specific environmental parameters, whether you go for a drysuit or a wetsuit, the below products are rugged and recommended to handle the work we have put them through. Get in touch with us for more details and information about the specifications that make these suits a selected choice in our opinion, and what are the leverage points of strength that made us adopt these products.',
 			icon: '/images/gear-icons/drysuit.svg',
 			position: { x: 71, y: 26 },
 			labelPosition: 'right',
 			products: [
 				{ name: 'Ursuit Cordura Grey', image: '/images/gear-products/ursuit-cordura-grey.jpg', category: 'technical' },
 				{ name: 'Fourth Element Argonaut 3.0', image: '/images/gear-products/fourth-element-argonaut.jpg', category: 'technical' },
-				{ name: 'Fourth Element Proteus II', image: '/images/gear-products/fourth-element-argonaut.jpg', category: 'basic' }
+				{ name: 'Fourth Element Proteus II', image: '', category: 'basic' }
 			]
 		},
 		{

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher, onMount, afterUpdate } from 'svelte';
 
 	export let icon: string;
 	export let title: string;
@@ -23,18 +23,10 @@
 	function updateActiveIndex() {
 		if (!productsGrid || !productsGrid.children.length) return;
 		const children = Array.from(productsGrid.children) as HTMLElement[];
-		const scrollCenter = productsGrid.scrollLeft + productsGrid.clientWidth / 2;
-		let closest = 0;
-		let minDist = Infinity;
-		for (let i = 0; i < children.length; i++) {
-			const childCenter = children[i].offsetLeft + children[i].offsetWidth / 2;
-			const dist = Math.abs(childCenter - scrollCenter);
-			if (dist < minDist) {
-				minDist = dist;
-				closest = i;
-			}
-		}
-		activeIndex = closest;
+		const scrollLeft = productsGrid.scrollLeft;
+		const itemWidth = children[0].offsetWidth + 12;
+		activeIndex = Math.round(scrollLeft / itemWidth);
+		activeIndex = Math.max(0, Math.min(activeIndex, products.length - 1));
 	}
 
 	function scrollCarousel(direction: 'prev' | 'next') {
@@ -47,8 +39,9 @@
 		if (!productsGrid) return;
 		const children = Array.from(productsGrid.children) as HTMLElement[];
 		if (children[index]) {
+			const itemWidth = children[0].offsetWidth + 12;
 			productsGrid.scrollTo({
-				left: children[index].offsetLeft,
+				left: index * itemWidth,
 				behavior: 'smooth'
 			});
 		}
@@ -99,6 +92,7 @@
 										<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
 									{/if}
 								</div>
+								<div class="product-underline"></div>
 								<span class="product-name">{product.name}</span>
 							</div>
 						{/each}
@@ -292,6 +286,7 @@
 		scroll-snap-type: x mandatory;
 		padding: 4px 0;
 		mask-image: linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%);
+		align-items: flex-start;
 	}
 
 	.carousel-grid::-webkit-scrollbar {
@@ -326,14 +321,13 @@
 	.carousel-btn.prev { left: -16px; }
 	.carousel-btn.next { right: -16px; }
 
-	/* Product item wrapper — card + name below */
+	/* Product item wrapper */
 	.product-item {
 		flex: 0 0 207px;
 		scroll-snap-align: start;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0;
 		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 		cursor: default;
 	}
@@ -377,25 +371,21 @@
 		background: rgba(10, 10, 10, 0.85);
 	}
 
-	/* Hover underline between image and name */
-	.product-card::after {
-		content: '';
-		position: absolute;
-		bottom: 0;
-		left: 50%;
-		transform: translateX(-50%) scaleX(0);
+	/* Hover underline — sits between card and name with equal spacing */
+	.product-underline {
 		width: 60%;
 		height: 1px;
 		background: rgba(255, 255, 255, 0.5);
+		margin: 10px auto;
+		transform: scaleX(0);
 		transition: transform 0.3s ease;
-		z-index: 2;
 	}
 
-	.product-item:hover .product-card::after {
-		transform: translateX(-50%) scaleX(1);
+	.product-item:hover .product-underline {
+		transform: scaleX(1);
 	}
 
-	/* Name outside the card — align to top */
+	/* Name outside the card — all names start at same vertical position */
 	.product-name {
 		font-size: 13px;
 		font-weight: 400;
@@ -404,7 +394,6 @@
 		line-height: 1.3;
 		letter-spacing: 0.3px;
 		max-width: 207px;
-		padding-top: 10px;
 	}
 
 	/* Instagram-style pagination dots */
@@ -441,7 +430,7 @@
 			max-width: 92vw;
 			border-radius: 20px;
 			max-height: 90vh;
-			min-height: 480px;
+			min-height: 520px;
 		}
 
 		.modal-icon {
@@ -458,19 +447,19 @@
 		}
 
 		.product-item {
-			flex: 0 0 156px;
+			flex: 0 0 203px;
 		}
 
 		.product-card {
-			width: 156px;
-			height: 156px;
-			min-height: 156px;
-			max-height: 156px;
+			width: 203px;
+			height: 203px;
+			min-height: 203px;
+			max-height: 203px;
 		}
 
 		.product-name {
 			font-size: 11px;
-			max-width: 156px;
+			max-width: 203px;
 		}
 
 		.carousel-btn {
