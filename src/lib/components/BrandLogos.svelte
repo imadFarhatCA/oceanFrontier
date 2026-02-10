@@ -68,13 +68,15 @@
 		animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 		animation-delay: calc(0.5s + var(--i) * 0.07s);
 		position: relative;
-		padding: 8px 0 20px;
+		padding: 8px 0 30px;
+		transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
+	/* Line between logo and name */
 	.brand-cell::after {
 		content: '';
 		position: absolute;
-		bottom: 0;
+		bottom: 16px;
 		left: 50%;
 		transform: translateX(-50%);
 		width: 0;
@@ -85,6 +87,14 @@
 
 	.brand-cell:hover::after {
 		width: 100%;
+	}
+
+	/* Adjacent logos spread on hover */
+	.brand-cell:hover + .brand-cell {
+		transform: translateX(5px);
+	}
+	.brand-cell:has(+ .brand-cell:hover) {
+		transform: translateX(-5px);
 	}
 
 	.brand-cell img {
@@ -112,7 +122,7 @@
 		color: white;
 		opacity: 0;
 		position: absolute;
-		bottom: 4px;
+		bottom: 0;
 		left: 50%;
 		transform: translateX(-50%);
 		white-space: nowrap;
@@ -132,7 +142,7 @@
 		}
 
 		.brand-cell {
-			padding: 6px 0 18px;
+			padding: 6px 0 26px;
 		}
 
 		.brand-cell img {
@@ -145,7 +155,7 @@
 
 		.brand-name {
 			font-size: 7px;
-			bottom: 2px;
+			bottom: 0;
 		}
 	}
 </style>
