@@ -914,8 +914,8 @@
 
 					<!-- Gear Description Section -->
 					<div class="gear-description-section">
-						<h2 class="gear-description-title">We Only Sell You What We Personally Use</h2>
-						<p class="gear-description-text">Our approach to Gear purchasing is a modular system that allows growth and adaptation to further and future developments. It is the most honest path into owning expensive and reliable diving gear to prevent unnecessary loss of funds, resources, and energy. Whether you want Basic, Technical or Underwater Content Creation equipment, I believe that we can help you make Sustainable Choices</p>
+						<h2 class="gear-description-title">We Only Sell You, What We Personally Use</h2>
+						<p class="gear-description-text">Our approach to Gear purchasing is a modular system that allows growth and adaptation to further and future developments. It is the most honest path into owning expensive and reliable diving gear to prevent unnecessary loss of funds, resources, and energy.<br><br>Whether you want Basic, Technical or Underwater Content Creation equipment, I believe that we can help you make Sustainable Choices</p>
 					</div>
 
 					<!-- Interactive Gear Diagram -->

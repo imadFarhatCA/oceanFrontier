@@ -138,7 +138,7 @@
 		},
 		{
 			id: 'pockets',
-			title: 'POCKETS ACCESSORIES',
+			title: 'POCKETS<br>ACCESSORIES',
 			subtitle: 'Storage & Tools',
 			description: 'Pockets and accessories for carrying essential tools, slates, reels, and other dive accessories',
 			icon: '/images/gear-icons/accessories.svg',
@@ -187,13 +187,14 @@
 			<button
 				class="hotspot"
 				class:active={activeHotspot === item.id}
+				data-id={item.id}
 				style="left: {item.position.x}%; top: {item.position.y}%; --delay: {i * 0.08}s;"
 				on:click={() => toggleHotspot(item.id)}
 				aria-label={item.title}
 			>
 				<span class="hotspot-pulse"></span>
 				<span class="hotspot-dot"></span>
-				<span class="hotspot-label {item.labelPosition}">{item.title}</span>
+				<span class="hotspot-label {item.labelPosition}">{@html item.title}</span>
 			</button>
 
 			{/each}
@@ -363,6 +364,11 @@
 		.diagram-wrapper {
 			width: 70vw;
 			max-width: 320px;
+		}
+
+		.hotspot[data-id="gauge"] {
+			margin-top: -10px;
+			margin-left: -5px;
 		}
 	}
 </style>
