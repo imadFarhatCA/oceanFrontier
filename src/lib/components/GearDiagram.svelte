@@ -75,7 +75,7 @@
 			products: [
 				{ name: 'Ursuit Cordura Grey', image: '/images/gear-products/ursuit-cordura-grey.jpg', category: 'technical' },
 				{ name: 'Fourth Element Argonaut 3.0', image: '/images/gear-products/fourth-element-argonaut.jpg', category: 'technical' },
-				{ name: 'Fourth Element Proteus II', image: '', category: 'basic' }
+				{ name: 'Fourth Element Proteus II', image: '/images/gear-products/fourth-element-proteus.jpg', category: 'basic' }
 			]
 		},
 		{
@@ -281,7 +281,7 @@
 		opacity: 0;
 	}
 
-	/* Hover label */
+	/* Label — always visible */
 	.hotspot-label {
 		position: absolute;
 		top: 50%;
@@ -291,14 +291,11 @@
 		font-weight: 700;
 		letter-spacing: 1px;
 		text-transform: uppercase;
-		color: rgba(255, 255, 255, 0.9);
-		background: rgba(0, 0, 0, 0.6);
-		backdrop-filter: blur(6px);
-		padding: 4px 10px;
-		border-radius: 4px;
-		opacity: 0;
+		color: rgba(255, 255, 255, 0.7);
 		pointer-events: none;
-		transition: opacity 0.25s ease, transform 0.25s ease;
+		opacity: 0;
+		animation: hotspotFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		animation-delay: calc(1s + var(--delay));
 	}
 
 	.hotspot-label.right {
@@ -310,7 +307,7 @@
 	}
 
 	.hotspot:hover .hotspot-label {
-		opacity: 1;
+		color: rgba(255, 255, 255, 1);
 	}
 
 .hotspot-pulse {
