@@ -74,10 +74,10 @@
 			position: { x: 71, y: 26 },
 			labelPosition: 'right',
 			products: [
+				{ name: 'Ursuit Cordura Grey', image: '/images/gear-products/ursuit-cordura-grey.jpg', category: 'technical' },
+				{ name: 'Fourth Element Argonaut 3.0', image: '/images/gear-products/fourth-element-argonaut.jpg', category: 'technical' },
 				{ name: 'Mares Rover 5mm', image: '', category: 'basic' },
-				{ name: 'Waterproof W4 5mm', image: '', category: 'basic' },
-				{ name: 'Santi E.Lite', image: '', category: 'technical' },
-				{ name: 'DUI CF200X', image: '', category: 'technical' }
+				{ name: 'Waterproof W4 5mm', image: '', category: 'basic' }
 			]
 		},
 		{
@@ -195,6 +195,7 @@
 			>
 				<span class="hotspot-pulse"></span>
 				<span class="hotspot-dot"></span>
+				<span class="hotspot-label {item.labelPosition}">{item.title}</span>
 			</button>
 
 			{/each}
@@ -280,6 +281,38 @@
 	.hotspot:hover .hotspot-pulse {
 		animation: none;
 		opacity: 0;
+	}
+
+	/* Hover label */
+	.hotspot-label {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		white-space: nowrap;
+		font-size: 10px;
+		font-weight: 700;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.9);
+		background: rgba(0, 0, 0, 0.6);
+		backdrop-filter: blur(6px);
+		padding: 4px 10px;
+		border-radius: 4px;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.25s ease, transform 0.25s ease;
+	}
+
+	.hotspot-label.right {
+		left: calc(100% + 10px);
+	}
+
+	.hotspot-label.left {
+		right: calc(100% + 10px);
+	}
+
+	.hotspot:hover .hotspot-label {
+		opacity: 1;
 	}
 
 .hotspot-pulse {
