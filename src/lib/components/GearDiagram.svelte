@@ -80,7 +80,7 @@
 		},
 		{
 			id: 'wing',
-			title: 'WING / BACKPLATE',
+			title: 'WING<span class="desktop-only"> / </span><br class="mobile-br">BACKPLATE',
 			subtitle: 'Buoyancy Compensator',
 			description: 'Doughnut shaped wings are used for different configurations and lift capacities',
 			icon: '/images/gear-icons/wing.svg',
@@ -109,7 +109,7 @@
 		},
 		{
 			id: 'computer',
-			title: 'DIVE COMPUTER',
+			title: 'DIVE<br class="mobile-br"> COMPUTER',
 			subtitle: 'GAUGE or DIVE COMPUTER',
 			description: 'Whether a depth gauge or dive computer, it is an essential tool to give the diver the ability to read the parameters of the dive',
 			icon: '/images/gear-icons/dive-computer.svg',
@@ -222,6 +222,15 @@
 		justify-content: flex-start;
 		align-items: center;
 		animation: chunkFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.6s backwards;
+		margin-left: 20px;
+	}
+
+	/* Mobile-only line breaks (hidden on desktop) */
+	:global(.mobile-br) {
+		display: none;
+	}
+	:global(.desktop-only) {
+		display: inline;
 	}
 
 	.diagram-wrapper {
@@ -359,6 +368,7 @@
 			padding: 20px 0 160px 0;
 			justify-content: center;
 			overflow: visible;
+			margin-left: 0;
 		}
 
 		.diagram-wrapper {
@@ -369,6 +379,13 @@
 		.hotspot[data-id="gauge"] {
 			margin-top: -10px;
 			margin-left: -5px;
+		}
+
+		:global(.mobile-br) {
+			display: inline;
+		}
+		:global(.desktop-only) {
+			display: none;
 		}
 	}
 </style>
