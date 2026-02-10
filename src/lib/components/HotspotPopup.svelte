@@ -110,7 +110,7 @@
 			<img class="modal-icon" src={icon} alt={title} />
 			<div class="icon-line"></div>
 			<h3 class="modal-title" class:lights-title={id === 'lights'} class:computer-title={id === 'computer'}>{cleanTitle}</h3>
-			<p class="modal-subtitle">{subtitle}</p>
+			<p class="modal-subtitle" class:lights-subtitle={id === 'lights'} class:computer-subtitle={id === 'computer'}>{subtitle}</p>
 		</div>
 
 		<p class="modal-description">{@html description}</p>
@@ -536,6 +536,14 @@
 		}
 
 		.modal-title.computer-title {
+			transform: translateY(-10px);
+		}
+
+		.modal-subtitle.lights-subtitle {
+			transform: translateY(-50px);
+		}
+
+		.modal-subtitle.computer-subtitle {
 			transform: translateY(-10px);
 		}
 
