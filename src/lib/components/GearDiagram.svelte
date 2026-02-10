@@ -434,6 +434,10 @@
 			margin-top: -10px;
 		}
 
+		.hotspot[data-id="computer"] {
+			margin-top: 15px;
+		}
+
 		:global(.mobile-br) {
 			display: inline;
 		}
