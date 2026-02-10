@@ -430,6 +430,14 @@
 			margin-left: -5px;
 		}
 
+		.hotspot[data-id="lights"] {
+			margin-top: -50px;
+		}
+
+		.hotspot[data-id="computer"] {
+			margin-top: -10px;
+		}
+
 		:global(.mobile-br) {
 			display: inline;
 		}
