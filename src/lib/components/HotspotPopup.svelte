@@ -8,6 +8,8 @@
 	export let products: { name: string; image: string; category: 'basic' | 'technical' }[] = [];
 	export let brands: string[] = [];
 
+	$: cleanTitle = title.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
 	const dispatch = createEventDispatcher();
 
 	let productsGrid: HTMLDivElement;
@@ -81,7 +83,7 @@
 		<div class="modal-header">
 			<img class="modal-icon" src={icon} alt={title} />
 			<div class="icon-line"></div>
-			<h3 class="modal-title">{title}</h3>
+			<h3 class="modal-title">{cleanTitle}</h3>
 			<p class="modal-subtitle">{subtitle}</p>
 		</div>
 
