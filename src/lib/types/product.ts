@@ -3,11 +3,12 @@
  * Represents a single product (training course or gear item)
  */
 export type Product = {
-	id: number;
+	id?: number;
 	name: string;
-	price: string;
+	price?: string;
 	image: string;
-	description: string;
+	description?: string;
+	category?: 'basic' | 'technical';
 };
 
 /**
