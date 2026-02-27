@@ -130,6 +130,22 @@
 		</script>
 
 		%sveltekit.head%
+
+		<!-- Website Control Panel Tracker -->
+		<script>
+		(function(){
+		  var h="https://website-control-panel.pages.dev",k="wcp_7b33239d466c0391cb8d45258d919135cc2600c5",p=location.pathname;
+		  fetch(h+"/api/track",{method:"POST",headers:{"Content-Type":"application/json"},
+		    body:JSON.stringify({api_key:k,event:"pageview",path:p,referrer:document.referrer,
+		      ua:navigator.userAgent,session:sessionStorage.getItem("wcp_s")||(function(){var s=Math.random().toString(36).slice(2);sessionStorage.setItem("wcp_s",s);return s;})()})
+		  });
+		  window.addEventListener("beforeunload",function(){
+		    var d=Date.now()-performance.timeOrigin;
+		    fetch(h+"/api/track",{method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,
+		      body:JSON.stringify({api_key:k,event:"duration",path:p,duration:Math.round(d/1000),session:sessionStorage.getItem("wcp_s")})});
+		  });
+		})();
+		</script>
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
