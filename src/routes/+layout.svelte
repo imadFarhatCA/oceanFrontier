@@ -1,9 +1,7 @@
 <script lang="ts">
+	import WebsiteTracker from '$lib/components/WebsiteTracker.svelte';
 	let { children } = $props();
 </script>
 
-<svelte:head>
-	<script src="https://website-control-panel.pages.dev/tracker.js"></script>
-</svelte:head>
-
+<WebsiteTracker />
 {@render children()}
