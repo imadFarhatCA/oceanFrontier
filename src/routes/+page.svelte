@@ -1,52 +1,69 @@
 <!-- Cloudflare Pages deployment test -->
 <script lang="ts">
 	import '../styles/main.css';
+	import '../styles/_mobile.css';
 	import { onMount } from 'svelte';
 	import BrandLogos from '$lib/components/BrandLogos.svelte';
 	import GearDiagram from '$lib/components/GearDiagram.svelte';
 	import Nav from '$lib/components/Nav.svelte';
-	import { trainingCourses, type CourseFilter } from '$lib/data/trainingCourses';
+	import CourseCard from '$lib/components/CourseCard.svelte';
+	import CourseFilterBar from '$lib/components/CourseFilterBar.svelte';
+	import CourseDetailPanel from '$lib/components/CourseDetailPanel.svelte';
+	import QuestionnairePanel from '$lib/components/QuestionnairePanel.svelte';
+	import MobileMenu from '$lib/components/MobileMenu.svelte';
+	import MobilePagination from '$lib/components/MobilePagination.svelte';
+	import CenterLogo from '$lib/components/CenterLogo.svelte';
+	import { trainingCourses, type CourseFilter, type TrainingCourse } from '$lib/data/trainingCourses';
+	import { isCartOpen } from '$lib/cart/cartStore';
+	import trainingCTAs from '$lib/data/trainingCTAs.json';
+	import gearCTAs from '$lib/data/gearCTAs.json';
+	import {
+		sliderPosition as sliderPositionStore,
+		showQuestionnaire as showQuestionnaireStore,
+		showTrainingView as showTrainingViewStore,
+		showGearView as showGearViewStore,
+		isMobile as isMobileStore,
+		currentMobileSection as currentMobileSectionStore,
+		isMobileMenuOpen as isMobileMenuOpenStore,
+		selectedCourse as selectedCourseStore
+	} from '$lib/stores/pageState';
 
-	type Section = 'training' | 'gear';
-	type Message = {
-		type: 'question' | 'answer' | 'products';
-		text: string;
-		typing?: boolean;
-	};
-
-	let sliderPosition = 50; // Percentage
-	let activeSection: Section | null = null;
-	let isDragging = false;
-	let isMobileMenuOpen = false;
+	// DOM refs
 	let leftSection: HTMLButtonElement;
 	let rightSection: HTMLButtonElement;
 	let sliderBar: HTMLDivElement;
+	let splitContainer: HTMLElement;
 	let arrowLeft: SVGSVGElement;
 	let arrowRight: SVGSVGElement;
 	let logoLeft: HTMLDivElement;
 	let logoRight: HTMLDivElement;
-	let productsGridLeft: HTMLDivElement;
-	let productsGridRight: HTMLDivElement;
 
-	// Questionnaire state
+	// Local reactive copies of stores for template use
+	let sliderPosition = 50;
 	let showQuestionnaire = false;
-	let messages: Message[] = [];
-	let currentQuestion: string | null = null;
-	let questionOptions: string[] = [];
-	let showProducts = false;
-	let products: string[] = [];
-	let currentProductIndex = 0;
-	let showCallToAction = false;
-	let currentFlow: string = '';
-	let showGearTypeSelection = false;
+	let showTrainingView = false;
+	let showGearView = false;
+	let isMobile = false;
+	let currentMobileSection = 0;
+	let selectedCourse: TrainingCourse | null = null;
+
+	sliderPositionStore.subscribe((v) => (sliderPosition = v));
+	showQuestionnaireStore.subscribe((v) => (showQuestionnaire = v));
+	showTrainingViewStore.subscribe((v) => (showTrainingView = v));
+	showGearViewStore.subscribe((v) => (showGearView = v));
+	isMobileStore.subscribe((v) => (isMobile = v));
+	currentMobileSectionStore.subscribe((v) => (currentMobileSection = v));
+	selectedCourseStore.subscribe((v) => (selectedCourse = v));
+
+	// Active flow for questionnaire
+	let currentFlow = '';
 
 	// Training view state
-	let showTrainingView = false;
 	let heroExpanded = false;
 	let activeFilter: CourseFilter = 'all';
+	let visibleCourses = trainingCourses;
 
 	// Gear view state
-	let showGearView = false;
 	type GearFilter = 'all' | 'basic' | 'technical' | 'content-creation';
 	let activeGearFilter: GearFilter = 'all';
 	let activeGearType: 'basic' | 'technical' = 'basic';
@@ -62,49 +79,38 @@
 		return `${day}/${month}/${year}`;
 	}
 
+	function filterCourses(filter: CourseFilter) {
+		activeFilter = filter;
+		visibleCourses =
+			filter === 'all' ? trainingCourses : trainingCourses.filter((c) => c.category === filter);
+	}
+
 	// Mobile swipe state
-	let isMobile = false;
-	let currentMobileSection = 0; // 0 = training, 1 = gear
 	let touchStartX = 0;
 	let touchStartY = 0;
 	let touchCurrentX = 0;
 	let isSwiping = false;
-	let swipeHintShown = false;
-	const courses = trainingCourses;
-	let visibleCourses = courses;
-
-	function filterCourses(filter: CourseFilter) {
-		activeFilter = filter;
-		visibleCourses = filter === 'all' ? courses : courses.filter(c => c.category === filter);
-	}
 
 	function openTrainingView() {
-		showTrainingView = true;
+		showTrainingViewStore.set(true);
 		activeFilter = 'all';
-		visibleCourses = courses;
+		visibleCourses = trainingCourses;
 		document.body.style.overflow = 'auto';
 		document.body.style.height = 'auto';
-
-		// On mobile, ensure we're on training section and close mobile menu
 		if (isMobile) {
-			currentMobileSection = 0;
-			isMobileMenuOpen = false;
+			currentMobileSectionStore.set(0);
+			isMobileMenuOpenStore.set(false);
 		}
-
 		if (leftSection) leftSection.style.clipPath = 'inset(0 0 0 0)';
 	}
 
 	function closeTrainingView() {
-		showTrainingView = false;
+		showTrainingViewStore.set(false);
 		document.body.style.overflow = 'hidden';
 		document.body.style.height = '100vh';
-
-		// On mobile, return to training section (section 0)
 		if (isMobile) {
-			currentMobileSection = 0;
+			currentMobileSectionStore.set(0);
 		}
-
-		// On desktop, restore clip paths
 		if (!isMobile) {
 			if (leftSection) leftSection.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
 			if (rightSection) rightSection.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
@@ -112,36 +118,34 @@
 	}
 
 	function openGearView(type: 'basic' | 'technical', filter?: GearFilter) {
-		showGearView = true;
+		showGearViewStore.set(true);
 		activeGearType = type;
 		activeGearFilter = filter || 'all';
 		document.body.style.overflow = 'auto';
 		document.body.style.height = 'auto';
-
-		// On mobile, ensure we're on gear section and close mobile menu
 		if (isMobile) {
-			currentMobileSection = 1;
-			isMobileMenuOpen = false;
+			currentMobileSectionStore.set(1);
+			isMobileMenuOpenStore.set(false);
 		}
-
 		if (rightSection) rightSection.style.clipPath = 'inset(0 0 0 0)';
 	}
 
 	function closeGearView() {
-		showGearView = false;
+		showGearViewStore.set(false);
 		document.body.style.overflow = 'hidden';
 		document.body.style.height = '100vh';
-
-		// On mobile, return to gear section (section 1)
 		if (isMobile) {
-			currentMobileSection = 1;
+			currentMobileSectionStore.set(1);
 		}
-
-		// On desktop, restore clip paths
 		if (!isMobile) {
 			if (leftSection) leftSection.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
 			if (rightSection) rightSection.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
 		}
+	}
+
+	function closeQuestionnaire() {
+		showQuestionnaireStore.set(false);
+		currentFlow = '';
 	}
 
 	function handleNavClick(e: Event, target: string) {
@@ -149,14 +153,12 @@
 		e.stopPropagation();
 		if (target === 'training') {
 			if (!showTrainingView) {
-				// Close gear view if open before opening training
 				if (showGearView) closeGearView();
 				if (showQuestionnaire) closeQuestionnaire();
 				openTrainingView();
 			}
 		} else if (target === 'gear') {
 			if (!showGearView) {
-				// Close training view if open before opening gear
 				if (showTrainingView) closeTrainingView();
 				if (showQuestionnaire) closeQuestionnaire();
 				openGearView('basic');
@@ -167,158 +169,98 @@
 			} else if (showGearView) {
 				closeGearView();
 			} else if (isMobile) {
-				// On mobile, Homepage always goes to Training section (section 0)
-				currentMobileSection = 0;
-				isMobileMenuOpen = false;
+				currentMobileSectionStore.set(0);
+				isMobileMenuOpenStore.set(false);
 			}
 		}
 	}
 
-	const trainingCTAs = [
-		{
-			title: 'Become a BETTER diver',
-			subtitle: 'GUE curriculums & classes',
-			id: 'better-diver'
-		},
-		{
-			title: 'Go Bubble-less',
-			subtitle: 'CCR curriculums & trainings',
-			id: 'ccr'
-		},
-		{
-			title: 'GUE Instructor Development',
-			subtitle: 'learn to transfer knowledge on how to teach',
-			id: 'instructor'
+	async function handleCTAClick(ctaId: string, section: 'training' | 'gear') {
+		currentFlow = ctaId;
+		if (isMobile) {
+			currentMobileSectionStore.set(section === 'training' ? 0 : 1);
 		}
-	];
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		showQuestionnaireStore.set(true);
+	}
 
-	const gearCTAs = [
-		{
-			title: 'Premium Equipment',
-			subtitle: 'we only sell you what we use',
-			id: 'premium'
-		},
-		{
-			title: 'Latest Technologies',
-			subtitle: 'breakthroughs in dive experiences',
-			id: 'tech'
-		},
-		{
-			title: 'Underwater Visual Content',
-			subtitle: 'your underwater photography gear',
-			id: 'visual'
-		}
-	];
+	function handleQuestionnaireClose() {
+		closeQuestionnaire();
+	}
+
+	function handleOpenGearView(e: CustomEvent<{ type: 'basic' | 'technical'; filter: GearFilter }>) {
+		closeQuestionnaire();
+		openGearView(e.detail.type, e.detail.filter);
+	}
 
 	// Mobile swipe handlers
 	function handleMobileTouchStart(e: TouchEvent) {
 		if (!isMobile || showQuestionnaire || showTrainingView || showGearView) return;
-
 		touchStartX = e.touches[0].clientX;
+		touchCurrentX = e.touches[0].clientX;
 		touchStartY = e.touches[0].clientY;
 		isSwiping = true;
-		swipeHintShown = true;
 	}
 
 	function handleMobileTouchMove(e: TouchEvent) {
 		if (!isMobile || !isSwiping || showQuestionnaire || showTrainingView || showGearView) return;
-
 		touchCurrentX = e.touches[0].clientX;
 		const touchCurrentY = e.touches[0].clientY;
-
-		// Check if it's a horizontal swipe (not vertical scroll)
 		const deltaX = Math.abs(touchCurrentX - touchStartX);
 		const deltaY = Math.abs(touchCurrentY - touchStartY);
-
 		if (deltaX > deltaY && deltaX > 10) {
-			e.preventDefault(); // Prevent scrolling
+			e.preventDefault();
 		}
 	}
 
 	function handleMobileTouchEnd() {
 		if (!isMobile || !isSwiping || showQuestionnaire || showTrainingView || showGearView) return;
-
 		const deltaX = touchCurrentX - touchStartX;
-		const threshold = 50; // Minimum swipe distance
-
+		const threshold = 50;
 		if (Math.abs(deltaX) > threshold) {
 			if (deltaX > 0 && currentMobileSection === 1) {
-				// Swipe right - go to training
-				currentMobileSection = 0;
+				currentMobileSectionStore.set(0);
 			} else if (deltaX < 0 && currentMobileSection === 0) {
-				// Swipe left - go to gear
-				currentMobileSection = 1;
+				currentMobileSectionStore.set(1);
 			}
 		}
-
 		isSwiping = false;
 		touchStartX = 0;
 		touchCurrentX = 0;
 	}
 
-	function switchMobileSection(section: number) {
-		if (!isMobile) return;
-		currentMobileSection = section;
-	}
-
-	onMount(() => {
-		// Initialize current date
-		currentDate = formatDate();
-
-		// Check if mobile
-		const checkMobile = () => {
-			isMobile = window.innerWidth <= 768;
-		};
-		checkMobile();
-		window.addEventListener('resize', checkMobile);
-
-		// Initialize clip paths (horizontal orientation) - only for desktop
-		if (!isMobile) {
-			if (leftSection) {
-				leftSection.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
-			}
-			if (rightSection) {
-				rightSection.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
-			}
-			// Initialize logo clip paths (matching HTML version exactly)
-			if (logoLeft && logoRight) {
-				logoLeft.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
-				logoRight.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
-			}
-		}
-
-		return () => {
-			window.removeEventListener('resize', checkMobile);
-		};
-	});
-
+	// Slider handlers
 	function handleSliderMouseDown(e: MouseEvent) {
 		e.preventDefault();
 		if (showQuestionnaire) closeQuestionnaire();
-		isDragging = true;
+		sliderPositionStore.update((v) => v); // ensure subscribed
 		updateSliderPosition(e);
+		// set dragging via direct flag
+		_isDragging = true;
 	}
 
+	let _isDragging = false;
+
 	function handleMouseMove(e: MouseEvent) {
-		if (isDragging) {
+		if (_isDragging) {
 			e.preventDefault();
 			updateSliderPosition(e);
 		}
 	}
 
 	function handleMouseUp() {
-		isDragging = false;
+		_isDragging = false;
 	}
 
 	function handleTouchStart(e: TouchEvent) {
 		if (showQuestionnaire) closeQuestionnaire();
-		isDragging = true;
+		_isDragging = true;
 		const touch = e.touches[0];
 		updateSliderPosition({ clientX: touch.clientX } as MouseEvent);
 	}
 
 	function handleTouchMove(e: TouchEvent) {
-		if (isDragging) {
+		if (_isDragging) {
 			e.preventDefault();
 			const touch = e.touches[0];
 			updateSliderPosition({ clientX: touch.clientX } as MouseEvent);
@@ -326,52 +268,39 @@
 	}
 
 	function handleTouchEnd() {
-		isDragging = false;
+		_isDragging = false;
 	}
 
 	function updateSliderPosition(e: MouseEvent) {
-		const container = document.querySelector('.split-container');
-		if (container) {
-			const rect = container.getBoundingClientRect();
+		if (splitContainer) {
+			const rect = splitContainer.getBoundingClientRect();
 			const x = e.clientX - rect.left;
 			const percentage = (x / rect.width) * 100;
-			sliderPosition = Math.max(10, Math.min(90, percentage));
+			const clamped = Math.max(10, Math.min(90, percentage));
+			sliderPositionStore.set(clamped);
 
-			// Direct updates for instant response (horizontal orientation)
-			if (sliderBar) {
-				sliderBar.style.left = sliderPosition + '%';
-			}
-			if (leftSection) {
-				leftSection.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
-			}
-			if (rightSection) {
-				rightSection.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
-			}
+			if (sliderBar) sliderBar.style.left = clamped + '%';
+			if (leftSection) leftSection.style.clipPath = `inset(0 ${100 - clamped}% 0 0)`;
+			if (rightSection) rightSection.style.clipPath = `inset(0 0 0 ${clamped}%)`;
 
-			// Update logo clip paths - only split when slider is near center (45-55%)
-			// Matching HTML version exactly
 			if (logoLeft && logoRight) {
-				if (sliderPosition < 45) {
-					// Slider is far left, show full white logo for dark background
+				if (clamped < 45) {
 					logoLeft.style.clipPath = `inset(0 100% 0 0)`;
 					logoRight.style.clipPath = `inset(0 0 0 0%)`;
-				} else if (sliderPosition > 55) {
-					// Slider is far right, show full dark logo for light background
+				} else if (clamped > 55) {
 					logoLeft.style.clipPath = `inset(0 0% 0 0)`;
 					logoRight.style.clipPath = `inset(0 0 0 100%)`;
 				} else {
-					// Slider is near center, split the logo
-					logoLeft.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
-					logoRight.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
+					logoLeft.style.clipPath = `inset(0 ${100 - clamped}% 0 0)`;
+					logoRight.style.clipPath = `inset(0 0 0 ${clamped}%)`;
 				}
 			}
 
-			// Update arrow sizes based on slider position
 			if (arrowLeft && arrowRight) {
-				if (sliderPosition < 45) {
+				if (clamped < 45) {
 					arrowLeft.classList.add('active');
 					arrowRight.classList.remove('active');
-				} else if (sliderPosition > 55) {
+				} else if (clamped > 55) {
 					arrowLeft.classList.remove('active');
 					arrowRight.classList.add('active');
 				} else {
@@ -382,192 +311,29 @@
 		}
 	}
 
-	function selectSection(section: Section) {
-		activeSection = section;
-	}
+	onMount(() => {
+		splitContainer = document.querySelector('.split-container') as HTMLElement;
+		currentDate = formatDate();
 
-	function toggleMobileMenu() {
-		isMobileMenuOpen = !isMobileMenuOpen;
-	}
+		const checkMobile = () => {
+			isMobileStore.set(window.innerWidth <= 768);
+		};
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
 
-	async function typeMessage(text: string, delay = 30): Promise<void> {
-		return new Promise((resolve) => {
-			let index = 0;
-			const interval = setInterval(() => {
-				if (index < text.length) {
-					index++;
-				} else {
-					clearInterval(interval);
-					resolve();
-				}
-			}, delay);
-		});
-	}
-
-	async function handleCTAClick(ctaId: string, section: Section) {
-		console.log('CTA clicked:', ctaId, section);
-
-		// Set current flow
-		currentFlow = ctaId;
-
-		// On mobile, ensure we stay on the section where CTA was clicked
-		if (isMobile) {
-			if (section === 'training') {
-				currentMobileSection = 0;
-			} else if (section === 'gear') {
-				currentMobileSection = 1;
+		if (!isMobile) {
+			if (leftSection) leftSection.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
+			if (rightSection) rightSection.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
+			if (logoLeft && logoRight) {
+				logoLeft.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
+				logoRight.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
 			}
 		}
 
-		// Wait for animation
-		await new Promise(resolve => setTimeout(resolve, 100));
-
-		// Show questionnaire
-		showQuestionnaire = true;
-		console.log('Questionnaire shown');
-
-		// Start questionnaire based on CTA
-		if (ctaId === 'better-diver') {
-			console.log('Starting better diver flow');
-			await startBetterDiverFlow();
-		} else if (ctaId === 'ccr') {
-			await startCCRFlow();
-		} else if (ctaId === 'instructor') {
-			await startInstructorFlow();
-		} else if (ctaId === 'premium') {
-			await startPremiumEquipmentFlow();
-		}
-	}
-
-	async function startBetterDiverFlow() {
-		// Show message with fade in animation (handled by CSS)
-		const questionText = 'Are you an existing diver with any other agency?';
-		messages = [{ type: 'question', text: questionText, typing: false }];
-
-		// Small delay before showing options
-		await new Promise(resolve => setTimeout(resolve, 400));
-		currentQuestion = 'existing-diver';
-		questionOptions = ['Yes', 'No', 'I am already a GUE certified diver'];
-	}
-
-	async function handleAnswer(answer: string) {
-		// Add user's answer to messages
-		messages = [...messages, { type: 'answer', text: answer }];
-
-		// Clear current question
-		currentQuestion = null;
-		questionOptions = [];
-
-		// Wait a bit
-		await new Promise(resolve => setTimeout(resolve, 500));
-
-		// Handle the answer based on response
-		if (answer === 'Yes') {
-			// Show products for existing divers with other agencies
-			showProducts = true;
-			currentProductIndex = 0;
-			products = [
-				'GUE Performance Diver',
-				'GUE Basic Fundamentals',
-				'GUE Technical Fundamentals',
-				'GUE Doubles Primer',
-				'GUE Drysuit Primer'
-			];
-		} else if (answer === 'No') {
-			// Show beginner products
-			showProducts = true;
-			currentProductIndex = 0;
-			products = [
-				'GUE Discover Diving',
-				'GUE Scuba Diver',
-				'GUE Open Water Diver'
-			];
-		} else if (answer === 'I am already a GUE certified diver') {
-			// Show advanced products for GUE certified divers
-			showProducts = true;
-			currentProductIndex = 0;
-			products = [
-				'GUE DPV 1',
-				'GUE Navigation Primer',
-				'GUE Deep Primer',
-				'GUE Doubles Primer',
-				'GUE Drysuit Primer'
-			];
-		}
-	}
-
-	async function startPremiumEquipmentFlow() {
-		messages = [{ type: 'question', text: 'WE ONLY SELL YOU WHAT WE USE !\n\nwhether you are starting up or optimizing your diving path, we will consult you on what is best, modular, and would serve you as a long term investment', typing: false }];
-		await new Promise(resolve => setTimeout(resolve, 400));
-		showGearTypeSelection = true;
-	}
-
-	async function closeQuestionnaire() {
-		// First hide the questionnaire
-		showQuestionnaire = false;
-		showProducts = false;
-		showCallToAction = false;
-		showGearTypeSelection = false;
-		messages = [];
-		currentQuestion = null;
-		questionOptions = [];
-		currentProductIndex = 0;
-		currentFlow = '';
-
-		// Wait a moment for questionnaire to fade out, then animate CTA back
-		await new Promise(resolve => setTimeout(resolve, 300));
-	}
-
-	async function startCCRFlow() {
-		// Show message with fade in animation (handled by CSS)
-		const titleText = 'A modern tool with a purpose, cross into the CCR world as an effective approach for a multitude of diving goals, such as but not limited to, deeper dives, extended ranges, underwater content creation';
-		messages = [{ type: 'question', text: titleText, typing: false }];
-
-		// Wait a moment then show products
-		await new Promise(resolve => setTimeout(resolve, 500));
-
-		// Show CCR products
-		showProducts = true;
-		currentProductIndex = 0;
-		products = [
-			'GUE Symbios CCR Fundamentals',
-			'GUE JJ CCR Fundamentals',
-			'JJ CCR - MOD 1'
-		];
-	}
-
-	async function startInstructorFlow() {
-		// Show message with fade in animation (handled by CSS)
-		const questionText = 'If you see yourself as a GUE Instructor, that\'s your starting point here';
-		messages = [{ type: 'question', text: questionText, typing: false }];
-
-		// Small delay before showing CTA
-		await new Promise(resolve => setTimeout(resolve, 400));
-		showCallToAction = true;
-	}
-
-	function scrollProducts(direction: 'prev' | 'next', grid: HTMLDivElement | null) {
-		if (!grid) return;
-
-		if (direction === 'next') {
-			currentProductIndex = Math.min(currentProductIndex + 1, products.length - 1);
-		} else {
-			currentProductIndex = Math.max(currentProductIndex - 1, 0);
-		}
-
-		const cardWidth = grid.scrollWidth / products.length;
-		grid.scrollTo({
-			left: currentProductIndex * cardWidth,
-			behavior: 'smooth'
-		});
-	}
-
-	function handleProductScroll(e: Event) {
-		const grid = e.target as HTMLDivElement;
-		if (!grid || !products.length) return;
-		const cardWidth = grid.scrollWidth / products.length;
-		currentProductIndex = Math.max(0, Math.min(Math.round(grid.scrollLeft / cardWidth), products.length - 1));
-	}
+		return () => {
+			window.removeEventListener('resize', checkMobile);
+		};
+	});
 </script>
 
 <svelte:window
@@ -597,7 +363,6 @@
 		class:active={sliderPosition < 50}
 		class:expanded={showTrainingView}
 		class:hidden={showGearView}
-		on:click={() => selectSection('training')}
 	>
 		<div class="section-content">
 			{#if !showTrainingView}
@@ -607,47 +372,25 @@
 			{/if}
 
 			{#if showTrainingView}
-				<!-- Training View Header - Centered -->
 				<div class="training-header">
 					<div class="logo centered">OCEAN FRONTIER</div>
 					<div class="logo-subtitle centered">CONSULTING</div>
 					<Nav variant="light" centered={true} activeLink="training" onNavClick={handleNavClick} onMobileClose={null} />
 				</div>
-
-				<!-- Close X Button -->
 				<button class="close-x-button" on:click={() => closeTrainingView()} aria-label="Close training view">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 						<line x1="18" y1="6" x2="6" y2="18"></line>
 						<line x1="6" y1="6" x2="18" y2="18"></line>
 					</svg>
 				</button>
-
-				<!-- Training View: Filter Bar -->
 				<div class="training-content">
-					<nav class="filter-bar">
-						<a href="#all" class="filter-link" class:active={activeFilter === 'all'} on:click|preventDefault|stopPropagation={() => filterCourses('all')}>ALL COURSES</a>
-						<span class="filter-separator">/</span>
-						<a href="#non-diver" class="filter-link" class:active={activeFilter === 'none-diver'} on:click|preventDefault|stopPropagation={() => filterCourses('none-diver')}>NON DIVER</a>
-						<span class="filter-separator">/</span>
-						<a href="#existing" class="filter-link" class:active={activeFilter === 'existing-diver'} on:click|preventDefault|stopPropagation={() => filterCourses('existing-diver')}>EXISTING DIVER</a>
-						<span class="filter-separator">/</span>
-						<a href="#gue" class="filter-link" class:active={activeFilter === 'gue-diver'} on:click|preventDefault|stopPropagation={() => filterCourses('gue-diver')}>GUE DIVER</a>
-						<span class="filter-separator">/</span>
-						<a href="#rebreathers" class="filter-link" class:active={activeFilter === 'rebreathers'} on:click|preventDefault|stopPropagation={() => filterCourses('rebreathers')}>REBREATHERS</a>
-						<span class="filter-separator">/</span>
-						<a href="#instructor" class="filter-link" class:active={activeFilter === 'instructor'} on:click|preventDefault|stopPropagation={() => filterCourses('instructor')}>INSTRUCTOR</a>
-					</nav>
+					<CourseFilterBar activeFilter={activeFilter} onFilter={filterCourses} />
 				</div>
-
-				<!-- Main Training Layout: Hero Left + Courses Right -->
 				<div class="training-main-layout">
-					<!-- Hero Section - Left Side -->
 					<div class="training-hero">
 						<h1 class="training-hero-title">Discover Your Perfect Dive Course</h1>
 						<p class="training-hero-description">Our training programs are designed for divers who demand excellence, precision, and mastery in every environment. Whether your objective is technical diving, cave exploration, or the development of world-class foundational skills, GUE sets the global benchmark for uncompromising training standards.</p>
 						<p class="training-hero-tagline">Train for Mastery, learn to explore</p>
-
-						<!-- Mobile: Collapsible content with read more -->
 						<div class="hero-expandable" class:expanded={heroExpanded}>
 							<div class="hero-expandable-content">
 								<p class="training-hero-intro">These curricula are built for divers who:</p>
@@ -666,183 +409,54 @@
 							</div>
 							<div class="hero-fade-overlay" class:hidden={heroExpanded}></div>
 						</div>
-
-						<!-- Read More/Less Button (mobile only) -->
-						<button class="read-more-button" class:expanded={heroExpanded} on:click={() => heroExpanded = !heroExpanded}>
+						<button class="read-more-button" class:expanded={heroExpanded} on:click={() => (heroExpanded = !heroExpanded)}>
 							<span>{heroExpanded ? 'Read less' : 'Read more'}</span>
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 								<polyline points="6 9 12 15 18 9"></polyline>
 							</svg>
 						</button>
 					</div>
-
-					<!-- Courses Grid - Right Side -->
 					<div class="courses-container">
 						<div class="courses-grid">
 							{#each visibleCourses as course, i (course.id)}
-								<div class="course-card" style="--card-index: {i}">
-									<div class="course-image-wrapper">
-										<div class="course-image" style="background-image: url('{course.image}')">
-											<div class="image-overlay"></div>
-										</div>
-									</div>
-									<div class="course-content">
-										<h3 class="course-title">{course.title}</h3>
-										<p class="course-description">{course.description}</p>
-										<button class="course-cta" on:click|stopPropagation>Learn More</button>
-									</div>
-								</div>
+								<CourseCard {course} index={i} on:learnmore={(e) => selectedCourseStore.set(e.detail)} />
 							{/each}
 						</div>
 					</div>
 				</div>
 			{:else}
-			<div class="cta-container" class:minimized={showQuestionnaire} class:hidden={showTrainingView}>
-				{#each trainingCTAs as cta, i}
-					<div
-						class="cta-item"
-						style="--item-index: {i}"
-						on:click|stopPropagation={() => handleCTAClick(cta.id, 'training')}
-						on:keydown|stopPropagation={(e) => e.key === 'Enter' && handleCTAClick(cta.id, 'training')}
-						role="button"
-						tabindex="0"
-					>
-						<h2 class="cta-title">{cta.title}</h2>
-						<p class="cta-subtitle">{cta.subtitle}</p>
-					</div>
-				{/each}
-			</div>
-			{/if}
-
-			{#if !showTrainingView}
-			<div class="section-label">
-				<span class="label-text">DIVE TRAINING</span>
-			</div>
-		{/if}
-
-		<!-- Questionnaire Panel for Left Section -->
-			{#if showQuestionnaire}
-				<div class="questionnaire-panel" class:active={showQuestionnaire}>
-					<div class="questionnaire-content-wrapper">
-						<button class="close-button" on:click={closeQuestionnaire} aria-label="Close">
-							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<line x1="18" y1="6" x2="6" y2="18"></line>
-								<line x1="6" y1="6" x2="18" y2="18"></line>
-							</svg>
-						</button>
-
-						<div class="questionnaire-content">
-							<h2 class="questionnaire-title">
-								{#if currentFlow === 'ccr'}
-									Cross into the Closed Circuit Rebreather World
-								{:else if currentFlow === 'instructor'}
-									Instructor Development
-								{:else}
-									Find Your Path
-								{/if}
-							</h2>
-
-							<!-- Messages -->
-							<div class="messages-container">
-								{#each messages as message, i}
-									<div class="message message-{message.type}" style="--message-index: {i}">
-										{#if message.type === 'question'}
-											<div class="message-bubble bot-message" class:instructor-message={currentFlow === 'instructor' || currentFlow === 'ccr'}>
-												{message.text}
-												{#if message.typing}
-													<span class="typing-indicator">
-														<span></span>
-														<span></span>
-														<span></span>
-													</span>
-												{/if}
-											</div>
-										{:else if message.type === 'answer'}
-											<div class="message-bubble user-message">
-												{message.text}
-											</div>
-										{/if}
-									</div>
-								{/each}
-							</div>
-
-							<!-- Question Options -->
-							{#if currentQuestion && questionOptions.length > 0}
-								<div class="options-container">
-									{#each questionOptions as option}
-										<button
-											class="option-button"
-											on:click={() => handleAnswer(option)}
-										>
-											{option}
-										</button>
-									{/each}
-								</div>
-							{/if}
-
-							<!-- Call to Action Button -->
-							{#if showCallToAction}
-								<div class="cta-button-container">
-									<button class="primary-cta-button">
-										Let us discuss your path
-									</button>
-								</div>
-							{/if}
-
-							<!-- Products Display -->
-							{#if showProducts}
-								<div class="products-container">
-									<h3 class="products-title">Recommended Courses</h3>
-									<div class="products-carousel-wrapper">
-										<button
-											class="carousel-button prev"
-											on:click={() => scrollProducts('prev', productsGridLeft)}
-											aria-label="Previous products"
-										>
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-												<polyline points="15 18 9 12 15 6"></polyline>
-											</svg>
-										</button>
-										<div class="products-grid" bind:this={productsGridLeft} on:scroll={handleProductScroll}>
-											{#each products as product, i}
-												<div class="product-card" style="--product-index: {i}">
-													<div class="product-icon">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-															<path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-															<path d="M2 17l10 5 10-5"></path>
-															<path d="M2 12l10 5 10-5"></path>
-														</svg>
-													</div>
-													<h4 class="product-name">{product}</h4>
-													<button class="product-button">Learn More</button>
-												</div>
-											{/each}
-										</div>
-										<button
-											class="carousel-button next"
-											on:click={() => scrollProducts('next', productsGridLeft)}
-											aria-label="Next products"
-										>
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-												<polyline points="9 18 15 12 9 6"></polyline>
-											</svg>
-										</button>
-									</div>
-									<div class="product-counter">
-										<div class="product-dots">
-											{#each products as _, i}
-												<span class="product-dot" class:active={i === Math.min(currentProductIndex, products.length - 1)}></span>
-											{/each}
-										</div>
-										<span class="product-counter-text">{Math.min(currentProductIndex + 1, products.length)}/{products.length}</span>
-									</div>
-								</div>
-							{/if}
+				<div class="cta-container" class:minimized={showQuestionnaire} class:hidden={showTrainingView}>
+					{#each trainingCTAs as cta, i}
+						<div
+							class="cta-item"
+							class:cta-disabled={cta.disabled}
+							style="--item-index: {i}"
+							on:click|stopPropagation={() => !cta.disabled && handleCTAClick(cta.id, 'training')}
+							on:keydown|stopPropagation={(e) => e.key === 'Enter' && !cta.disabled && handleCTAClick(cta.id, 'training')}
+							role="button"
+							tabindex={cta.disabled ? -1 : 0}
+						>
+							<h2 class="cta-title">{cta.title}</h2>
+							<p class="cta-subtitle">{cta.subtitle}</p>
 						</div>
-					</div>
+					{/each}
 				</div>
 			{/if}
 
+			{#if !showTrainingView}
+				<div class="section-label">
+					<span class="label-text">DIVE TRAINING</span>
+				</div>
+			{/if}
+
+			{#if showQuestionnaire && !showTrainingView}
+				<QuestionnairePanel
+					flow={currentFlow}
+					section="training"
+					on:close={handleQuestionnaireClose}
+					on:openGearView={handleOpenGearView}
+				/>
+			{/if}
 		</div>
 	</button>
 
@@ -853,254 +467,80 @@
 		class:active={sliderPosition > 50}
 		class:hidden={showTrainingView}
 		class:expanded={showGearView}
-		on:click={() => selectSection('gear')}
 	>
 		<div class="section-content">
 			{#if !showGearView}
-			<div class="logo">OCEAN FRONTIER</div>
-			<div class="logo-subtitle">CONSULTING</div>
-			<Nav variant="dark" centered={false} activeLink={null} onNavClick={handleNavClick} onMobileClose={null} />
+				<div class="logo">OCEAN FRONTIER</div>
+				<div class="logo-subtitle">CONSULTING</div>
+				<Nav variant="dark" centered={false} activeLink={null} onNavClick={handleNavClick} onMobileClose={null} />
 			{/if}
 
 			{#if showGearView}
-				<!-- Gear View Header -->
 				<div class="gear-header">
 					<div class="logo centered">OCEAN FRONTIER</div>
 					<div class="logo-subtitle centered">CONSULTING</div>
 					<Nav variant="light" centered={true} activeLink="gear" onNavClick={handleNavClick} onMobileClose={null} />
 				</div>
-
-				<!-- Close X Button -->
 				<button class="close-x-button" on:click={() => closeGearView()} aria-label="Close gear view">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 						<line x1="18" y1="6" x2="6" y2="18"></line>
 						<line x1="6" y1="6" x2="18" y2="18"></line>
 					</svg>
 				</button>
-
-				<!-- Gear View Content -->
 				<div class="gear-content">
-					<!-- Filter Bar -->
 					<nav class="filter-bar">
-						<a href="#all" class="filter-link" class:active={activeGearFilter === 'all'} on:click|preventDefault|stopPropagation={() => activeGearFilter = 'all'}>ALL GEAR</a>
+						<a href="#all" class="filter-link" class:active={activeGearFilter === 'all'} on:click|preventDefault|stopPropagation={() => (activeGearFilter = 'all')}>ALL GEAR</a>
 						<span class="filter-separator">/</span>
-						<a href="#basic" class="filter-link" class:active={activeGearFilter === 'basic'} on:click|preventDefault|stopPropagation={() => activeGearFilter = 'basic'}>BASIC</a>
+						<a href="#basic" class="filter-link" class:active={activeGearFilter === 'basic'} on:click|preventDefault|stopPropagation={() => (activeGearFilter = 'basic')}>BASIC</a>
 						<span class="filter-separator">/</span>
-						<a href="#technical" class="filter-link" class:active={activeGearFilter === 'technical'} on:click|preventDefault|stopPropagation={() => activeGearFilter = 'technical'}>TECHNICAL</a>
+						<a href="#technical" class="filter-link" class:active={activeGearFilter === 'technical'} on:click|preventDefault|stopPropagation={() => (activeGearFilter = 'technical')}>TECHNICAL</a>
 						<span class="filter-separator">/</span>
-						<a href="#content" class="filter-link" class:active={activeGearFilter === 'content-creation'} on:click|preventDefault|stopPropagation={() => activeGearFilter = 'content-creation'}>UNDERWATER CONTENT CREATION</a>
+						<a href="#content" class="filter-link" class:active={activeGearFilter === 'content-creation'} on:click|preventDefault|stopPropagation={() => (activeGearFilter = 'content-creation')}>UNDERWATER CONTENT CREATION</a>
 					</nav>
-
-					<!-- Brand Logos Strip -->
 					<div class="gear-brands-section">
 						<BrandLogos />
 					</div>
-
-					<!-- Gear Description Section -->
 					<div class="gear-description-section">
 						<h2 class="gear-description-title">We Only Sell You, What We Personally Use</h2>
 						<p class="gear-description-text">Our approach to Gear purchasing is a modular system that allows growth and adaptation to further and future developments. It is the most honest path into owning expensive and reliable diving gear to prevent unnecessary loss of funds, resources, and energy.<br><br>Whether you want Basic, Technical or Underwater Content Creation equipment, I believe that we can help you make Sustainable Choices</p>
 					</div>
-
-					<!-- Interactive Gear Diagram -->
 					<GearDiagram />
 				</div>
 			{:else}
-			<div class="cta-container" class:minimized={showQuestionnaire} class:hidden={showTrainingView}>
-				{#each gearCTAs as cta, i}
-					<div
-						class="cta-item"
-						style="--item-index: {i}"
-						on:click|stopPropagation={() => handleCTAClick(cta.id, 'gear')}
-						on:keydown|stopPropagation={(e) => e.key === 'Enter' && handleCTAClick(cta.id, 'gear')}
-						role="button"
-						tabindex="0"
-					>
-						<h2 class="cta-title">{cta.title}</h2>
-						<p class="cta-subtitle">{cta.subtitle}</p>
-					</div>
-				{/each}
-			</div>
-
-			<div class="section-label">
-				<span class="label-text">DIVE GEAR</span>
-			</div>
-
-		<!-- Questionnaire Panel for Right Section -->
-			{#if showQuestionnaire}
-				<div class="questionnaire-panel" class:active={showQuestionnaire}>
-					<div class="questionnaire-content-wrapper">
-						<button class="close-button" on:click={closeQuestionnaire} aria-label="Close">
-							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<line x1="18" y1="6" x2="6" y2="18"></line>
-								<line x1="6" y1="6" x2="18" y2="18"></line>
-							</svg>
-						</button>
-
-						<div class="questionnaire-content">
-							<h2 class="questionnaire-title">
-								{#if currentFlow === 'ccr'}
-									Cross into the Closed Circuit Rebreather World
-								{:else if currentFlow === 'instructor'}
-									Instructor Development
-								{:else}
-									Modular Gear Approach
-								{/if}
-							</h2>
-
-							<!-- Messages -->
-							<div class="messages-container">
-								{#each messages as message, i}
-									<div class="message message-{message.type}" style="--message-index: {i}">
-										{#if message.type === 'question'}
-											<div class="message-bubble bot-message" class:instructor-message={currentFlow === 'instructor' || currentFlow === 'ccr'}>
-												{message.text}
-												{#if message.typing}
-													<span class="typing-indicator">
-														<span></span>
-														<span></span>
-														<span></span>
-													</span>
-												{/if}
-											</div>
-										{:else if message.type === 'answer'}
-											<div class="message-bubble user-message">
-												{message.text}
-											</div>
-										{/if}
-									</div>
-								{/each}
-							</div>
-
-							<!-- Question Options -->
-							{#if currentQuestion && questionOptions.length > 0}
-								<div class="options-container">
-									{#each questionOptions as option}
-										<button
-											class="option-button"
-											on:click={() => handleAnswer(option)}
-										>
-											{option}
-										</button>
-									{/each}
-								</div>
-							{/if}
-
-							<!-- Gear Type Selection -->
-							{#if showGearTypeSelection}
-								<div class="gear-type-selection">
-									<button class="gear-type-card" on:click|stopPropagation={() => { closeQuestionnaire(); openGearView('basic', 'basic'); }}>
-										<div class="gear-type-frame">
-											<svg class="gear-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.46 283.46">
-												<rect x="116.91" y="88.54" width="54.93" height="97.06"/>
-												<path d="M171.84,90.48h-54.93v-5.36c0-4.36,4.79-11.89,8.14-14.68,9.73-8.1,30.34-7.92,39.6.93,3.11,2.97,7.2,10.39,7.2,14.68v4.43Z"/>
-												<path d="M171.84,174.98v74.71c0,6.87-6.55,15.62-12.55,18.64-7.65,3.86-23.64,3.81-31.07-.63-4.65-2.78-11.32-11.07-11.32-16.62v-76.11h54.93Z"/>
-												<rect x="134.14" y="50.65" width="20.48" height="11.17"/>
-												<path d="M149.71,48.11v.25h-.08c.03-.08.06-.16.08-.25Z"/>
-												<path d="M152.13,28.53h-2.42v-2.51c0-1.1-.88-1.98-1.98-1.98h-7.05c-1.09,0-1.98.88-1.98,1.98v2.51h-1.96c-1.1,0-1.99.89-1.99,1.98v4.66s-.08-.01-.11-.01h-4.16c-.13,0-.25.01-.36.04v-.46c0-1.09-.89-1.98-1.98-1.98l-10.96-2c-1.09,0-1.98.89-1.98,1.98v10.62c0,1.09.89,1.98,1.98,1.98l10.96-2c1.09,0,1.98-.89,1.98-1.98v-.46c.11.03.24.04.36.04h4.16s.08,0,.11-.01v5.47c0,1.09.89,1.98,1.99,1.98h1.96v.46c0,1.09.89,1.98,1.98,1.98h7.05c1.1,0,1.98-.89,1.98-1.98v-.46h-.08c.03-.08.06-.16.08-.25v.25h2.42c1.1,0,1.98-.89,1.98-1.98v-15.87c0-1.09-.88-1.98-1.98-1.98ZM144.17,43.79c-3.36,0-6.09-2.73-6.09-6.09s2.73-6.09,6.09-6.09,6.09,2.73,6.09,6.09-2.73,6.09-6.09,6.09Z"/>
-											</svg>
-										</div>
-										<span class="gear-type-label">Basic</span>
-									</button>
-									<button class="gear-type-card" on:click|stopPropagation={() => { closeQuestionnaire(); openGearView('technical', 'technical'); }}>
-										<div class="gear-type-frame">
-											<svg class="gear-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.46 283.46">
-												<rect x="82.4" y="107.56" width="54.93" height="48.02"/>
-												<rect x="143.85" y="107.56" width="54.93" height="48.02"/>
-												<path d="M198.79,90.48h-54.93v-5.36c0-7.34,8.16-16.25,14.78-18.74,6.14-2.31,19.61-2.3,25.72.13,6.62,2.63,14.44,11.78,14.44,19.08v4.89Z"/>
-												<path d="M137.34,90.48h-54.93v-5.36c0-4.36,4.79-11.89,8.14-14.68,9.73-8.1,30.34-7.92,39.6.93,3.11,2.97,7.2,10.39,7.2,14.68v4.43Z"/>
-												<path d="M137.34,174.98v74.71c0,6.87-6.55,15.62-12.55,18.64-7.65,3.86-23.64,3.81-31.07-.63-4.65-2.78-11.32-11.07-11.32-16.62v-76.11h54.93Z"/>
-												<path d="M198.79,174.98v74.71c0,4.29-4.09,11.7-7.2,14.68-9.38,8.97-30.46,9.09-40.06.46-3.01-2.7-7.67-10.21-7.67-14.21v-75.64h54.93Z"/>
-												<path d="M181.56,50.65v11.17h-20.48v-10.94l.7-.7h18.16c.25,0,1.04.72,1.63.47Z"/>
-												<rect x="99.63" y="50.65" width="20.48" height="11.17"/>
-												<path d="M115.2,48.11v.25h-.08c.03-.08.06-.16.08-.25Z"/>
-												<path d="M117.62,28.53h-2.42v-2.51c0-1.1-.88-1.98-1.98-1.98h-7.05c-1.09,0-1.98.88-1.98,1.98v2.51h-1.96c-1.1,0-1.99.89-1.99,1.98v4.66s-.08-.01-.11-.01h-4.16c-.13,0-.25.01-.36.04v-.46c0-1.09-.89-1.98-1.98-1.98l-10.96-2c-1.09,0-1.98.89-1.98,1.98v10.62c0,1.09.89,1.98,1.98,1.98l10.96-2c1.09,0,1.98-.89,1.98-1.98v-.46c.11.03.24.04.36.04h4.16s.08,0,.11-.01v5.47c0,1.09.89,1.98,1.99,1.98h1.96v.46c0,1.09.89,1.98,1.98,1.98h7.05c1.1,0,1.98-.89,1.98-1.98v-.46h-.08c.03-.08.06-.16.08-.25v.25h2.42c1.1,0,1.98-.89,1.98-1.98v-15.87c0-1.09-.88-1.98-1.98-1.98ZM109.66,43.79c-3.36,0-6.09-2.73-6.09-6.09s2.73-6.09,6.09-6.09,6.09,2.73,6.09,6.09-2.73,6.09-6.09,6.09Z"/>
-												<path d="M150.45,33.11c0-1.11-.89-2-1.98-2h-4.65s.01-.08.01-.11v-2.17c0-.13-.01-.25-.04-.36h.46c1.09,0,1.98-.89,1.98-1.99l.99-8.98c0-1.09-.89-1.99-1.98-1.99h-8.59c-1.09,0-1.98.89-1.98,1.99l.99,8.98c0,1.09.89,1.99,1.98,1.99h.46c-.03.11-.04.24-.04.36v2.17s0,.08.01.11h-5.45c-1.09,0-1.98.89-1.98,2h19.78Z"/>
-												<path d="M165.73,48.11v.25s.08,0,.08,0c-.03-.08-.06-.16-.08-.25Z"/>
-												<path d="M161.33,30.51v15.87c0,1.09.88,1.98,1.98,1.98h2.42s0-.25,0-.25c.01.09.05.18.08.25h-.08s0,.46,0,.46c0,1.09.88,1.98,1.98,1.98h7.05c1.09,0,1.98-.89,1.98-1.98v-.46h1.96c1.1,0,1.99-.89,1.99-1.98v-5.47s.08.01.11.01h4.16c.13,0,.25-.01.36-.04v.46c0,1.09.89,1.98,1.98,1.98l10.96,2c1.09,0,1.98-.89,1.98-1.98v-10.62c0-1.09-.89-1.98-1.98-1.98l-10.96,2c-1.09,0-1.98.89-1.98,1.98v.46c-.11-.03-.24-.04-.36-.04h-4.16s-.08,0-.11.01v-4.66c0-1.09-.89-1.98-1.99-1.98h-1.96v-2.51c0-1.1-.89-1.98-1.98-1.98h-7.05c-1.1,0-1.98.88-1.98,1.98v2.51h-2.42c-1.1,0-1.98.89-1.98,1.98ZM165.17,37.7c0-3.36,2.73-6.09,6.09-6.09s6.09,2.73,6.09,6.09-2.73,6.09-6.09,6.09-6.09-2.73-6.09-6.09Z"/>
-												<rect x="117.42" y="35.04" width="45.5" height="5.99"/>
-												<rect x="132.53" y="42.85" width="16.38" height="2.4"/>
-											</svg>
-										</div>
-										<span class="gear-type-label">Technical</span>
-									</button>
-								</div>
-							{/if}
-
-							<!-- Call to Action Button -->
-							{#if showCallToAction}
-								<div class="cta-button-container">
-									<button class="primary-cta-button">
-										Let us discuss your path
-									</button>
-								</div>
-							{/if}
-
-							<!-- Products Display -->
-							{#if showProducts}
-								<div class="products-container">
-									<h3 class="products-title">Recommended Equipment</h3>
-									<div class="products-carousel-wrapper">
-										<button
-											class="carousel-button prev"
-											on:click={() => scrollProducts('prev', productsGridRight)}
-											aria-label="Previous products"
-										>
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-												<polyline points="15 18 9 12 15 6"></polyline>
-											</svg>
-										</button>
-										<div class="products-grid" bind:this={productsGridRight} on:scroll={handleProductScroll}>
-											{#each products as product, i}
-												<div class="product-card" style="--product-index: {i}">
-													<div class="product-icon">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-															<path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-															<path d="M2 17l10 5 10-5"></path>
-															<path d="M2 12l10 5 10-5"></path>
-														</svg>
-													</div>
-													<h4 class="product-name">{product}</h4>
-													<button class="product-button">Learn More</button>
-												</div>
-											{/each}
-										</div>
-										<button
-											class="carousel-button next"
-											on:click={() => scrollProducts('next', productsGridRight)}
-											aria-label="Next products"
-										>
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-												<polyline points="9 18 15 12 9 6"></polyline>
-											</svg>
-										</button>
-									</div>
-									<div class="product-counter">
-										<div class="product-dots">
-											{#each products as _, i}
-												<span class="product-dot" class:active={i === Math.min(currentProductIndex, products.length - 1)}></span>
-											{/each}
-										</div>
-										<span class="product-counter-text">{Math.min(currentProductIndex + 1, products.length)}/{products.length}</span>
-									</div>
-								</div>
-							{/if}
+				<div class="cta-container" class:minimized={showQuestionnaire} class:hidden={showTrainingView}>
+					{#each gearCTAs as cta, i}
+						<div
+							class="cta-item"
+							style="--item-index: {i}"
+							on:click|stopPropagation={() => handleCTAClick(cta.id, 'gear')}
+							on:keydown|stopPropagation={(e) => e.key === 'Enter' && handleCTAClick(cta.id, 'gear')}
+							role="button"
+							tabindex="0"
+						>
+							<h2 class="cta-title">{cta.title}</h2>
+							<p class="cta-subtitle">{cta.subtitle}</p>
 						</div>
-					</div>
+					{/each}
 				</div>
-			{/if}
-			{/if}
+				<div class="section-label">
+					<span class="label-text">DIVE GEAR</span>
+				</div>
 
+				{#if showQuestionnaire}
+					<QuestionnairePanel
+						flow={currentFlow}
+						section="gear"
+						on:close={handleQuestionnaireClose}
+						on:openGearView={handleOpenGearView}
+					/>
+				{/if}
+			{/if}
 		</div>
 	</button>
 
 	<!-- Slider Bar -->
 	<div bind:this={sliderBar} class="slider-bar" class:hidden={showTrainingView || showGearView} style="left: {sliderPosition}%">
-		<button
-			class="slider-handle"
-			on:mousedown={handleSliderMouseDown}
-			on:touchstart={handleTouchStart}
-		>
+		<button class="slider-handle" on:mousedown={handleSliderMouseDown} on:touchstart={handleTouchStart}>
 			<div class="slider-toggle-thumb">
 				<div class="slider-arrows">
 					<svg bind:this={arrowLeft} class="slider-chevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1136,77 +576,19 @@
 	</div>
 
 	<!-- Center Logo - Split for background reactivity -->
-	<div bind:this={logoLeft} class="center-logo-left" class:hidden={showQuestionnaire || showTrainingView || showGearView}>
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.46 283.46">
-			<path style="fill: #2a2a2a !important;" d="M179.77,104.39c-.87.44-1.34,1.69-2.36,1.75-1.25.07.05-1.34.18-1.61.65-1.33-.2-2.58.07-3.32.22-.59,1.08-.7,1.39-1.35.27-.57-.2-1.25.11-1.82l-.38-.15c-.28,1.22.5,1.42-.61,2.39-.68.59-1.45.24-2.19-.2-.48-.28-1.51-1.97-1.4-2.5l1.1.17-1.09-.53.07-.44c-.82,1.35-2.47-1.07-2.54-1.95-.13-2,3.09-1.18,4.2-1.08l.18-.57-3.49.05c-.6.24-1.08,1.2-1.65,1.3-.66.11-1.57-.64-2.9-.23-.5.16-1.36.99-1.79.42-.47-.61,1.97-2.59,2.45-2.36l.85.68-.14-.71-.99-.47,1.09-1.52c1.34.47,2.5.47,2.99-1.08,0,0,.28.39.55.26.28-.13-.05-.77-.05-.77-.8-.17-1.7,3.07-3.56.9-.22-.26.37-.75.04-.97-.48.44-.18,1.09-.4,1.57-.21.45-.92,1.38-1.27,1.79-.92,1.07-2.16,1.98-3.08,3.07-.15-1.58-.91-3.98-.47-5.51.72-2.46,4.27-4.32,5.82-6.39,2.79-2.15,4.43.86,7.2,1.11,0,0,.74-.16-.28-.81-1.02-.66-2.39-1.4-3.62-2.05-.92-.48-1.92-.4-2.48-1.39-.51-.91-1.68-4.62-1.54-5.62.35-2.57,2.73-2.05,3.25-3.8.51-1.76-.8-.96-.8-.96-1.03,1.52-2.51,1.4-3.18,3.31-.86,2.48,1.59,7.74,1.08,8.84-.44.95-1.81,1.64-2.61,2.36-2.05,1.85-4.16,3.35-4.61,6.27-.21,1.37.46,3.67-.07,4.88-.55,1.24-2.09,2.2-2.82.6-.26-.57-1.39-5.2-1.39-5.78,0-.68.27-1.3.23-2.05-.09-1.99-2.41-6.1-.88-7.85.47-.54,2.61-1.22,3.55-2.02.81-.7,1.41-1.4,1.83-2.39l-2.43,2.19c-.55.36-1.11.6-1.77.4.16-2.23.39-2.78.01-4.93-.05-.32-.19-1.14-.64-2.24-.45-1.09-1.84-1.07-2.46-1.02.14.41.73.4,1.05.68,1.21,1.03,1.64,4.89,1.26,6.38-.21.82-1.33,3.26-2.29,2.68-.61-.37-2.89-3.27-3.44-4.03-1.06-1.47-2.45-3.12-1.32-4.94.96-1.57,2.05-1.58,2.18-4.08.08-1.53-.08-2.7-1.33-4.46-1.25-1.77-.99-.17-.99-.17.63.76.77,1.72.7,2.35-.33,2.61,1.68,2.52-.05,4.21-.29.28-2.69,2.02-3.08,2.22-1.66.89-2.12-.54-3.08-1.29-1.35-1.06-2.08-1.71-3.4-2.49-2.07-1.2.06-3.69-.79-3.48-.84.22-1.18,2.84-1.18,2.84-1.25-1.49-2.37-3.10-3.42-4.73-.62-.97-1.11-2.15-1.71-3.02-.11-.17-.37-.59-.55-.27.42,1.72,1.16,2.59,1.79,4.03.32.72.53,1.81,1.41,2.24-.12-.03-.75-.15-2.09.76-1.49,1.02,1.23-1.16,3.26.85,1.25.66,3.19,1.76,4.17,2.42.94.64,2.11,1.83,3.07,2.49.86.6,2.3.8,2.93,1.36.54.47,1.12,1.93,1.58,2.61,3.27,4.76,6.2,7.44,6.41,13.7.01.25.16.43-.11.66-.84-.99-2.03-1.34-2.97-2.16-.93-.81-1.76-2.15-2.6-3.01-1.55-1.61-3.79-3.22-4.74-5.38-.28-.63.19-1.32-.57-1.69l.22,1.04c-.12.28-1.82.85-2.16.72-.5-.19-.98-1.21-1.64-.89.6.33,1.23,1.06,1.85,1.28.44.15,1.15-.27,1.55-.19.9.17,1.43,1.66,2.01,2.32-.26.63-.74.36-1.28.42l.21.42-.68.59c.61.21,1.16-.7,1.59-.77.79-.13,3.12,2.38,3.58,3.15.17.27.39.22.09.51-.77.73-2.08-.71-2.75-1.06-1.3-.69-2.96.08-3.91-.29-.81-.33-1.5-1.8-2.8-2.23-.13-.05-1.99-.19-2.33-.21-.15-.01-.71-.22-.6.2.04.19,2.82.48,3.3.45.41.18,1.47,1.25,1.66,1.64.28.57-.75,2.8-1.65,2.88l.15.48c.36-.38.9-.56,1.22-.98.46-.61.21-1.36.84-1.72.28-.16,3.2-.11,3.59.03.73.27,1.8,1.11,1.81,1.88l-.88-.15c.44.28.69.34.5.86.23-.32,1.6-.53,1.93-.46.53.11.91.62,1.42.84.5.21,1.26.26,1.67.53.23.15,2.35,3.07,2.55,3.43.66,1.2,1.38,7.12,1.75,8.87.42,2.04,1.32,3.45,1.13,5.69-.1,1.18-.56,2.28-.74,3.41-.55,3.41,2.46,7.28.64,10.13-.97,1.52-.7-1.56-1.38-4.27-1.13-4.49-5.24-7.11-7.22-11.17-.32-.66-3.15-6.13-3.19-6.46-.06-.42.26-1.12.27-1.77.02-1.51-.49-3.24-.47-4.79l-.39.22c-.32-.71-.54-1.82-1.23-2.24l1.44,3.13-1.81-.57,1.73,1.37c.13.76-.07,1.53-.03,2.29.02.32.32.69.29.97-.11.86-2.84.77-3.54.15-.21-.18-1.31-1.63-1.49-1.91-.39-.59-.22-1.32-.52-1.92-.55-1.12-1.87-1.76-2.07-3.03l-.07.8.77,1.31-1.71-.34c-.05.53-.34.49-.74.66.5.43.79-.24,1.31-.26.44-.01,1.35.41,1.71.69.89.71.38,1.28.82,2.03.13.24,2.02,2.67,2.16,2.78.78.56,2.02-.09,3.22,1.2.4.44,1.87,4.16,1.65,4.45-1.78.23-3.05-.93-4.02-2.27.09,1.56,1.45,1.9,2.57,2.58-.4.64-1.08.4-1.63.56,1.77.76,2.06-1.11,3.86.58.7.66,3.11,4.77,3.38,5.75.1.36.16.74.2,1.11-.27.64-1.5-.44-1.8-.71-1.26-1.15-2.13-3.42-3.58-4.28-1.13-.67-3.09-.17-4.28-.86-1.11-1.29-2.38-4.3-3.63-5.29-.53-.42-1.26-.31-1.79-.58-.78-.4-2.89-1.7-3.46-2.28-.4-.41-.51-.98-.93-1.35-.16.38.53,1.16.17,1.47-.4.35-1.22-.6-1.5.04.63.3,1.36.22,2.02.52,1.29.58,2.37,1.41,3.53,2.15.51.32,1.37.36,1.78.65.67.48,2.98,3.89,2.38,4.72-.16.22-1.73,1.82-1.98,2-2.13,1.5-3.9,0-5.48-1.53l.85,1.21-.57.45c.86.49,1.79-.09,2.57.87l-2.19,2.37,2.65-1.78c2.09,0,3.44-2.11,4.99-2.71.42-.16,4.26.36,4.69.6.65.36,3.04,3.91,3.2,4.71.05.27.13.44-.11.66l-1.35-1.21-.06.44-1.14-.82,1.62,1.53-.44,1.29.37.15c.19-1.41.75-.77,1.45-.81,1.43-.08,2.81-.41,3.67,1.11,1.55,2.75,2.6,3.54.99,6.14-.31.48-1.24.77-1.91.54-1.15-.39-1.51-.16-1.77-1.37-.36-1.74,1.18-1.72,1.16-1.98l-.63.03c-.16-.12.24-1.28-.31-1.45.22.18-.38,2.31-.81,1.63-.29-1.48-3.7-3.74-4.53-4.97-.36-.54-.82-.69-1.18-1.10-.51-.58-.65-2.28-1.65-1.38,1.13.19,1.08,1.38,1.52,1.97,1.05,1.38,2.45,2.15,2.96,4.10.08.32.68,1.74.38,1.82-.7-.69-3.37-2.81-4.15-3.21-.8-.39-1.21.85-1.77.68-.41-.51-1.28-.45-1.66-.7-.61-.39-.98-1.56-1.7-1.92-.19.21.19.53.33.73.99,1.38,1.91,1.48.51,3.28l.57.69c.23-.24.02-.66.18-1.03.2-.48.64-1.08,1.23-.86,1.11.4.5.89,1.86-.21.48,0,3.29,1.57,3.57,2.08,2.28,4.08,3.8,2.43,3.69,5.66v.07c-1.06,11.83-4.89,15.95-14.1,15.95-11.2,0-14.43-6.11-14.43-24.78v-53.32c0-18.5,3.23-24.62,14.43-24.62,10.41,0,13.94,5.28,14.39,20.87h20.36c-.83-25.53-10.44-38.52-34.75-38.52s-34.8,14.26-34.8,42.27v53.32c0,28.18,9.34,42.44,34.8,42.44,22.53,0,32.44-11.15,34.43-33.24.03-.16.05-.34.06-.52.09-2.45,1.14-11.65,1.91-13.52.56-1.37,1.65-1.15,1.98-1.61.21-.29-.08-.71.02-1.01.26-.75,1.39-1.10,1.98-1.59.17-.15,1.81-1.72,1.08-1.69ZM162.78,108.46c.31-1.97.92-3.56,1.25-5.43.18-1.09-.32-2.07-.25-2.69.05-.56.53-.75.61-1.09.06-.24-.1-.77-.04-1.14.22-1.43.82-1.98,2.2-2.34.59-.15,1.18.38,1.59.11l.3-.38-.72-.02c.35-1.33,3.26-1.05,4-.58.49.32.29.89.69,1.24-.29.22-.68-.18-.89.37-.21.54-.19,2.38-.41,3.21-.59,2.24-1.14,2.08-2.18,3.64-.34.5-.59,4.57-.54,5.4.08,1.37.49,3.13,1.2,4.31.06.67-1.77-.31-2-.45-1.4-.88-2.15-2.01-3.36-3.04-.05,1.21,1.11,1.63,1.58,2.6.15.76-.84.65-.81.78,2.33.49,4.04.77,5.26,3.08,2.02,3.81-1.31,6.74-3.39,4.96-2.16-1.86-2.57-3.74-2.79-6.07-.22-2.21-1.64-4.24-1.3-6.47ZM176.1,104.7l.19-.6-.74.33c.76,1.43.45,1.5-.19,2.75-.11.21-.04.54-.15.73-.48.83-3.02,1.35-2.42,2.43l-1.93,2.16c-.86-.4-1.81-5.95-1.59-7.04.29-1.47,1.16-1.63,1.78-2.72.99-1.72.58-4.36,1.73-6.09.48.45,1.54.76,1.39,1.49l-.8-.42c.93.62,1.48,1.83,2.23,2.42.56.45,1.22.39,1.67,1.14.06.09.25,2.11.21,2.26-.14.61-.7,1.67-1.38,1.16Z"/>
-		</svg>
-	</div>
-	<div bind:this={logoRight} class="center-logo-right" class:hidden={showQuestionnaire || showTrainingView || showGearView}>
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.46 283.46">
-			<path style="fill: #ffffff !important;" d="M179.77,104.39c-.87.44-1.34,1.69-2.36,1.75-1.25.07.05-1.34.18-1.61.65-1.33-.2-2.58.07-3.32.22-.59,1.08-.7,1.39-1.35.27-.57-.2-1.25.11-1.82l-.38-.15c-.28,1.22.5,1.42-.61,2.39-.68.59-1.45.24-2.19-.2-.48-.28-1.51-1.97-1.4-2.5l1.1.17-1.09-.53.07-.44c-.82,1.35-2.47-1.07-2.54-1.95-.13-2,3.09-1.18,4.2-1.08l.18-.57-3.49.05c-.6.24-1.08,1.2-1.65,1.3-.66.11-1.57-.64-2.9-.23-.5.16-1.36.99-1.79.42-.47-.61,1.97-2.59,2.45-2.36l.85.68-.14-.71-.99-.47,1.09-1.52c1.34.47,2.5.47,2.99-1.08,0,0,.28.39.55.26.28-.13-.05-.77-.05-.77-.8-.17-1.7,3.07-3.56.9-.22-.26.37-.75.04-.97-.48.44-.18,1.09-.4,1.57-.21.45-.92,1.38-1.27,1.79-.92,1.07-2.16,1.98-3.08,3.07-.15-1.58-.91-3.98-.47-5.51.72-2.46,4.27-4.32,5.82-6.39,2.79-2.15,4.43.86,7.2,1.11,0,0,.74-.16-.28-.81-1.02-.66-2.39-1.4-3.62-2.05-.92-.48-1.92-.4-2.48-1.39-.51-.91-1.68-4.62-1.54-5.62.35-2.57,2.73-2.05,3.25-3.8.51-1.76-.8-.96-.8-.96-1.03,1.52-2.51,1.4-3.18,3.31-.86,2.48,1.59,7.74,1.08,8.84-.44.95-1.81,1.64-2.61,2.36-2.05,1.85-4.16,3.35-4.61,6.27-.21,1.37.46,3.67-.07,4.88-.55,1.24-2.09,2.2-2.82.6-.26-.57-1.39-5.2-1.39-5.78,0-.68.27-1.3.23-2.05-.09-1.99-2.41-6.1-.88-7.85.47-.54,2.61-1.22,3.55-2.02.81-.7,1.41-1.4,1.83-2.39l-2.43,2.19c-.55.36-1.11.6-1.77.4.16-2.23.39-2.78.01-4.93-.05-.32-.19-1.14-.64-2.24-.45-1.09-1.84-1.07-2.46-1.02.14.41.73.4,1.05.68,1.21,1.03,1.64,4.89,1.26,6.38-.21.82-1.33,3.26-2.29,2.68-.61-.37-2.89-3.27-3.44-4.03-1.06-1.47-2.45-3.12-1.32-4.94.96-1.57,2.05-1.58,2.18-4.08.08-1.53-.08-2.7-1.33-4.46-1.25-1.77-.99-.17-.99-.17.63.76.77,1.72.7,2.35-.33,2.61,1.68,2.52-.05,4.21-.29.28-2.69,2.02-3.08,2.22-1.66.89-2.12-.54-3.08-1.29-1.35-1.06-2.08-1.71-3.4-2.49-2.07-1.2.06-3.69-.79-3.48-.84.22-1.18,2.84-1.18,2.84-1.25-1.49-2.37-3.10-3.42-4.73-.62-.97-1.11-2.15-1.71-3.02-.11-.17-.37-.59-.55-.27.42,1.72,1.16,2.59,1.79,4.03.32.72.53,1.81,1.41,2.24-.12-.03-.75-.15-2.09.76-1.49,1.02,1.23-1.16,3.26.85,1.25.66,3.19,1.76,4.17,2.42.94.64,2.11,1.83,3.07,2.49.86.6,2.3.8,2.93,1.36.54.47,1.12,1.93,1.58,2.61,3.27,4.76,6.2,7.44,6.41,13.7.01.25.16.43-.11.66-.84-.99-2.03-1.34-2.97-2.16-.93-.81-1.76-2.15-2.6-3.01-1.55-1.61-3.79-3.22-4.74-5.38-.28-.63.19-1.32-.57-1.69l.22,1.04c-.12.28-1.82.85-2.16.72-.5-.19-.98-1.21-1.64-.89.6.33,1.23,1.06,1.85,1.28.44.15,1.15-.27,1.55-.19.9.17,1.43,1.66,2.01,2.32-.26.63-.74.36-1.28.42l.21.42-.68.59c.61.21,1.16-.7,1.59-.77.79-.13,3.12,2.38,3.58,3.15.17.27.39.22.09.51-.77.73-2.08-.71-2.75-1.06-1.3-.69-2.96.08-3.91-.29-.81-.33-1.5-1.8-2.8-2.23-.13-.05-1.99-.19-2.33-.21-.15-.01-.71-.22-.6.2.04.19,2.82.48,3.3.45.41.18,1.47,1.25,1.66,1.64.28.57-.75,2.8-1.65,2.88l.15.48c.36-.38.9-.56,1.22-.98.46-.61.21-1.36.84-1.72.28-.16,3.2-.11,3.59.03.73.27,1.8,1.11,1.81,1.88l-.88-.15c.44.28.69.34.5.86.23-.32,1.6-.53,1.93-.46.53.11.91.62,1.42.84.5.21,1.26.26,1.67.53.23.15,2.35,3.07,2.55,3.43.66,1.2,1.38,7.12,1.75,8.87.42,2.04,1.32,3.45,1.13,5.69-.1,1.18-.56,2.28-.74,3.41-.55,3.41,2.46,7.28.64,10.13-.97,1.52-.7-1.56-1.38-4.27-1.13-4.49-5.24-7.11-7.22-11.17-.32-.66-3.15-6.13-3.19-6.46-.06-.42.26-1.12.27-1.77.02-1.51-.49-3.24-.47-4.79l-.39.22c-.32-.71-.54-1.82-1.23-2.24l1.44,3.13-1.81-.57,1.73,1.37c.13.76-.07,1.53-.03,2.29.02.32.32.69.29.97-.11.86-2.84.77-3.54.15-.21-.18-1.31-1.63-1.49-1.91-.39-.59-.22-1.32-.52-1.92-.55-1.12-1.87-1.76-2.07-3.03l-.07.8.77,1.31-1.71-.34c-.05.53-.34.49-.74.66.5.43.79-.24,1.31-.26.44-.01,1.35.41,1.71.69.89.71.38,1.28.82,2.03.13.24,2.02,2.67,2.16,2.78.78.56,2.02-.09,3.22,1.2.4.44,1.87,4.16,1.65,4.45-1.78.23-3.05-.93-4.02-2.27.09,1.56,1.45,1.9,2.57,2.58-.4.64-1.08.4-1.63.56,1.77.76,2.06-1.11,3.86.58.7.66,3.11,4.77,3.38,5.75.1.36.16.74.2,1.11-.27.64-1.5-.44-1.8-.71-1.26-1.15-2.13-3.42-3.58-4.28-1.13-.67-3.09-.17-4.28-.86-1.11-1.29-2.38-4.3-3.63-5.29-.53-.42-1.26-.31-1.79-.58-.78-.4-2.89-1.7-3.46-2.28-.4-.41-.51-.98-.93-1.35-.16.38.53,1.16.17,1.47-.4.35-1.22-.6-1.5.04.63.3,1.36.22,2.02.52,1.29.58,2.37,1.41,3.53,2.15.51.32,1.37.36,1.78.65.67.48,2.98,3.89,2.38,4.72-.16.22-1.73,1.82-1.98,2-2.13,1.5-3.9,0-5.48-1.53l.85,1.21-.57.45c.86.49,1.79-.09,2.57.87l-2.19,2.37,2.65-1.78c2.09,0,3.44-2.11,4.99-2.71.42-.16,4.26.36,4.69.6.65.36,3.04,3.91,3.2,4.71.05.27.13.44-.11.66l-1.35-1.21-.06.44-1.14-.82,1.62,1.53-.44,1.29.37.15c.19-1.41.75-.77,1.45-.81,1.43-.08,2.81-.41,3.67,1.11,1.55,2.75,2.6,3.54.99,6.14-.31.48-1.24.77-1.91.54-1.15-.39-1.51-.16-1.77-1.37-.36-1.74,1.18-1.72,1.16-1.98l-.63.03c-.16-.12.24-1.28-.31-1.45.22.18-.38,2.31-.81,1.63-.29-1.48-3.7-3.74-4.53-4.97-.36-.54-.82-.69-1.18-1.10-.51-.58-.65-2.28-1.65-1.38,1.13.19,1.08,1.38,1.52,1.97,1.05,1.38,2.45,2.15,2.96,4.10.08.32.68,1.74.38,1.82-.7-.69-3.37-2.81-4.15-3.21-.8-.39-1.21.85-1.77.68-.41-.51-1.28-.45-1.66-.7-.61-.39-.98-1.56-1.7-1.92-.19.21.19.53.33.73.99,1.38,1.91,1.48.51,3.28l.57.69c.23-.24.02-.66.18-1.03.2-.48.64-1.08,1.23-.86,1.11.4.5.89,1.86-.21.48,0,3.29,1.57,3.57,2.08,2.28,4.08,3.8,2.43,3.69,5.66v.07c-1.06,11.83-4.89,15.95-14.1,15.95-11.2,0-14.43-6.11-14.43-24.78v-53.32c0-18.5,3.23-24.62,14.43-24.62,10.41,0,13.94,5.28,14.39,20.87h20.36c-.83-25.53-10.44-38.52-34.75-38.52s-34.8,14.26-34.8,42.27v53.32c0,28.18,9.34,42.44,34.8,42.44,22.53,0,32.44-11.15,34.43-33.24.03-.16.05-.34.06-.52.09-2.45,1.14-11.65,1.91-13.52.56-1.37,1.65-1.15,1.98-1.61.21-.29-.08-.71.02-1.01.26-.75,1.39-1.10,1.98-1.59.17-.15,1.81-1.72,1.08-1.69ZM162.78,108.46c.31-1.97.92-3.56,1.25-5.43.18-1.09-.32-2.07-.25-2.69.05-.56.53-.75.61-1.09.06-.24-.1-.77-.04-1.14.22-1.43.82-1.98,2.2-2.34.59-.15,1.18.38,1.59.11l.3-.38-.72-.02c.35-1.33,3.26-1.05,4-.58.49.32.29.89.69,1.24-.29.22-.68-.18-.89.37-.21.54-.19,2.38-.41,3.21-.59,2.24-1.14,2.08-2.18,3.64-.34.5-.59,4.57-.54,5.4.08,1.37.49,3.13,1.2,4.31.06.67-1.77-.31-2-.45-1.4-.88-2.15-2.01-3.36-3.04-.05,1.21,1.11,1.63,1.58,2.6.15.76-.84.65-.81.78,2.33.49,4.04.77,5.26,3.08,2.02,3.81-1.31,6.74-3.39,4.96-2.16-1.86-2.57-3.74-2.79-6.07-.22-2.21-1.64-4.24-1.3-6.47ZM176.1,104.7l.19-.6-.74.33c.76,1.43.45,1.5-.19,2.75-.11.21-.04.54-.15.73-.48.83-3.02,1.35-2.42,2.43l-1.93,2.16c-.86-.4-1.81-5.95-1.59-7.04.29-1.47,1.16-1.63,1.78-2.72.99-1.72.58-4.36,1.73-6.09.48.45,1.54.76,1.39,1.49l-.8-.42c.93.62,1.48,1.83,2.23,2.42.56.45,1.22.39,1.67,1.14.06.09.25,2.11.21,2.26-.14.61-.7,1.67-1.38,1.16Z"/>
-		</svg>
-	</div>
+	<CenterLogo variant="light" bind:element={logoLeft} hidden={showQuestionnaire || showTrainingView || showGearView} />
+	<CenterLogo variant="dark" bind:element={logoRight} hidden={showQuestionnaire || showTrainingView || showGearView} />
 
-	<!-- Mobile Hamburger Button -->
-	<button class="hamburger-button" class:hidden={showTrainingView || showGearView} on:click={toggleMobileMenu} class:open={isMobileMenuOpen} aria-label="Toggle menu">
-		<span></span>
-		<span></span>
-		<span></span>
-	</button>
+	<!-- Mobile Menu -->
+	<MobileMenu
+		onNavClick={handleNavClick}
+		hidden={showTrainingView || showGearView}
+	/>
 
-	<!-- Mobile Menu Overlay -->
-	{#if isMobileMenuOpen}
-		<div class="mobile-menu-overlay" on:click={toggleMobileMenu}>
-			<div class="mobile-menu-content" on:click|stopPropagation>
-				<Nav variant="mobile" centered={false} activeLink={null} onNavClick={handleNavClick} onMobileClose={toggleMobileMenu} />
-				<div class="mobile-social">
-					<a href="https://facebook.com" target="_blank" rel="noopener">FB</a>
-					<span> . </span>
-					<a href="https://linkedin.com" target="_blank" rel="noopener">IN</a>
-					<span> . </span>
-					<a href="mailto:info@oceanfrontier.com" class="mail-icon">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<rect x="2" y="4" width="20" height="16" rx="2"/>
-							<path d="m2 7 10 7 10-7"/>
-						</svg>
-					</a>
-				</div>
-				<div class="mobile-contact-info">
-					<span class="contact-location">Cyprus, Nicosia</span>
-					<a href="tel:+35795119881" class="contact-phone">+357 95 119 881</a>
-					<a href="https://www.oceanfrontier.com" target="_blank" rel="noopener" class="contact-website">www.oceanfrontier.com</a>
-				</div>
-			</div>
-		</div>
-	{/if}
-
-	<!-- Mobile Pagination Dots -->
-	{#if isMobile && !showTrainingView && !showGearView && !showQuestionnaire}
-		<div class="mobile-pagination">
-			<button
-				class="pagination-dot"
-				class:active={currentMobileSection === 0}
-				on:click={() => switchMobileSection(0)}
-				aria-label="Training section"
-			></button>
-			<button
-				class="pagination-dot"
-				class:active={currentMobileSection === 1}
-				on:click={() => switchMobileSection(1)}
-				aria-label="Gear section"
-			></button>
-		</div>
-
-		<!-- Swipe Hint - iPhone toggle style -->
-		<div class="swipe-hint" class:swipe-left={currentMobileSection === 1}>
-			<span class="swipe-label">{currentMobileSection === 0 ? 'Slide for "Equipment"' : 'Slide for "Training"'}</span>
-			<div class="swipe-track">
-				<div class="swipe-slider">
-					<svg class="swipe-arrow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-						<polyline points="9 18 15 12 9 6"></polyline>
-					</svg>
-				</div>
-			</div>
-		</div>
-	{/if}
+	<!-- Mobile Pagination -->
+	<MobilePagination />
 </div>
+
+{#if selectedCourse}
+	<CourseDetailPanel course={selectedCourse} on:close={() => selectedCourseStore.set(null)} />
+{/if}

@@ -72,8 +72,7 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: rgba(0, 0, 0, 0.7);
-		backdrop-filter: blur(4px);
+		background: rgba(0, 0, 0, 0.75);
 		z-index: 500;
 		display: flex;
 		align-items: center;
@@ -89,8 +88,7 @@
 
 	/* Modal card */
 	.modal-card {
-		background: rgba(42, 42, 42, 0.98);
-		backdrop-filter: blur(20px);
+		background: rgb(42, 42, 42);
 		border-radius: 24px;
 		padding: 48px 36px;
 		max-width: 560px;
@@ -115,13 +113,10 @@
 		0% {
 			opacity: 0;
 			transform: scale(0.96);
-			filter: blur(4px);
 		}
-		60% { filter: blur(0); }
 		100% {
 			opacity: 1;
 			transform: scale(1);
-			filter: blur(0);
 		}
 	}
 

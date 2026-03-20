@@ -1,0 +1,14 @@
+/* ===================================
+   CSS Custom Properties / Variables
+   =================================== */
+/* CSS Variables for duotone design */
+:root {
+	/* Duotone Colors - Grey and White */
+	--color-light: #f5f5f5;
+	--color-dark: #2a2a2a;
+	--color-grey-medium: #6b6b6b;
+	--color-grey-light: #d4d4d4;
+	--color-white: #ffffff;
+	--transition-smooth: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-fast: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

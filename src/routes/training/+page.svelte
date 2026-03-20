@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { trainingCourses, type CourseFilter } from '$lib/data/trainingCourses';
+	import CourseCard from '$lib/components/CourseCard.svelte';
+	import CourseFilterBar from '$lib/components/CourseFilterBar.svelte';
 
 	let activeFilter: CourseFilter = 'all';
 	let visibleCourses: typeof trainingCourses = [];
@@ -22,7 +24,13 @@
 </script>
 
 <svelte:head>
-	<title>Training - Ocean Frontier Consulting</title>
+	<title>GUE Dive Training Courses | the Ocean Frontier — Cyprus</title>
+	<meta name="description" content="Explore GUE dive training courses in Cyprus — from beginner Discover Diving to advanced technical, CCR and Cave courses. Taught by GUE-certified instructor Imad Farhat." />
+	<meta property="og:title" content="GUE Dive Training Courses | the Ocean Frontier" />
+	<meta property="og:description" content="GUE dive training from entry-level to technical, CCR and Cave courses in Cyprus. Authorized Halcyon dealer." />
+	<meta property="og:url" content="https://theoceanfrontier.com/training" />
+	<meta property="og:image" content="https://theoceanfrontier.com/og-image.jpg" />
+	<link rel="canonical" href="https://theoceanfrontier.com/training" />
 </svelte:head>
 
 <div class="training-page">
@@ -38,79 +46,16 @@
 		</nav>
 
 		<!-- Center Logo -->
-		<div class="center-logo-left">
-			<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-				<circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" stroke-width="2" opacity="0.3"/>
-				<circle cx="100" cy="100" r="70" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.2"/>
-				<circle cx="100" cy="100" r="50" fill="none" stroke="currentColor" stroke-width="1" opacity="0.15"/>
-				<path d="M100 40 L100 160 M40 100 L160 100" stroke="currentColor" stroke-width="1" opacity="0.2"/>
-				<circle cx="100" cy="100" r="8" fill="currentColor" opacity="0.4"/>
-			</svg>
-		</div>
 	</div>
 
 	<!-- Filter Bar -->
-	<div class="filter-bar">
-		<button
-			class="filter-button"
-			class:active={activeFilter === 'all'}
-			on:click={() => filterCourses('all')}
-		>
-			All Courses
-		</button>
-		<button
-			class="filter-button"
-			class:active={activeFilter === 'none-diver'}
-			on:click={() => filterCourses('none-diver')}
-		>
-			Non Diver
-		</button>
-		<button
-			class="filter-button"
-			class:active={activeFilter === 'existing-diver'}
-			on:click={() => filterCourses('existing-diver')}
-		>
-			Existing Diver
-		</button>
-		<button
-			class="filter-button"
-			class:active={activeFilter === 'gue-diver'}
-			on:click={() => filterCourses('gue-diver')}
-		>
-			GUE Diver
-		</button>
-		<button
-			class="filter-button"
-			class:active={activeFilter === 'rebreathers'}
-			on:click={() => filterCourses('rebreathers')}
-		>
-			Rebreathers
-		</button>
-		<button
-			class="filter-button"
-			class:active={activeFilter === 'instructor'}
-			on:click={() => filterCourses('instructor')}
-		>
-			Instructor Development
-		</button>
-	</div>
+	<CourseFilterBar activeFilter={activeFilter} onFilter={filterCourses} buttonStyle={true} />
 
 	<!-- Courses Grid -->
 	<div class="courses-container">
 		<div class="courses-grid">
 			{#each visibleCourses as course, i (course.id)}
-				<div class="course-card" style="--card-index: {i}">
-					<div class="course-image-wrapper">
-						<div class="course-image" style="background-image: url('{course.image}')">
-							<div class="image-overlay"></div>
-						</div>
-					</div>
-					<div class="course-content">
-						<h3 class="course-title">{course.title}</h3>
-						<p class="course-description">{course.description}</p>
-						<button class="course-cta">Learn More</button>
-					</div>
-				</div>
+				<CourseCard {course} index={i} />
 			{/each}
 		</div>
 	</div>
@@ -204,43 +149,6 @@
 		height: 100%;
 	}
 
-	/* Filter Bar */
-	.filter-bar {
-		background: transparent;
-		padding: 40px 60px 24px;
-		display: flex;
-		gap: 16px;
-		justify-content: center;
-		flex-wrap: wrap;
-		position: relative;
-		z-index: 2;
-	}
-
-	.filter-button {
-		padding: 12px 24px;
-		background: transparent;
-		border: 1px solid rgba(0, 0, 0, 0.12);
-		color: #6b6b6b;
-		font-size: 13px;
-		font-weight: 600;
-		letter-spacing: 0.5px;
-		border-radius: 24px;
-		cursor: pointer;
-		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.filter-button:hover {
-		background: rgba(0, 0, 0, 0.04);
-		border-color: rgba(0, 0, 0, 0.2);
-		transform: translateY(-2px);
-	}
-
-	.filter-button.active {
-		background: linear-gradient(135deg, #2a2a2a 0%, #3d3d3d 100%);
-		border-color: transparent;
-		color: white;
-	}
-
 	/* Courses Grid */
 	.courses-container {
 		padding: 20px 60px 60px;
@@ -254,116 +162,6 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
 		gap: 32px;
-	}
-
-	.course-card {
-		background: white;
-		border-radius: 20px;
-		overflow: hidden;
-		box-shadow:
-			0 4px 16px rgba(0, 0, 0, 0.06),
-			0 2px 8px rgba(0, 0, 0, 0.04);
-		transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-		animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-		animation-delay: calc(var(--card-index) * 0.08s);
-		animation-fill-mode: backwards;
-	}
-
-	@keyframes slideUpFade {
-		0% {
-			opacity: 0;
-			transform: translateY(30px);
-		}
-		100% {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-	.course-card:hover {
-		transform: translateY(-8px);
-		box-shadow:
-			0 12px 40px rgba(0, 0, 0, 0.12),
-			0 6px 16px rgba(0, 0, 0, 0.08);
-	}
-
-	.course-image-wrapper {
-		position: relative;
-		width: 100%;
-		padding-top: 60%;
-		overflow: hidden;
-	}
-
-	.course-image {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-size: cover;
-		background-position: center;
-		background-color: #d4d4d4;
-		transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.course-card:hover .course-image {
-		transform: scale(1.05);
-	}
-
-	.image-overlay {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(
-			to bottom,
-			transparent 0%,
-			rgba(0, 0, 0, 0.4) 100%
-		);
-	}
-
-	.course-content {
-		padding: 28px;
-	}
-
-	.course-title {
-		font-size: 20px;
-		font-weight: 700;
-		color: #2a2a2a;
-		margin: 0 0 12px 0;
-		letter-spacing: -0.02em;
-		line-height: 1.3;
-	}
-
-	.course-description {
-		font-size: 14px;
-		line-height: 1.6;
-		color: #6b6b6b;
-		margin: 0 0 20px 0;
-	}
-
-	.course-cta {
-		width: 100%;
-		padding: 14px 24px;
-		background: linear-gradient(135deg, #2a2a2a 0%, #3d3d3d 100%);
-		border: none;
-		color: white;
-		font-size: 13px;
-		font-weight: 600;
-		letter-spacing: 0.5px;
-		border-radius: 12px;
-		cursor: pointer;
-		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-		text-transform: uppercase;
-	}
-
-	.course-cta:hover {
-		transform: translateY(-2px);
-		box-shadow:
-			0 8px 20px rgba(0, 0, 0, 0.2),
-			0 4px 10px rgba(0, 0, 0, 0.15);
-	}
-
-	.course-cta:active {
-		transform: translateY(0);
 	}
 
 	/* Responsive */
@@ -380,16 +178,6 @@
 			width: 200px;
 			height: 200px;
 			top: 15%;
-		}
-
-		.filter-bar {
-			padding: 20px 24px;
-			gap: 12px;
-		}
-
-		.filter-button {
-			padding: 10px 18px;
-			font-size: 12px;
 		}
 
 		.courses-container {

@@ -1,0 +1,173 @@
+/* ===================================
+   Animations - @keyframes definitions
+   =================================== */
+@keyframes slideInFromBottom {
+	from {
+		opacity: 0;
+		transform: translateY(40px) scale(1);
+	}
+	to {
+		transform: translateY(0) scale(1);
+	}
+}
+@keyframes shimmerSweep {
+	0% { transform: translateX(-100%) rotate(25deg); }
+	100% { transform: translateX(100%) rotate(25deg); }
+}
+@keyframes subtleBreath {
+	0%, 100% { transform: scale(1); }
+	50% { transform: scale(1.05); }
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes slideUpScale {
+	from {
+		opacity: 0;
+		transform: scale(0.98);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+@keyframes panelSlideIn {
+	0% {
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(0.96);
+	}
+	100% {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(1);
+	}
+}
+@keyframes smoothFadeIn {
+	0% {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes messageFadeIn {
+	0% {
+		opacity: 0;
+		transform: translateY(16px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes typingDot {
+	0%, 60%, 100% {
+		opacity: 0.25;
+		transform: translateY(0) scale(1);
+	}
+	30% {
+		opacity: 1;
+		transform: translateY(-7px) scale(1.15);
+	}
+}
+@keyframes optionFadeIn {
+	0% {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes optionFadeIn {
+	0% {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes productPop {
+	0% {
+		opacity: 0;
+		transform: translateY(15px) scale(0.98);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+@keyframes panelSlideInMobile {
+		0% {
+			opacity: 0;
+			transform: translate(-50%, -50%) scale(0.94);
+		}
+		100% {
+			opacity: 1;
+			transform: translate(-50%, -50%) scale(1);
+		}
+	}
+@keyframes trainingSlideIn {
+	0% {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes chunkFadeUp {
+	0% {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes slideUpFade {
+	0% {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
+@keyframes mobileFadeUpBlock {
+		0% {
+			opacity: 0;
+			transform: translateY(40px);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+@keyframes shimmerSweep {
+		0% {
+			transform: translateX(-100%) rotate(25deg);
+		}
+		100% {
+			transform: translateX(100%) rotate(25deg);
+		}
+	}
+@keyframes subtleBreath {
+		0%, 100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.05);
+		}
+	}

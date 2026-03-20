@@ -3,9 +3,11 @@
  * Represents a single gear product with category
  */
 export type GearProduct = {
+	id?: string;
 	name: string;
 	image: string;
 	category: 'basic' | 'technical';
+	price?: number;
 };
 
 /**
