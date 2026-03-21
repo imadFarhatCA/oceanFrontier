@@ -6,6 +6,7 @@ export const isDragging = writable(false);
 export const showQuestionnaire = writable(false);
 export const showTrainingView = writable(false);
 export const showGearView = writable(false);
+export const showScheduleView = writable(false);
 export const isMobile = writable(false);
 export const currentMobileSection = writable(0); // 0=training, 1=gear
 export const isMobileMenuOpen = writable(false);

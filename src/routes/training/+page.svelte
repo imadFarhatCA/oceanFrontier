@@ -1,13 +1,22 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { trainingCourses, type CourseFilter } from '$lib/data/trainingCourses';
 	import CourseCard from '$lib/components/CourseCard.svelte';
 	import CourseFilterBar from '$lib/components/CourseFilterBar.svelte';
+	import GUESchedule from '$lib/components/GUESchedule.svelte';
 
 	let activeFilter: CourseFilter = 'all';
 	let visibleCourses: typeof trainingCourses = [];
+	let ready = false;
 
 	const courses = trainingCourses;
+
+	function navigate(e: MouseEvent, href: string) {
+		e.preventDefault();
+		ready = false;
+		setTimeout(() => goto(href), 350);
+	}
 
 	function filterCourses(filter: CourseFilter) {
 		activeFilter = filter;
@@ -20,6 +29,7 @@
 
 	onMount(() => {
 		visibleCourses = courses;
+		requestAnimationFrame(() => { ready = true; });
 	});
 </script>
 
@@ -33,15 +43,18 @@
 	<link rel="canonical" href="https://theoceanfrontier.com/training" />
 </svelte:head>
 
-<div class="training-page">
+<div class="training-page" class:ready>
 	<!-- Header with Homepage Frame -->
 	<div class="section-content">
-		<div class="logo">OCEAN FRONTIER</div>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div class="logo" on:click={(e) => navigate(e, '/')}>OCEAN FRONTIER</div>
 		<div class="logo-subtitle">CONSULTING</div>
 		<nav class="nav">
-			<a href="/">HOMEPAGE</a>
+			<a href="/" on:click={(e) => navigate(e, '/')}>HOMEPAGE</a>
 			<a href="/training" class="active">TRAINING</a>
-			<a href="/gear">GEAR</a>
+			<a href="/schedule" on:click={(e) => navigate(e, '/schedule')}>SCHEDULE</a>
+			<a href="/gear" on:click={(e) => navigate(e, '/gear')}>GEAR</a>
 			<a href="/community">COMMUNITY</a>
 		</nav>
 
@@ -59,6 +72,9 @@
 			{/each}
 		</div>
 	</div>
+
+	<!-- Live GUE Schedule -->
+	<GUESchedule />
 </div>
 
 <style>
@@ -67,6 +83,12 @@
 		background: white;
 		font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
 		position: relative;
+		opacity: 0;
+		transition: opacity 0.35s ease;
+	}
+
+	.training-page.ready {
+		opacity: 1;
 	}
 
 	/* Header - Using Homepage Frame Styles */
@@ -88,6 +110,12 @@
 		color: var(--color-dark, #2a2a2a);
 		margin: 0;
 		text-align: center;
+		cursor: pointer;
+		transition: opacity 0.2s ease;
+	}
+
+	.logo:hover {
+		opacity: 0.7;
 	}
 
 	.logo-subtitle {

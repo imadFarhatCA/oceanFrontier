@@ -11,11 +11,13 @@
 			{ href: '/', target: 'home', label: 'HOMEPAGE' },
 			{ href: '/gear', target: 'gear', label: 'GEAR' },
 			{ href: '/training', target: 'training', label: 'TRAINING' },
+			{ href: '/schedule', target: 'schedule', label: 'SCHEDULE' },
 			{ href: '/community', target: 'community', label: 'COMMUNITY', external: true }
 		]
 		: [
 			{ href: '/', target: 'home', label: 'HOMEPAGE' },
 			{ href: '/training', target: 'training', label: 'TRAINING' },
+			{ href: '/schedule', target: 'schedule', label: 'SCHEDULE' },
 			{ href: '/gear', target: 'gear', label: 'GEAR' },
 			{ href: '/community', target: 'community', label: 'COMMUNITY', external: true }
 		];
