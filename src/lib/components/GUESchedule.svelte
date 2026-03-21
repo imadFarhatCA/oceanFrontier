@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { GUEClass } from '../../routes/api/gue-schedule/+server';
+
+	interface GUEClass {
+		title: string;
+		date: string;
+		dateIso: string;
+		location: string;
+		cid: string;
+		url: string;
+	}
 
 	let classes: GUEClass[] = [];
 	let loading = true;

@@ -1,20 +1,10 @@
-import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+// Cloudflare Pages Function — replaces SvelteKit API route
+// (adapter-static cannot serve dynamic server routes)
 
-export interface GUEClass {
-	title: string;
-	date: string;
-	dateIso: string;
-	location: string;
-	cid: string;
-	url: string;
-}
-
-// Simple in-memory cache
-let cache: { data: GUEClass[]; ts: number } | null = null;
 const CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours
+let cache = null;
 
-function parseDate(raw: string): string {
+function parseDate(raw) {
 	try {
 		return new Date(raw).toISOString().split('T')[0];
 	} catch {
@@ -22,7 +12,7 @@ function parseDate(raw: string): string {
 	}
 }
 
-async function fetchGUESchedule(): Promise<GUEClass[]> {
+async function fetchGUESchedule() {
 	const url = 'https://www.gue.com/diver-training/gue-class-schedule?instructor_name=imad+farhat';
 	const res = await fetch(url, {
 		headers: { 'User-Agent': 'Mozilla/5.0 (compatible; OceanFrontier/1.0)' }
@@ -32,20 +22,18 @@ async function fetchGUESchedule(): Promise<GUEClass[]> {
 
 	const html = await res.text();
 
-	// Match every <tr> that contains course data
 	const rowRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
-	const tdRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi;
 	const linkRegex = /<a[^>]+href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/i;
-	const stripTags = (s: string) => s.replace(/<[^>]+>/g, '').trim();
+	const stripTags = (s) => s.replace(/<[^>]+>/g, '').trim();
 
-	const classes: GUEClass[] = [];
-	let rowMatch: RegExpExecArray | null;
+	const classes = [];
+	let rowMatch;
 
 	while ((rowMatch = rowRegex.exec(html)) !== null) {
 		const rowHtml = rowMatch[1];
-		const tds: string[] = [];
-		let tdMatch: RegExpExecArray | null;
-		const tdRe = new RegExp(tdRegex.source, 'gi');
+		const tds = [];
+		const tdRe = /<td[^>]*>([\s\S]*?)<\/td>/gi;
+		let tdMatch;
 
 		while ((tdMatch = tdRe.exec(rowHtml)) !== null) {
 			tds.push(tdMatch[1]);
@@ -53,23 +41,16 @@ async function fetchGUESchedule(): Promise<GUEClass[]> {
 
 		if (tds.length < 4) continue;
 
-		// Column 0: course title + link
 		const titleLinkMatch = linkRegex.exec(tds[0]);
 		if (!titleLinkMatch) continue;
 
 		const cid = (titleLinkMatch[1].match(/cid=(\d+)/) ?? [])[1] ?? '';
 		const title = stripTags(titleLinkMatch[2]);
-
-		// Column 1: date
 		const dateRaw = stripTags(tds[1]);
-
-		// Column 2: location
 		const location = stripTags(tds[2]);
-
-		// Column 3: instructor — confirm it's Imad Farhat
 		const instructor = stripTags(tds[3]);
-		if (!instructor.toLowerCase().includes('imad')) continue;
 
+		if (!instructor.toLowerCase().includes('imad')) continue;
 		if (!title || !dateRaw) continue;
 
 		classes.push({
@@ -85,20 +66,29 @@ async function fetchGUESchedule(): Promise<GUEClass[]> {
 	return classes;
 }
 
-export const GET: RequestHandler = async () => {
+export async function onRequestGet() {
 	const now = Date.now();
 
 	if (cache && now - cache.ts < CACHE_TTL) {
-		return json(cache.data);
+		return new Response(JSON.stringify(cache.data), {
+			headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+		});
 	}
 
 	try {
 		const data = await fetchGUESchedule();
 		cache = { data, ts: now };
-		return json(data);
-	} catch (err) {
-		// Return cached stale data if available, else empty
-		if (cache) return json(cache.data);
-		return json([]);
+		return new Response(JSON.stringify(data), {
+			headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+		});
+	} catch {
+		if (cache) {
+			return new Response(JSON.stringify(cache.data), {
+				headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+			});
+		}
+		return new Response(JSON.stringify([]), {
+			headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+		});
 	}
-};
+}
