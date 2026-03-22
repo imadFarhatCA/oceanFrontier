@@ -2,6 +2,7 @@
 	import { cart, cartCount, cartTotal, isCartOpen } from './cartStore';
 	import type { CartItem } from './cartStore';
 	import { fly, fade } from 'svelte/transition';
+	import { tick } from 'svelte';
 
 	const TURNSTILE_SITE_KEY = '0x4AAAAAACumGj3Wq8ivI4Fk'; // replace with your Cloudflare Turnstile site key
 
@@ -40,8 +41,17 @@
 		turnstileToken = token;
 	}
 
-	if (typeof window !== 'undefined') {
-		(window as any).onTurnstileVerified = onTurnstileSuccess;
+	async function openCheckout() {
+		checkoutStep = true;
+		await tick();
+		if (typeof window !== 'undefined' && (window as any).turnstile) {
+			(window as any).turnstile.render('#turnstile-container', {
+				sitekey: TURNSTILE_SITE_KEY,
+				theme: 'dark',
+				callback: (token: string) => { turnstileToken = token; },
+				'expired-callback': () => { turnstileToken = ''; }
+			});
+		}
 	}
 
 	async function submitInquiry() {
@@ -84,7 +94,7 @@
 			<!-- Header -->
 			<div class="cart-header">
 				{#if checkoutStep}
-					<button class="back-btn" on:click={() => { checkoutStep = false; submitted = false; }} aria-label="Back to cart">
+					<button class="back-btn" on:click={() => { checkoutStep = false; submitted = false; turnstileToken = ''; }} aria-label="Back to cart">
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
 					</button>
 					<h2>Submit Inquiry</h2>
@@ -132,12 +142,7 @@
 							<input id="inq-whatsapp" type="tel" placeholder="+1 234 567 890" bind:value={whatsapp} />
 						</div>
 
-						<div
-							class="cf-turnstile"
-							data-sitekey={TURNSTILE_SITE_KEY}
-							data-callback="onTurnstileVerified"
-							data-theme="dark"
-						></div>
+						<div id="turnstile-container"></div>
 
 						<div class="checkout-footer">
 							{#if submitError}
@@ -201,7 +206,7 @@
 							<span>Total</span>
 							<span class="total-amount">{formatPrice($cartTotal)}</span>
 						</div>
-						<button class="checkout-btn" on:click={() => checkoutStep = true}>Proceed to Checkout</button>
+						<button class="checkout-btn" on:click={openCheckout}>Proceed to Checkout</button>
 						<button class="clear-btn" on:click={() => cart.clear()}>Clear Cart</button>
 					</div>
 				{/if}
