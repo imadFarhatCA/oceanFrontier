@@ -29,7 +29,7 @@ export async function onRequestPost(context) {
 
 		const result = await verification.json();
 		if (!result.success) {
-			return json({ error: 'Turnstile verification failed' }, 403);
+			return json({ error: 'Turnstile verification failed', codes: result['error-codes'] }, 403);
 		}
 	}
 
