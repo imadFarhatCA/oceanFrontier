@@ -87,6 +87,10 @@
 						{:else}
 							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
 						{/if}
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<div class="cart-overlay" role="button" tabindex="0" on:click|stopPropagation={() => addProductToCart(currentProduct)} aria-label="Add {currentProduct.name} to cart">
+							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+						</div>
 					</div>
 					<div class="product-underline"></div>
 					<span class="product-name">{currentProduct.name}</span>
@@ -374,6 +378,24 @@
 		font-weight: 600;
 		color: rgba(255, 255, 255, 0.5);
 		letter-spacing: 0.5px;
+	}
+
+	/* Cart hover overlay */
+	.cart-overlay {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(0, 0, 0, 0.55);
+		opacity: 0;
+		transition: opacity 0.2s ease;
+		cursor: pointer;
+		border-radius: 8px;
+	}
+
+	.product-card:hover .cart-overlay {
+		opacity: 1;
 	}
 
 	@media (max-width: 768px) {
