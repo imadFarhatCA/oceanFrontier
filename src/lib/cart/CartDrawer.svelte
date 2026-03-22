@@ -594,9 +594,9 @@
 	}
 
 	.same-as-phone {
-		display: flex;
+		display: inline-flex;
 		align-items: center;
-		gap: 5px;
+		gap: 6px;
 		font-size: 11px;
 		color: rgba(255, 255, 255, 0.45);
 		cursor: pointer;
@@ -604,6 +604,7 @@
 		letter-spacing: 0;
 		font-weight: 400;
 		white-space: nowrap;
+		margin-top: -8px;
 	}
 
 	.same-as-phone input[type="checkbox"] {
