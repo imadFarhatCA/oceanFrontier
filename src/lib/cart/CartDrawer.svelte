@@ -41,16 +41,29 @@
 		turnstileToken = token;
 	}
 
+	async function waitForTurnstile(attempts = 20): Promise<boolean> {
+		for (let i = 0; i < attempts; i++) {
+			if ((window as any).turnstile) return true;
+			await new Promise(r => setTimeout(r, 150));
+		}
+		return false;
+	}
+
 	async function openCheckout() {
 		checkoutStep = true;
 		await tick();
-		if (typeof window !== 'undefined' && (window as any).turnstile) {
+		if (typeof window === 'undefined') return;
+		const ready = await waitForTurnstile();
+		if (ready) {
 			(window as any).turnstile.render('#turnstile-container', {
 				sitekey: TURNSTILE_SITE_KEY,
 				theme: 'dark',
 				callback: (token: string) => { turnstileToken = token; },
 				'expired-callback': () => { turnstileToken = ''; }
 			});
+		} else {
+			// Turnstile failed to load — allow submission anyway
+			turnstileToken = 'unavailable';
 		}
 	}
 
