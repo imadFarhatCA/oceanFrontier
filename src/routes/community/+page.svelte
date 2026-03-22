@@ -45,23 +45,19 @@
 
 <div class="community-page" class:ready>
 
-	<!-- Header: left-aligned -->
-	<div class="header">
-		<div class="header-left">
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div class="logo" on:click={(e) => navigate(e, '/')}>
-				OCEAN FRONTIER
-				<span class="logo-subtitle">CONSULTING</span>
-			</div>
-			<nav class="nav">
-				<a href="/" on:click={(e) => navigate(e, '/')}>HOMEPAGE</a>
-				<a href="/training" on:click={(e) => navigate(e, '/training')}>TRAINING</a>
-				<a href="/schedule" on:click={(e) => navigate(e, '/schedule')}>SCHEDULE</a>
-				<a href="/gear" on:click={(e) => navigate(e, '/gear')}>GEAR</a>
-				<a href="/community" class="active">COMMUNITY</a>
-			</nav>
-		</div>
+	<!-- Header — same centered style as training/schedule/gear -->
+	<div class="section-content">
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div class="logo" on:click={(e) => navigate(e, '/')}>OCEAN FRONTIER</div>
+		<div class="logo-subtitle">CONSULTING</div>
+		<nav class="nav">
+			<a href="/" on:click={(e) => navigate(e, '/')}>HOMEPAGE</a>
+			<a href="/training" on:click={(e) => navigate(e, '/training')}>TRAINING</a>
+			<a href="/schedule" on:click={(e) => navigate(e, '/schedule')}>SCHEDULE</a>
+			<a href="/gear" on:click={(e) => navigate(e, '/gear')}>GEAR</a>
+			<a href="/community" class="active">COMMUNITY</a>
+		</nav>
 	</div>
 
 	<div class="content-wrap">
@@ -144,77 +140,76 @@
 	}
 	.community-page.ready { opacity: 1; }
 
-	/* Left-aligned header */
-	.header {
-		padding: 40px 60px 32px;
-		border-bottom: 1px solid rgba(0,0,0,0.07);
-	}
-
-	.header-left {
+	/* Header — centered, same as training/schedule/gear */
+	.section-content {
+		width: 100%;
+		padding: 40px 60px 60px;
 		display: flex;
+		flex-direction: column;
 		align-items: center;
-		gap: 48px;
 	}
 
 	.logo {
-		font-size: 16px;
+		font-size: 18px;
 		font-weight: 700;
 		letter-spacing: 2px;
 		color: #2a2a2a;
 		cursor: pointer;
 		transition: opacity 0.2s ease;
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-		flex-shrink: 0;
 	}
 	.logo:hover { opacity: 0.7; }
 
 	.logo-subtitle {
-		font-size: 9px;
+		font-size: 11px;
 		font-weight: 300;
 		letter-spacing: 3px;
-		color: rgba(42,42,42,0.6);
+		color: rgba(42,42,42,0.7);
+		margin: 4px 0 0;
+		text-align: center;
 	}
 
 	.nav {
 		display: flex;
-		gap: 32px;
+		gap: 40px;
+		margin-top: 30px;
 	}
 
 	.nav a {
-		color: rgba(42,42,42,0.5);
+		color: rgba(42,42,42,0.6);
 		text-decoration: none;
 		font-size: 11px;
 		font-weight: 500;
 		letter-spacing: 1px;
-		transition: color 0.2s ease;
+		transition: color 0.3s ease;
 		position: relative;
 	}
 	.nav a:hover, .nav a.active { color: #2a2a2a; }
 	.nav a.active::after {
 		content: '';
 		position: absolute;
-		bottom: -6px; left: 0; right: 0;
+		bottom: -8px; left: 0; right: 0;
 		height: 2px;
 		background: #2a2a2a;
 	}
 
 	/* Content */
 	.content-wrap {
-		padding: 32px 60px 80px;
+		padding: 0 60px 80px;
+		max-width: 1400px;
+		margin: 0 auto;
 	}
 
 	/* Filter bar */
 	.filter-bar {
 		display: flex;
-		gap: 12px;
+		gap: 16px;
+		justify-content: center;
 		flex-wrap: wrap;
-		margin-bottom: 36px;
+		margin-bottom: 40px;
 	}
 
 	.filter-button {
-		padding: 10px 22px;
+		padding: 12px 24px;
 		background: transparent;
 		border: 1px solid rgba(0,0,0,0.12);
 		color: #6b6b6b;
@@ -223,20 +218,20 @@
 		letter-spacing: 0.5px;
 		border-radius: 24px;
 		cursor: pointer;
-		transition: all 0.25s ease;
+		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 	.filter-button:hover {
 		background: rgba(0,0,0,0.04);
 		border-color: rgba(0,0,0,0.2);
-		transform: translateY(-1px);
+		transform: translateY(-2px);
 	}
 	.filter-button.active {
-		background: #2a2a2a;
+		background: linear-gradient(135deg, #2a2a2a 0%, #3d3d3d 100%);
 		border-color: transparent;
 		color: white;
 	}
 
-	/* Hero card */
+	/* Hero card — full width, image left + text right */
 	.hero-card {
 		display: grid;
 		grid-template-columns: 1.1fr 1fr;
@@ -299,7 +294,7 @@
 		margin: 0;
 	}
 
-	/* Article grid */
+	/* 3-column grid */
 	.articles-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
@@ -391,10 +386,11 @@
 	}
 
 	@media (max-width: 768px) {
-		.header { padding: 24px; }
-		.header-left { flex-direction: column; align-items: flex-start; gap: 20px; }
-		.nav { gap: 20px; flex-wrap: wrap; }
-		.content-wrap { padding: 24px 24px 60px; }
+		.section-content { padding: 30px 24px 40px; }
+		.nav { gap: 24px; }
+		.content-wrap { padding: 0 24px 60px; }
+		.filter-bar { gap: 10px; }
+		.filter-button { padding: 10px 16px; font-size: 12px; }
 		.hero-card { grid-template-columns: 1fr; }
 		.hero-image { min-height: 220px; }
 		.hero-body { padding: 24px; }
