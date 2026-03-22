@@ -9,6 +9,9 @@
 	let activeFilter: CategoryFilter = 'all';
 	let visibleArticles = articles;
 
+	$: featured = visibleArticles.find(a => a.featured) ?? visibleArticles[0];
+	$: grid = visibleArticles.filter(a => a.id !== featured?.id);
+
 	const categoryColors: Record<string, string> = {
 		Trips:    '#0a84ff',
 		Gear:     '#30d158',
@@ -42,46 +45,62 @@
 
 <div class="community-page" class:ready>
 
-	<!-- Header -->
-	<div class="section-content">
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div class="logo" on:click={(e) => navigate(e, '/')}>OCEAN FRONTIER</div>
-		<div class="logo-subtitle">CONSULTING</div>
-		<nav class="nav">
-			<a href="/" on:click={(e) => navigate(e, '/')}>HOMEPAGE</a>
-			<a href="/training" on:click={(e) => navigate(e, '/training')}>TRAINING</a>
-			<a href="/schedule" on:click={(e) => navigate(e, '/schedule')}>SCHEDULE</a>
-			<a href="/gear" on:click={(e) => navigate(e, '/gear')}>GEAR</a>
-			<a href="/community" class="active">COMMUNITY</a>
-		</nav>
+	<!-- Header: left-aligned -->
+	<div class="header">
+		<div class="header-left">
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<div class="logo" on:click={(e) => navigate(e, '/')}>
+				OCEAN FRONTIER
+				<span class="logo-subtitle">CONSULTING</span>
+			</div>
+			<nav class="nav">
+				<a href="/" on:click={(e) => navigate(e, '/')}>HOMEPAGE</a>
+				<a href="/training" on:click={(e) => navigate(e, '/training')}>TRAINING</a>
+				<a href="/schedule" on:click={(e) => navigate(e, '/schedule')}>SCHEDULE</a>
+				<a href="/gear" on:click={(e) => navigate(e, '/gear')}>GEAR</a>
+				<a href="/community" class="active">COMMUNITY</a>
+			</nav>
+		</div>
 	</div>
 
-	<!-- Filter Bar -->
-	<div class="filter-bar">
-		<button class="filter-button" class:active={activeFilter === 'all'} on:click={() => filterArticles('all')}>All</button>
-		<button class="filter-button" class:active={activeFilter === 'Trips'} on:click={() => filterArticles('Trips')}>Trips</button>
-		<button class="filter-button" class:active={activeFilter === 'Gear'} on:click={() => filterArticles('Gear')}>Gear</button>
-		<button class="filter-button" class:active={activeFilter === 'Training'} on:click={() => filterArticles('Training')}>Training</button>
-		<button class="filter-button" class:active={activeFilter === 'News'} on:click={() => filterArticles('News')}>News</button>
-	</div>
+	<div class="content-wrap">
 
-	<!-- Main layout: left text + right cards -->
-	<div class="main-layout">
-
-		<!-- Left intro panel -->
-		<div class="intro-panel">
-			<h1>Explore the<br>Community</h1>
-			<p>Stories from the water, honest gear reviews, training insights, and news from the GUE Cyprus chapter.</p>
-			<p><em>We are Explorers who Teach.</em></p>
-			<div class="intro-divider"></div>
-			<p class="intro-sub">From cave expeditions to first dives — real experiences shared by real divers.</p>
+		<!-- Filter bar -->
+		<div class="filter-bar">
+			<button class="filter-button" class:active={activeFilter === 'all'} on:click={() => filterArticles('all')}>All</button>
+			<button class="filter-button" class:active={activeFilter === 'Trips'} on:click={() => filterArticles('Trips')}>Trips</button>
+			<button class="filter-button" class:active={activeFilter === 'Gear'} on:click={() => filterArticles('Gear')}>Gear</button>
+			<button class="filter-button" class:active={activeFilter === 'Training'} on:click={() => filterArticles('Training')}>Training</button>
+			<button class="filter-button" class:active={activeFilter === 'News'} on:click={() => filterArticles('News')}>News</button>
 		</div>
 
-		<!-- Right: article cards grid -->
-		<div class="articles-container">
+		<!-- Hero / Featured article -->
+		{#if featured}
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<div class="hero-card" on:click={(e) => navigate(e, `/community/${featured.id}`)}>
+				<div class="hero-image">
+					{#if featured.image}
+						<img src={featured.image} alt={featured.title} />
+					{:else}
+						<div class="image-placeholder"></div>
+					{/if}
+					<span class="hero-badge" style="background:{categoryColors[featured.category]}">{featured.category}</span>
+				</div>
+				<div class="hero-body">
+					<span class="meta">{featured.date} · {featured.author}</span>
+					<h2>{featured.title}</h2>
+					<p>{featured.excerpt}</p>
+					<span class="read-more">Read article →</span>
+				</div>
+			</div>
+		{/if}
+
+		<!-- 3-column grid -->
+		{#if grid.length > 0}
 			<div class="articles-grid">
-				{#each visibleArticles as article}
+				{#each grid as article}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div class="article-card" on:click={(e) => navigate(e, `/community/${article.id}`)}>
@@ -102,7 +121,7 @@
 					</div>
 				{/each}
 			</div>
-		</div>
+		{/if}
 
 	</div>
 </div>
@@ -112,7 +131,6 @@
 		overflow: auto !important;
 		height: auto !important;
 	}
-
 	:global(body.community-body .split-container) {
 		display: none !important;
 	}
@@ -124,196 +142,200 @@
 		opacity: 0;
 		transition: opacity 0.35s ease;
 	}
-
 	.community-page.ready { opacity: 1; }
 
-	/* Header */
-	.section-content {
-		width: 100%;
-		padding: 40px 60px 60px;
+	/* Left-aligned header */
+	.header {
+		padding: 40px 60px 32px;
+		border-bottom: 1px solid rgba(0,0,0,0.07);
+	}
+
+	.header-left {
 		display: flex;
-		flex-direction: column;
 		align-items: center;
+		gap: 48px;
 	}
 
 	.logo {
-		font-size: 18px;
+		font-size: 16px;
 		font-weight: 700;
 		letter-spacing: 2px;
 		color: #2a2a2a;
 		cursor: pointer;
 		transition: opacity 0.2s ease;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		flex-shrink: 0;
 	}
-
 	.logo:hover { opacity: 0.7; }
 
 	.logo-subtitle {
-		font-size: 11px;
+		font-size: 9px;
 		font-weight: 300;
 		letter-spacing: 3px;
-		color: rgba(42, 42, 42, 0.7);
-		margin: 4px 0 0;
+		color: rgba(42,42,42,0.6);
 	}
 
 	.nav {
 		display: flex;
-		gap: 40px;
-		margin-top: 30px;
+		gap: 32px;
 	}
 
 	.nav a {
-		color: rgba(42, 42, 42, 0.6);
+		color: rgba(42,42,42,0.5);
 		text-decoration: none;
 		font-size: 11px;
 		font-weight: 500;
 		letter-spacing: 1px;
-		transition: color 0.3s ease;
+		transition: color 0.2s ease;
 		position: relative;
 	}
-
 	.nav a:hover, .nav a.active { color: #2a2a2a; }
-
 	.nav a.active::after {
 		content: '';
 		position: absolute;
-		bottom: -8px;
-		left: 0; right: 0;
+		bottom: -6px; left: 0; right: 0;
 		height: 2px;
 		background: #2a2a2a;
 	}
 
+	/* Content */
+	.content-wrap {
+		padding: 32px 60px 80px;
+	}
+
 	/* Filter bar */
 	.filter-bar {
-		padding: 0 60px 32px;
 		display: flex;
-		gap: 16px;
-		justify-content: flex-start;
+		gap: 12px;
 		flex-wrap: wrap;
+		margin-bottom: 36px;
 	}
 
 	.filter-button {
-		padding: 12px 24px;
+		padding: 10px 22px;
 		background: transparent;
-		border: 1px solid rgba(0, 0, 0, 0.12);
+		border: 1px solid rgba(0,0,0,0.12);
 		color: #6b6b6b;
 		font-size: 13px;
 		font-weight: 600;
 		letter-spacing: 0.5px;
 		border-radius: 24px;
 		cursor: pointer;
-		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+		transition: all 0.25s ease;
 	}
-
 	.filter-button:hover {
-		background: rgba(0, 0, 0, 0.04);
-		border-color: rgba(0, 0, 0, 0.2);
-		transform: translateY(-2px);
+		background: rgba(0,0,0,0.04);
+		border-color: rgba(0,0,0,0.2);
+		transform: translateY(-1px);
 	}
-
 	.filter-button.active {
-		background: linear-gradient(135deg, #2a2a2a 0%, #3d3d3d 100%);
+		background: #2a2a2a;
 		border-color: transparent;
 		color: white;
 	}
 
-	/* Main layout */
-	.main-layout {
+	/* Hero card */
+	.hero-card {
 		display: grid;
-		grid-template-columns: 320px 1fr;
-		gap: 0;
-		padding: 0 60px 80px;
-		align-items: start;
+		grid-template-columns: 1.1fr 1fr;
+		border: 1px solid rgba(0,0,0,0.08);
+		border-radius: 16px;
+		overflow: hidden;
+		cursor: pointer;
+		margin-bottom: 40px;
+		transition: box-shadow 0.25s ease, transform 0.25s ease;
+	}
+	.hero-card:hover {
+		box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+		transform: translateY(-2px);
 	}
 
-	/* Left intro */
-	.intro-panel {
-		padding-right: 48px;
-		position: sticky;
-		top: 40px;
+	.hero-image {
+		position: relative;
+		min-height: 400px;
+		overflow: hidden;
+		background: #e8e8e8;
 	}
+	.hero-image img {
+		width: 100%; height: 100%;
+		object-fit: cover;
+		transition: transform 0.5s ease;
+	}
+	.hero-card:hover .hero-image img { transform: scale(1.03); }
 
-	.intro-panel h1 {
-		font-size: 36px;
+	.hero-badge {
+		position: absolute;
+		top: 16px; left: 16px;
+		padding: 4px 12px;
+		border-radius: 20px;
+		font-size: 10px;
 		font-weight: 700;
-		letter-spacing: -0.5px;
+		letter-spacing: 0.8px;
+		text-transform: uppercase;
+		color: white;
+	}
+
+	.hero-body {
+		padding: 44px 40px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 16px;
+	}
+	.hero-body h2 {
+		font-size: 28px;
+		font-weight: 700;
 		color: #2a2a2a;
-		line-height: 1.2;
-		margin: 0 0 20px;
+		line-height: 1.3;
+		letter-spacing: -0.3px;
+		margin: 0;
+	}
+	.hero-body p {
+		font-size: 15px;
+		color: rgba(42,42,42,0.6);
+		line-height: 1.75;
+		margin: 0;
 	}
 
-	.intro-panel p {
-		font-size: 14px;
-		color: rgba(42, 42, 42, 0.6);
-		line-height: 1.7;
-		margin: 0 0 12px;
-	}
-
-	.intro-panel em {
-		font-style: italic;
-		color: rgba(42, 42, 42, 0.45);
-	}
-
-	.intro-divider {
-		width: 40px;
-		height: 2px;
-		background: #2a2a2a;
-		margin: 20px 0;
-	}
-
-	.intro-sub {
-		font-size: 12px !important;
-		color: rgba(42, 42, 42, 0.4) !important;
-	}
-
-	/* Articles grid */
-	.articles-container {
-		min-width: 0;
-	}
-
+	/* Article grid */
 	.articles-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		grid-template-columns: repeat(3, 1fr);
 		gap: 28px;
 	}
 
 	.article-card {
-		border: 1px solid rgba(0, 0, 0, 0.08);
-		border-radius: 16px;
+		border: 1px solid rgba(0,0,0,0.08);
+		border-radius: 14px;
 		overflow: hidden;
 		cursor: pointer;
-		transition: box-shadow 0.25s ease, transform 0.25s ease;
 		display: flex;
 		flex-direction: column;
-		background: white;
+		transition: box-shadow 0.25s ease, transform 0.25s ease;
 	}
-
 	.article-card:hover {
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 8px 28px rgba(0,0,0,0.09);
 		transform: translateY(-3px);
 	}
 
 	.card-image {
 		position: relative;
-		height: 180px;
+		height: 200px;
 		background: #e8e8e8;
 		overflow: hidden;
 	}
-
 	.card-image img {
-		width: 100%;
-		height: 100%;
+		width: 100%; height: 100%;
 		object-fit: cover;
 		transition: transform 0.4s ease;
 	}
-
-	.article-card:hover .card-image img {
-		transform: scale(1.04);
-	}
+	.article-card:hover .card-image img { transform: scale(1.05); }
 
 	.category-badge {
 		position: absolute;
-		top: 12px;
-		left: 12px;
+		top: 12px; left: 12px;
 		padding: 3px 9px;
 		border-radius: 20px;
 		font-size: 9px;
@@ -324,38 +346,27 @@
 	}
 
 	.image-placeholder {
-		width: 100%;
-		height: 100%;
+		width: 100%; height: 100%;
 		background: linear-gradient(135deg, #e0e0e0, #c8c8c8);
 	}
 
 	.card-body {
-		padding: 18px 20px 20px;
+		padding: 18px 20px 22px;
 		display: flex;
 		flex-direction: column;
-		gap: 7px;
+		gap: 8px;
 		flex: 1;
 	}
-
-	.meta {
-		font-size: 10px;
-		font-weight: 500;
-		letter-spacing: 0.5px;
-		color: rgba(42, 42, 42, 0.4);
-		text-transform: uppercase;
-	}
-
 	.card-body h3 {
-		font-size: 14px;
+		font-size: 15px;
 		font-weight: 700;
 		color: #2a2a2a;
 		line-height: 1.4;
 		margin: 0;
 	}
-
 	.card-body p {
-		font-size: 12.5px;
-		color: rgba(42, 42, 42, 0.6);
+		font-size: 13px;
+		color: rgba(42,42,42,0.6);
 		line-height: 1.6;
 		margin: 0;
 		display: -webkit-box;
@@ -364,27 +375,30 @@
 		overflow: hidden;
 	}
 
+	.meta {
+		font-size: 10px;
+		font-weight: 500;
+		letter-spacing: 0.5px;
+		color: rgba(42,42,42,0.4);
+		text-transform: uppercase;
+	}
+
 	.read-more {
-		font-size: 11px;
+		font-size: 12px;
 		font-weight: 600;
 		color: #2a2a2a;
 		margin-top: 4px;
 	}
 
 	@media (max-width: 768px) {
-		.section-content { padding: 30px 24px 40px; }
-		.nav { gap: 24px; }
-		.filter-bar { padding: 0 24px 24px; gap: 10px; }
-		.filter-button { padding: 10px 16px; font-size: 12px; }
-		.main-layout {
-			grid-template-columns: 1fr;
-			padding: 0 24px 60px;
-		}
-		.intro-panel {
-			position: static;
-			padding-right: 0;
-			margin-bottom: 32px;
-		}
+		.header { padding: 24px; }
+		.header-left { flex-direction: column; align-items: flex-start; gap: 20px; }
+		.nav { gap: 20px; flex-wrap: wrap; }
+		.content-wrap { padding: 24px 24px 60px; }
+		.hero-card { grid-template-columns: 1fr; }
+		.hero-image { min-height: 220px; }
+		.hero-body { padding: 24px; }
+		.hero-body h2 { font-size: 22px; }
 		.articles-grid { grid-template-columns: 1fr; gap: 20px; }
 	}
 </style>
