@@ -596,6 +596,7 @@
 	.same-as-phone {
 		display: inline-flex;
 		align-items: center;
+		align-self: flex-start;
 		gap: 6px;
 		font-size: 11px;
 		color: rgba(255, 255, 255, 0.45);
