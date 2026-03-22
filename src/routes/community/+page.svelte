@@ -102,6 +102,11 @@
 </div>
 
 <style>
+	:global(body) {
+		overflow: auto !important;
+		height: auto !important;
+	}
+
 	.community-page {
 		min-height: 100vh;
 		background: white;

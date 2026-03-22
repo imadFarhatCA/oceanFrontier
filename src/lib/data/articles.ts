@@ -17,7 +17,7 @@ export const articles: Article[] = [
 		category: 'Trips',
 		author: 'Imad Farhat',
 		date: 'March 10, 2026',
-		image: '/images/community/cave-expedition.jpg',
+		image: 'https://images.unsplash.com/photo-1682687220199-d0124f48f95b?w=900&q=80',
 		featured: true
 	},
 	{
@@ -27,7 +27,7 @@ export const articles: Article[] = [
 		category: 'Gear',
 		author: 'Imad Farhat',
 		date: 'February 22, 2026',
-		image: '/images/community/halcyon-symbios.jpg'
+		image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80'
 	},
 	{
 		id: 'gue-fundamentals-what-to-expect',
@@ -36,7 +36,7 @@ export const articles: Article[] = [
 		category: 'Training',
 		author: 'Imad Farhat',
 		date: 'February 5, 2026',
-		image: '/images/community/fundamentals.jpg'
+		image: 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=600&q=80'
 	},
 	{
 		id: 'red-sea-expedition',
@@ -45,16 +45,16 @@ export const articles: Article[] = [
 		category: 'Trips',
 		author: 'Imad Farhat',
 		date: 'January 18, 2026',
-		image: '/images/community/red-sea.jpg'
+		image: 'https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=600&q=80'
 	},
 	{
 		id: 'gue-cyprus-community-2026',
 		title: 'GUE Cyprus 2026: Growing the Community',
-		excerpt: 'This year we welcomed 12 new members to the GUE Cyprus chapter. A look at where we are, where we're going, and upcoming community dives.',
+		excerpt: "This year we welcomed 12 new members to the GUE Cyprus chapter. A look at where we are, where we're going, and upcoming community dives.",
 		category: 'News',
 		author: 'Imad Farhat',
 		date: 'January 2, 2026',
-		image: '/images/community/community.jpg'
+		image: 'https://images.unsplash.com/photo-1601019051263-7c2c555a9095?w=600&q=80'
 	},
 	{
 		id: 'drysuit-selection-guide',
@@ -63,6 +63,6 @@ export const articles: Article[] = [
 		category: 'Gear',
 		author: 'Imad Farhat',
 		date: 'December 14, 2025',
-		image: '/images/community/drysuit.jpg'
+		image: 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=600&q=80'
 	}
 ];
