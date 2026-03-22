@@ -7,6 +7,7 @@
 	const TURNSTILE_SITE_KEY = '0x4AAAAAACumGj3Wq8ivI4Fk'; // replace with your Cloudflare Turnstile site key
 
 	let checkoutStep = false;
+	let name = '';
 	let email = '';
 	let phone = '';
 	let whatsapp = '';
@@ -81,6 +82,7 @@
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
+					name,
 					email,
 					phone,
 					whatsapp,
@@ -153,6 +155,9 @@
 						</div>
 
 						<div class="inquiry-form">
+							<label for="inq-name">Full Name</label>
+							<input id="inq-name" type="text" placeholder="John Doe" bind:value={name} />
+
 							<label for="inq-email">Email</label>
 							<input id="inq-email" type="email" placeholder="your@email.com" bind:value={email} />
 

@@ -10,7 +10,7 @@ export async function onRequestPost(context) {
 		return json({ error: 'Invalid request body' }, 400);
 	}
 
-	const { email, phone, whatsapp, turnstileToken, items } = body;
+	const { name, email, phone, whatsapp, turnstileToken, items } = body;
 
 	if (!email || !turnstileToken) {
 		return json({ error: 'Missing required fields' }, 400);
@@ -55,12 +55,13 @@ export async function onRequestPost(context) {
 			from: 'Ocean Frontier <onboarding@resend.dev>',
 			to: 'imad.farhat@hotmail.com',
 			reply_to: email,
-			subject: `[${ref}] New Inquiry from ${email}`,
+			subject: `[${ref}] New Inquiry from ${name || email}`,
 			html: `
 				<h2>New Inquiry — the Ocean Frontier</h2>
 				<p><strong>Reference:</strong> ${ref}</p>
 				<h3>Contact Details</h3>
-				<p><strong>Email:</strong> ${email}<br>
+				<p><strong>Name:</strong> ${name || 'Not provided'}<br>
+				<strong>Email:</strong> ${email}<br>
 				<strong>Phone:</strong> ${phone || 'Not provided'}<br>
 				<strong>WhatsApp:</strong> ${whatsapp || 'Not provided'}</p>
 				<h3>Requested Items</h3>
