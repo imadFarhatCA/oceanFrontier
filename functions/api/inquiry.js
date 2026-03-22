@@ -1,7 +1,4 @@
 // Cloudflare Pages Function — handles inquiry form submission with Turnstile verification
-// Uses Cloudflare Email Workers (send_email binding) — no third-party email service needed
-
-import { EmailMessage } from 'cloudflare:email';
 
 export async function onRequestPost(context) {
 	const { request, env } = context;
@@ -19,7 +16,7 @@ export async function onRequestPost(context) {
 		return json({ error: 'Missing required fields' }, 400);
 	}
 
-	// Verify Turnstile token (skip if unavailable — fallback set client-side)
+	// Verify Turnstile token
 	if (turnstileToken !== 'unavailable') {
 		const verification = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
 			method: 'POST',
@@ -39,50 +36,36 @@ export async function onRequestPost(context) {
 
 	// Build item list
 	const itemLines = Array.isArray(items) && items.length > 0
-		? items.map(i => `  • ${i.name} (${i.type}) x${i.quantity}`).join('\r\n')
-		: '  No items listed';
+		? items.map(i => `• ${i.name} (${i.type}) x${i.quantity}`).join('<br>')
+		: '• No items listed';
 
-	// Build raw MIME email
-	const emailBody =
-		`New inquiry received from the Ocean Frontier website.\r\n` +
-		`\r\n` +
-		`CONTACT DETAILS\r\n` +
-		`───────────────\r\n` +
-		`Email:     ${email}\r\n` +
-		`Phone:     ${phone || 'Not provided'}\r\n` +
-		`WhatsApp:  ${whatsapp || 'Not provided'}\r\n` +
-		`\r\n` +
-		`REQUESTED ITEMS\r\n` +
-		`───────────────\r\n` +
-		`${itemLines}\r\n`;
-
-	const rawEmail =
-		`From: Ocean Frontier Inquiries <inquiries@theoceanfrontier.com>\r\n` +
-		`To: imad.farhat@hotmail.com\r\n` +
-		`Reply-To: ${email}\r\n` +
-		`Subject: New Inquiry from ${email}\r\n` +
-		`MIME-Version: 1.0\r\n` +
-		`Content-Type: text/plain; charset=utf-8\r\n` +
-		`\r\n` +
-		emailBody;
-
-	const encoded = new TextEncoder().encode(rawEmail);
-
-	const message = new EmailMessage(
-		'inquiries@theoceanfrontier.com',
-		'imad.farhat@hotmail.com',
-		new ReadableStream({
-			start(controller) {
-				controller.enqueue(encoded);
-				controller.close();
-			}
+	// Send email via Resend
+	const emailRes = await fetch('https://api.resend.com/emails', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${env.RESEND_API_KEY}`
+		},
+		body: JSON.stringify({
+			from: 'Ocean Frontier <onboarding@resend.dev>',
+			to: 'imad.farhat@hotmail.com',
+			reply_to: email,
+			subject: `New Inquiry from ${email}`,
+			html: `
+				<h2>New Inquiry — the Ocean Frontier</h2>
+				<h3>Contact Details</h3>
+				<p><strong>Email:</strong> ${email}<br>
+				<strong>Phone:</strong> ${phone || 'Not provided'}<br>
+				<strong>WhatsApp:</strong> ${whatsapp || 'Not provided'}</p>
+				<h3>Requested Items</h3>
+				<p>${itemLines}</p>
+			`
 		})
-	);
+	});
 
-	try {
-		await env.SEND_EMAIL.send(message);
-	} catch (err) {
-		console.error('Email send error:', err);
+	if (!emailRes.ok) {
+		const err = await emailRes.text();
+		console.error('Resend error:', err);
 		return json({ error: 'Failed to send email. Please try again.' }, 500);
 	}
 
