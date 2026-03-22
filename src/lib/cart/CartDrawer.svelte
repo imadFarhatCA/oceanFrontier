@@ -154,11 +154,13 @@
 							<label for="inq-phone">Phone Number</label>
 							<input id="inq-phone" type="tel" placeholder="+1 234 567 890" bind:value={phone} />
 
-							<label for="inq-whatsapp">WhatsApp Number</label>
-							<label class="same-as-phone">
-								<input type="checkbox" bind:checked={whatsappSameAsPhone} />
-								Same as phone
-							</label>
+							<div class="whatsapp-label-row">
+								<label for="inq-whatsapp">WhatsApp Number</label>
+								<label class="same-as-phone">
+									<input type="checkbox" bind:checked={whatsappSameAsPhone} />
+									Same as phone
+								</label>
+							</div>
 							<input id="inq-whatsapp" type="tel" placeholder="+1 234 567 890" bind:value={whatsapp} disabled={whatsappSameAsPhone} />
 						</div>
 
@@ -593,10 +595,19 @@
 		margin-bottom: -4px;
 	}
 
+	.whatsapp-label-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.whatsapp-label-row label[for="inq-whatsapp"] {
+		margin-bottom: 0;
+	}
+
 	.same-as-phone {
 		display: inline-flex;
 		align-items: center;
-		align-self: flex-start;
 		gap: 6px;
 		font-size: 11px;
 		color: rgba(255, 255, 255, 0.45);
@@ -605,7 +616,6 @@
 		letter-spacing: 0;
 		font-weight: 400;
 		white-space: nowrap;
-		margin-top: -8px;
 	}
 
 	.same-as-phone input[type="checkbox"] {
