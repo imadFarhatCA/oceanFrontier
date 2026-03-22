@@ -10,6 +10,9 @@
 	let email = '';
 	let phone = '';
 	let whatsapp = '';
+	let whatsappSameAsPhone = false;
+
+	$: if (whatsappSameAsPhone) whatsapp = phone;
 	let submitted = false;
 	let submitting = false;
 	let submitError = '';
@@ -151,8 +154,14 @@
 							<label for="inq-phone">Phone Number</label>
 							<input id="inq-phone" type="tel" placeholder="+1 234 567 890" bind:value={phone} />
 
-							<label for="inq-whatsapp">WhatsApp Number</label>
-							<input id="inq-whatsapp" type="tel" placeholder="+1 234 567 890" bind:value={whatsapp} />
+							<div class="whatsapp-label-row">
+								<label for="inq-whatsapp">WhatsApp Number</label>
+								<label class="same-as-phone">
+									<input type="checkbox" bind:checked={whatsappSameAsPhone} />
+									Same as phone
+								</label>
+							</div>
+							<input id="inq-whatsapp" type="tel" placeholder="+1 234 567 890" bind:value={whatsapp} disabled={whatsappSameAsPhone} />
 						</div>
 
 						<div id="turnstile-container"></div>
@@ -584,6 +593,30 @@
 		text-transform: uppercase;
 		letter-spacing: 0.6px;
 		margin-bottom: -4px;
+	}
+
+	.whatsapp-label-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: -4px;
+	}
+
+	.same-as-phone {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		font-size: 11px;
+		color: rgba(255, 255, 255, 0.45);
+		cursor: pointer;
+		text-transform: none;
+		letter-spacing: 0;
+		font-weight: 400;
+	}
+
+	.same-as-phone input[type="checkbox"] {
+		accent-color: rgba(0, 162, 255, 1);
+		cursor: pointer;
 	}
 
 	.inquiry-form input {
