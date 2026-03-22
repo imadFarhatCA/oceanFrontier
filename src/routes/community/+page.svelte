@@ -3,10 +3,11 @@
 	import { goto } from '$app/navigation';
 	import { articles } from '$lib/data/articles';
 
-	let ready = false;
+	type CategoryFilter = 'all' | 'Trips' | 'Gear' | 'Training' | 'News';
 
-	const featured = articles.find(a => a.featured);
-	const grid = articles.filter(a => !a.featured);
+	let ready = false;
+	let activeFilter: CategoryFilter = 'all';
+	let visibleArticles = articles;
 
 	const categoryColors: Record<string, string> = {
 		Trips:    '#0a84ff',
@@ -14,6 +15,11 @@
 		Training: '#ff9f0a',
 		News:     '#ff453a'
 	};
+
+	function filterArticles(filter: CategoryFilter) {
+		activeFilter = filter;
+		visibleArticles = filter === 'all' ? articles : articles.filter(a => a.category === filter);
+	}
 
 	function navigate(e: MouseEvent, href: string) {
 		e.preventDefault();
@@ -51,53 +57,51 @@
 		</nav>
 	</div>
 
-	<div class="content-wrap">
+	<!-- Filter Bar -->
+	<div class="filter-bar">
+		<button class="filter-button" class:active={activeFilter === 'all'} on:click={() => filterArticles('all')}>All</button>
+		<button class="filter-button" class:active={activeFilter === 'Trips'} on:click={() => filterArticles('Trips')}>Trips</button>
+		<button class="filter-button" class:active={activeFilter === 'Gear'} on:click={() => filterArticles('Gear')}>Gear</button>
+		<button class="filter-button" class:active={activeFilter === 'Training'} on:click={() => filterArticles('Training')}>Training</button>
+		<button class="filter-button" class:active={activeFilter === 'News'} on:click={() => filterArticles('News')}>News</button>
+	</div>
 
-		<!-- Page title -->
-		<div class="page-header">
-			<h1>Community</h1>
-			<p>Stories, gear, training and news from the deep.</p>
+	<!-- Main layout: left text + right cards -->
+	<div class="main-layout">
+
+		<!-- Left intro panel -->
+		<div class="intro-panel">
+			<h1>Explore the<br>Community</h1>
+			<p>Stories from the water, honest gear reviews, training insights, and news from the GUE Cyprus chapter.</p>
+			<p><em>We are Explorers who Teach.</em></p>
+			<div class="intro-divider"></div>
+			<p class="intro-sub">From cave expeditions to first dives — real experiences shared by real divers.</p>
 		</div>
 
-		<!-- Featured / Hero article -->
-		{#if featured}
-			<a href="/community/{featured.id}" class="hero-card" on:click={(e) => navigate(e, `/community/${featured.id}`)}>
-				<div class="hero-image">
-					{#if featured.image}
-						<img src={featured.image} alt={featured.title} />
-					{:else}
-						<div class="image-placeholder"></div>
-					{/if}
-					<span class="hero-badge" style="background:{categoryColors[featured.category]}">{featured.category}</span>
-				</div>
-				<div class="hero-body">
-					<span class="meta">{featured.date} · {featured.author}</span>
-					<h2>{featured.title}</h2>
-					<p>{featured.excerpt}</p>
-					<span class="read-more">Read article →</span>
-				</div>
-			</a>
-		{/if}
-
-		<!-- 3-column grid -->
-		<div class="articles-grid">
-			{#each grid as article}
-				<a href="/community/{article.id}" class="article-card" on:click={(e) => navigate(e, `/community/${article.id}`)}>
-					<div class="card-image">
-						{#if article.image}
-							<img src={article.image} alt={article.title} />
-						{:else}
-							<div class="image-placeholder"></div>
-						{/if}
-						<span class="category-badge" style="background:{categoryColors[article.category]}">{article.category}</span>
+		<!-- Right: article cards grid -->
+		<div class="articles-container">
+			<div class="articles-grid">
+				{#each visibleArticles as article}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					<div class="article-card" on:click={(e) => navigate(e, `/community/${article.id}`)}>
+						<div class="card-image">
+							{#if article.image}
+								<img src={article.image} alt={article.title} loading="lazy" />
+							{:else}
+								<div class="image-placeholder"></div>
+							{/if}
+							<span class="category-badge" style="background:{categoryColors[article.category]}">{article.category}</span>
+						</div>
+						<div class="card-body">
+							<span class="meta">{article.date}</span>
+							<h3>{article.title}</h3>
+							<p>{article.excerpt}</p>
+							<span class="read-more">Read article →</span>
+						</div>
 					</div>
-					<div class="card-body">
-						<span class="meta">{article.date}</span>
-						<h3>{article.title}</h3>
-						<p>{article.excerpt}</p>
-					</div>
-				</a>
-			{/each}
+				{/each}
+			</div>
 		</div>
 
 	</div>
@@ -109,10 +113,7 @@
 		height: auto !important;
 	}
 
-	:global(body.community-body) :global(.app),
-	:global(body.community-body) :global(.split-container),
-	:global(body.community-body) :global(.left-panel),
-	:global(body.community-body) :global(.right-panel) {
+	:global(body.community-body .split-container) {
 		display: none !important;
 	}
 
@@ -124,9 +125,7 @@
 		transition: opacity 0.35s ease;
 	}
 
-	.community-page.ready {
-		opacity: 1;
-	}
+	.community-page.ready { opacity: 1; }
 
 	/* Header */
 	.section-content {
@@ -172,145 +171,132 @@
 		position: relative;
 	}
 
-	.nav a:hover,
-	.nav a.active { color: #2a2a2a; }
+	.nav a:hover, .nav a.active { color: #2a2a2a; }
 
 	.nav a.active::after {
 		content: '';
 		position: absolute;
 		bottom: -8px;
-		left: 0;
-		right: 0;
+		left: 0; right: 0;
 		height: 2px;
 		background: #2a2a2a;
 	}
 
-	/* Content */
-	.content-wrap {
-		max-width: 1200px;
-		margin: 0 auto;
+	/* Filter bar */
+	.filter-bar {
+		padding: 0 60px 32px;
+		display: flex;
+		gap: 16px;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.filter-button {
+		padding: 12px 24px;
+		background: transparent;
+		border: 1px solid rgba(0, 0, 0, 0.12);
+		color: #6b6b6b;
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 0.5px;
+		border-radius: 24px;
+		cursor: pointer;
+		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.filter-button:hover {
+		background: rgba(0, 0, 0, 0.04);
+		border-color: rgba(0, 0, 0, 0.2);
+		transform: translateY(-2px);
+	}
+
+	.filter-button.active {
+		background: linear-gradient(135deg, #2a2a2a 0%, #3d3d3d 100%);
+		border-color: transparent;
+		color: white;
+	}
+
+	/* Main layout */
+	.main-layout {
+		display: grid;
+		grid-template-columns: 320px 1fr;
+		gap: 0;
 		padding: 0 60px 80px;
+		max-width: 1400px;
+		margin: 0 auto;
+		align-items: start;
 	}
 
-	.page-header {
-		margin-bottom: 40px;
+	/* Left intro */
+	.intro-panel {
+		padding-right: 48px;
+		position: sticky;
+		top: 40px;
 	}
 
-	.page-header h1 {
+	.intro-panel h1 {
 		font-size: 36px;
 		font-weight: 700;
 		letter-spacing: -0.5px;
 		color: #2a2a2a;
-		margin: 0 0 8px;
+		line-height: 1.2;
+		margin: 0 0 20px;
 	}
 
-	.page-header p {
-		font-size: 15px;
-		color: rgba(42, 42, 42, 0.5);
-		margin: 0;
-	}
-
-	/* Hero card */
-	.hero-card {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 0;
-		border: 1px solid rgba(0,0,0,0.08);
-		border-radius: 12px;
-		overflow: hidden;
-		text-decoration: none;
-		margin-bottom: 48px;
-		transition: box-shadow 0.2s ease, transform 0.2s ease;
-	}
-
-	.hero-card:hover {
-		box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-		transform: translateY(-2px);
-	}
-
-	.hero-image {
-		position: relative;
-		min-height: 380px;
-		background: #e8e8e8;
-		overflow: hidden;
-	}
-
-	.hero-image img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	.hero-badge {
-		position: absolute;
-		top: 16px;
-		left: 16px;
-		padding: 4px 10px;
-		border-radius: 20px;
-		font-size: 10px;
-		font-weight: 700;
-		letter-spacing: 0.8px;
-		text-transform: uppercase;
-		color: white;
-	}
-
-	.hero-body {
-		padding: 40px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		gap: 14px;
-	}
-
-	.hero-body h2 {
-		font-size: 26px;
-		font-weight: 700;
-		color: #2a2a2a;
-		line-height: 1.3;
-		margin: 0;
-		letter-spacing: -0.3px;
-	}
-
-	.hero-body p {
-		font-size: 15px;
-		color: rgba(42,42,42,0.65);
+	.intro-panel p {
+		font-size: 14px;
+		color: rgba(42, 42, 42, 0.6);
 		line-height: 1.7;
-		margin: 0;
+		margin: 0 0 12px;
 	}
 
-	.read-more {
-		font-size: 12px;
-		font-weight: 600;
-		color: #2a2a2a;
-		letter-spacing: 0.5px;
-		margin-top: 8px;
+	.intro-panel em {
+		font-style: italic;
+		color: rgba(42, 42, 42, 0.45);
 	}
 
-	/* Article grid */
+	.intro-divider {
+		width: 40px;
+		height: 2px;
+		background: #2a2a2a;
+		margin: 20px 0;
+	}
+
+	.intro-sub {
+		font-size: 12px !important;
+		color: rgba(42, 42, 42, 0.4) !important;
+	}
+
+	/* Articles grid */
+	.articles-container {
+		min-width: 0;
+	}
+
 	.articles-grid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 32px;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 28px;
 	}
 
 	.article-card {
-		border: 1px solid rgba(0,0,0,0.08);
-		border-radius: 10px;
+		border: 1px solid rgba(0, 0, 0, 0.08);
+		border-radius: 16px;
 		overflow: hidden;
-		text-decoration: none;
-		transition: box-shadow 0.2s ease, transform 0.2s ease;
+		cursor: pointer;
+		transition: box-shadow 0.25s ease, transform 0.25s ease;
 		display: flex;
 		flex-direction: column;
+		background: white;
 	}
 
 	.article-card:hover {
-		box-shadow: 0 6px 24px rgba(0,0,0,0.09);
-		transform: translateY(-2px);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+		transform: translateY(-3px);
 	}
 
 	.card-image {
 		position: relative;
-		height: 200px;
+		height: 180px;
 		background: #e8e8e8;
 		overflow: hidden;
 	}
@@ -330,7 +316,7 @@
 		position: absolute;
 		top: 12px;
 		left: 12px;
-		padding: 3px 8px;
+		padding: 3px 9px;
 		border-radius: 20px;
 		font-size: 9px;
 		font-weight: 700;
@@ -342,19 +328,27 @@
 	.image-placeholder {
 		width: 100%;
 		height: 100%;
-		background: linear-gradient(135deg, #e0e0e0 0%, #c8c8c8 100%);
+		background: linear-gradient(135deg, #e0e0e0, #c8c8c8);
 	}
 
 	.card-body {
-		padding: 20px;
+		padding: 18px 20px 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 7px;
 		flex: 1;
 	}
 
+	.meta {
+		font-size: 10px;
+		font-weight: 500;
+		letter-spacing: 0.5px;
+		color: rgba(42, 42, 42, 0.4);
+		text-transform: uppercase;
+	}
+
 	.card-body h3 {
-		font-size: 15px;
+		font-size: 14px;
 		font-weight: 700;
 		color: #2a2a2a;
 		line-height: 1.4;
@@ -362,8 +356,8 @@
 	}
 
 	.card-body p {
-		font-size: 13px;
-		color: rgba(42,42,42,0.6);
+		font-size: 12.5px;
+		color: rgba(42, 42, 42, 0.6);
 		line-height: 1.6;
 		margin: 0;
 		display: -webkit-box;
@@ -372,27 +366,27 @@
 		overflow: hidden;
 	}
 
-	.meta {
-		font-size: 10px;
-		font-weight: 500;
-		letter-spacing: 0.5px;
-		color: rgba(42,42,42,0.4);
-		text-transform: uppercase;
+	.read-more {
+		font-size: 11px;
+		font-weight: 600;
+		color: #2a2a2a;
+		margin-top: 4px;
 	}
 
 	@media (max-width: 768px) {
 		.section-content { padding: 30px 24px 40px; }
 		.nav { gap: 24px; }
-		.content-wrap { padding: 0 24px 60px; }
-
-		.hero-card { grid-template-columns: 1fr; }
-		.hero-image { min-height: 220px; }
-		.hero-body { padding: 24px; }
-		.hero-body h2 { font-size: 20px; }
-
-		.articles-grid {
+		.filter-bar { padding: 0 24px 24px; gap: 10px; }
+		.filter-button { padding: 10px 16px; font-size: 12px; }
+		.main-layout {
 			grid-template-columns: 1fr;
-			gap: 20px;
+			padding: 0 24px 60px;
 		}
+		.intro-panel {
+			position: static;
+			padding-right: 0;
+			margin-bottom: 32px;
+		}
+		.articles-grid { grid-template-columns: 1fr; gap: 20px; }
 	}
 </style>
