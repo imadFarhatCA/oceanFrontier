@@ -22,7 +22,9 @@
 	}
 
 	onMount(() => {
+		document.body.classList.add('community-body');
 		requestAnimationFrame(() => { ready = true; });
+		return () => document.body.classList.remove('community-body');
 	});
 </script>
 
@@ -102,9 +104,16 @@
 </div>
 
 <style>
-	:global(body) {
+	:global(body.community-body) {
 		overflow: auto !important;
 		height: auto !important;
+	}
+
+	:global(body.community-body) :global(.app),
+	:global(body.community-body) :global(.split-container),
+	:global(body.community-body) :global(.left-panel),
+	:global(body.community-body) :global(.right-panel) {
+		display: none !important;
 	}
 
 	.community-page {
