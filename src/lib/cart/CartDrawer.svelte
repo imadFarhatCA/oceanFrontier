@@ -612,6 +612,7 @@
 		text-transform: none;
 		letter-spacing: 0;
 		font-weight: 400;
+		white-space: nowrap;
 	}
 
 	.same-as-phone input[type="checkbox"] {
