@@ -14,6 +14,7 @@
 
 	$: if (whatsappSameAsPhone) whatsapp = phone;
 	let submitted = false;
+	let inquiryRef = '';
 	let submitting = false;
 	let submitError = '';
 	let turnstileToken = '';
@@ -90,6 +91,7 @@
 
 			const data = await res.json();
 			if (data.success) {
+				inquiryRef = data.ref ?? '';
 				submitted = true;
 			} else {
 				submitError = data.error ?? 'Something went wrong. Please try again.';
@@ -132,6 +134,9 @@
 						<div class="submitted-state" in:fade={{ duration: 200 }}>
 							<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
 							<h3>Inquiry Received</h3>
+							{#if inquiryRef}
+								<p class="inquiry-ref">{inquiryRef}</p>
+							{/if}
 							<p>We'll review your request, check availability, and get back to you with the best options and next steps.</p>
 							<button class="checkout-btn" on:click={close}>Close</button>
 						</div>
@@ -661,6 +666,17 @@
 		text-align: center;
 		gap: 16px;
 		padding: 24px;
+	}
+
+	.inquiry-ref {
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(0, 162, 255, 0.9);
+		letter-spacing: 1px;
+		background: rgba(0, 162, 255, 0.08);
+		border: 1px solid rgba(0, 162, 255, 0.2);
+		border-radius: 6px;
+		padding: 6px 14px;
 	}
 
 	.submitted-state h3 {

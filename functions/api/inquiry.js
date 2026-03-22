@@ -33,6 +33,12 @@ export async function onRequestPost(context) {
 		}
 	}
 
+	// Generate reference number: OF-YYYYMMDD-XXXX
+	const now = new Date();
+	const datePart = now.toISOString().slice(0, 10).replace(/-/g, '');
+	const randPart = Math.random().toString(36).toUpperCase().slice(2, 6);
+	const ref = `OF-${datePart}-${randPart}`;
+
 	// Build item list
 	const itemLines = Array.isArray(items) && items.length > 0
 		? items.map(i => `• ${i.name} (${i.type}) x${i.quantity}`).join('<br>')
@@ -49,9 +55,10 @@ export async function onRequestPost(context) {
 			from: 'Ocean Frontier <onboarding@resend.dev>',
 			to: 'imad.farhat@hotmail.com',
 			reply_to: email,
-			subject: `New Inquiry from ${email}`,
+			subject: `[${ref}] New Inquiry from ${email}`,
 			html: `
 				<h2>New Inquiry — the Ocean Frontier</h2>
+				<p><strong>Reference:</strong> ${ref}</p>
 				<h3>Contact Details</h3>
 				<p><strong>Email:</strong> ${email}<br>
 				<strong>Phone:</strong> ${phone || 'Not provided'}<br>
@@ -68,7 +75,7 @@ export async function onRequestPost(context) {
 		return json({ error: 'Failed to send email. Please try again.' }, 500);
 	}
 
-	return json({ success: true });
+	return json({ success: true, ref });
 }
 
 function json(data, status = 200) {
