@@ -187,7 +187,7 @@
 		padding: 0 60px 32px;
 		display: flex;
 		gap: 16px;
-		justify-content: center;
+		justify-content: flex-start;
 		flex-wrap: wrap;
 	}
 
@@ -222,8 +222,6 @@
 		grid-template-columns: 320px 1fr;
 		gap: 0;
 		padding: 0 60px 80px;
-		max-width: 1400px;
-		margin: 0 auto;
 		align-items: start;
 	}
 
