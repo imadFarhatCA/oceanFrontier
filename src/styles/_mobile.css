@@ -1056,3 +1056,23 @@
 		margin-bottom: 10px;
 	}
 }
+
+/* Community View Mobile */
+@media (max-width: 768px) {
+	.community-hero-card {
+		grid-template-columns: 1fr;
+	}
+	.community-hero-image {
+		min-height: 220px;
+	}
+	.community-hero-body {
+		padding: 24px;
+	}
+	.community-hero-body h2 {
+		font-size: 22px;
+	}
+	.community-articles-grid {
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
+}

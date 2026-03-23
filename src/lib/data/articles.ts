@@ -7,6 +7,7 @@ export interface Article {
 	date: string;
 	image?: string;
 	featured?: boolean;
+	tags: string[];
 }
 
 export const articles: Article[] = [
@@ -18,7 +19,8 @@ export const articles: Article[] = [
 		author: 'Imad Farhat',
 		date: 'March 10, 2026',
 		image: 'https://images.unsplash.com/photo-1682687220199-d0124f48f95b?w=900&q=80',
-		featured: true
+		featured: true,
+		tags: ['Cave Diving', 'Cyprus', 'Expedition']
 	},
 	{
 		id: 'halcyon-symbios-review',
@@ -27,7 +29,8 @@ export const articles: Article[] = [
 		category: 'Gear',
 		author: 'Imad Farhat',
 		date: 'February 22, 2026',
-		image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80'
+		image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80',
+		tags: ['Rebreather', 'Halcyon', 'Review']
 	},
 	{
 		id: 'gue-fundamentals-what-to-expect',
@@ -36,7 +39,8 @@ export const articles: Article[] = [
 		category: 'Training',
 		author: 'Imad Farhat',
 		date: 'February 5, 2026',
-		image: 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=600&q=80'
+		image: 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=600&q=80',
+		tags: ['GUE Fundamentals', 'Beginner', 'Courses']
 	},
 	{
 		id: 'red-sea-expedition',
@@ -45,7 +49,8 @@ export const articles: Article[] = [
 		category: 'Trips',
 		author: 'Imad Farhat',
 		date: 'January 18, 2026',
-		image: 'https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=600&q=80'
+		image: 'https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=600&q=80',
+		tags: ['Red Sea', 'Wreck Diving', 'Liveaboard']
 	},
 	{
 		id: 'gue-cyprus-community-2026',
@@ -54,7 +59,8 @@ export const articles: Article[] = [
 		category: 'News',
 		author: 'Imad Farhat',
 		date: 'January 2, 2026',
-		image: 'https://images.unsplash.com/photo-1601019051263-7c2c555a9095?w=600&q=80'
+		image: 'https://images.unsplash.com/photo-1601019051263-7c2c555a9095?w=600&q=80',
+		tags: ['Cyprus', 'Community', 'GUE Chapter']
 	},
 	{
 		id: 'drysuit-selection-guide',
@@ -63,6 +69,7 @@ export const articles: Article[] = [
 		category: 'Gear',
 		author: 'Imad Farhat',
 		date: 'December 14, 2025',
-		image: 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=600&q=80'
+		image: 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=600&q=80',
+		tags: ['Drysuit', 'Mediterranean', 'Buying Guide']
 	}
 ];

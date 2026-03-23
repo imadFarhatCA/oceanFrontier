@@ -40,7 +40,16 @@
 <svelte:head>
 	<title>Community | the Ocean Frontier</title>
 	<meta name="description" content="Dive stories, gear reviews, training insights and news from the Ocean Frontier GUE community." />
+	<meta property="og:title" content="Community | the Ocean Frontier" />
+	<meta property="og:description" content="Dive stories, gear reviews, training insights and news from the Ocean Frontier GUE community." />
+	<meta property="og:url" content="https://theoceanfrontier.com/community" />
+	<meta property="og:image" content="https://theoceanfrontier.com/og-image.jpg" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Community | the Ocean Frontier" />
+	<meta name="twitter:description" content="Dive stories, gear reviews, training insights and news from the Ocean Frontier GUE community." />
+	<meta name="twitter:image" content="https://theoceanfrontier.com/og-image.jpg" />
 	<link rel="canonical" href="https://theoceanfrontier.com/community" />
+	<link rel="alternate" type="application/rss+xml" title="the Ocean Frontier — Community" href="https://theoceanfrontier.com/community/rss.xml" />
 </svelte:head>
 
 <div class="community-page" class:ready>

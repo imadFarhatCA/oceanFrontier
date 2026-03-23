@@ -12,28 +12,18 @@
 			{ href: '/gear', target: 'gear', label: 'GEAR' },
 			{ href: '/training', target: 'training', label: 'TRAINING' },
 			{ href: '/schedule', target: 'schedule', label: 'SCHEDULE' },
-			{ href: '/community', target: 'community', label: 'COMMUNITY', external: true }
+			{ href: '/community', target: 'community', label: 'COMMUNITY' }
 		]
 		: [
 			{ href: '/', target: 'home', label: 'HOMEPAGE' },
 			{ href: '/training', target: 'training', label: 'TRAINING' },
 			{ href: '/schedule', target: 'schedule', label: 'SCHEDULE' },
 			{ href: '/gear', target: 'gear', label: 'GEAR' },
-			{ href: '/community', target: 'community', label: 'COMMUNITY', external: true }
+			{ href: '/community', target: 'community', label: 'COMMUNITY' }
 		];
 
-	function handleClick(e: Event, target: string, isExternal: boolean | undefined = false) {
-		// Community link is external - let it navigate normally
-		if (isExternal) {
-			// For mobile, still close the menu
-			if (onMobileClose && variant === 'mobile') {
-				onMobileClose();
-			}
-		} else {
-			// Internal link - handleNavClick manages menu state internally
-			onNavClick(e, target);
-			// Don't call onMobileClose here - openTrainingView/openGearView handle it
-		}
+	function handleClick(e: Event, target: string) {
+		onNavClick(e, target);
 	}
 </script>
 
@@ -42,7 +32,7 @@
 		<a
 			href={link.href}
 			class:nav-active={activeLink === link.target}
-			on:click={(e) => handleClick(e, link.target, link.external)}
+			on:click={(e) => handleClick(e, link.target)}
 		>
 			{link.label}
 		</a>

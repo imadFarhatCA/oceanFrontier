@@ -23,12 +23,14 @@
 		showTrainingView as showTrainingViewStore,
 		showGearView as showGearViewStore,
 		showScheduleView as showScheduleViewStore,
+		showCommunityView as showCommunityViewStore,
 		isMobile as isMobileStore,
 		currentMobileSection as currentMobileSectionStore,
 		isMobileMenuOpen as isMobileMenuOpenStore,
 		selectedCourse as selectedCourseStore
 	} from '$lib/stores/pageState';
 	import GUESchedule from '$lib/components/GUESchedule.svelte';
+	import { articles, type Article } from '$lib/data/articles';
 
 	// DOM refs
 	let leftSection: HTMLDivElement;
@@ -46,6 +48,7 @@
 	let showTrainingView = false;
 	let showGearView = false;
 	let showScheduleView = false;
+	let showCommunityView = false;
 	let isMobile = false;
 	let currentMobileSection = 0;
 	let selectedCourse: TrainingCourse | null = null;
@@ -55,6 +58,7 @@
 	showTrainingViewStore.subscribe((v) => (showTrainingView = v));
 	showGearViewStore.subscribe((v) => (showGearView = v));
 	showScheduleViewStore.subscribe((v) => (showScheduleView = v));
+	showCommunityViewStore.subscribe((v) => (showCommunityView = v));
 	isMobileStore.subscribe((v) => (isMobile = v));
 	currentMobileSectionStore.subscribe((v) => (currentMobileSection = v));
 	selectedCourseStore.subscribe((v) => (selectedCourse = v));
@@ -71,6 +75,64 @@
 	type GearFilter = 'all' | 'basic' | 'technical' | 'content-creation';
 	let activeGearFilter: GearFilter = 'all';
 	let activeGearType: 'basic' | 'technical' = 'basic';
+
+	// Community view state
+	type CategoryFilter = 'all' | 'Trips' | 'Gear' | 'Training' | 'News';
+	let activeCommunityFilter: CategoryFilter = 'all';
+	let visibleArticles = articles;
+	let copiedArticleId: string | null = null;
+
+	const categoryColors: Record<string, string> = {
+		Trips: '#0a84ff',
+		Gear: '#30d158',
+		Training: '#ff9f0a',
+		News: '#ff453a'
+	};
+
+	$: featuredArticle = visibleArticles.find(a => a.featured) ?? visibleArticles[0];
+	$: gridArticles = visibleArticles.filter(a => a.id !== featuredArticle?.id);
+
+	function filterArticles(filter: CategoryFilter) {
+		activeCommunityFilter = filter;
+		visibleArticles = filter === 'all' ? articles : articles.filter(a => a.category === filter);
+	}
+
+	let shareMenuId: string | null = null;
+
+	function toggleShareMenu(e: Event, articleId: string) {
+		e.stopPropagation();
+		shareMenuId = shareMenuId === articleId ? null : articleId;
+	}
+
+	function closeShareMenu() {
+		shareMenuId = null;
+	}
+
+	async function shareArticle(e: Event, articleId: string, method: 'copy' | 'whatsapp' | 'email' | 'facebook' | 'x' | 'linkedin') {
+		e.stopPropagation();
+		const article = articles.find(a => a.id === articleId);
+		if (!article) return;
+		const url = `https://theoceanfrontier.com/community/${articleId}`;
+		const text = encodeURIComponent(article.title);
+		const encodedUrl = encodeURIComponent(url);
+
+		if (method === 'copy') {
+			await navigator.clipboard.writeText(url);
+			copiedArticleId = articleId;
+			setTimeout(() => { copiedArticleId = null; }, 2000);
+		} else if (method === 'whatsapp') {
+			window.open(`https://wa.me/?text=${text}%20—%20${encodedUrl}`, '_blank');
+		} else if (method === 'email') {
+			window.location.href = `mailto:?subject=${text}&body=${text}%0A%0A${encodedUrl}`;
+		} else if (method === 'facebook') {
+			window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, '_blank');
+		} else if (method === 'x') {
+			window.open(`https://x.com/intent/tweet?text=${text}&url=${encodedUrl}`, '_blank');
+		} else if (method === 'linkedin') {
+			window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`, '_blank');
+		}
+		shareMenuId = null;
+	}
 
 	// Dynamic date
 	let currentDate = '';
@@ -168,6 +230,29 @@
 		}
 	}
 
+	function openCommunityView() {
+		showCommunityViewStore.set(true);
+		activeCommunityFilter = 'all';
+		visibleArticles = articles;
+		document.body.style.overflow = 'auto';
+		document.body.style.height = 'auto';
+		if (isMobile) {
+			currentMobileSectionStore.set(0);
+			isMobileMenuOpenStore.set(false);
+		}
+		if (leftSection) leftSection.style.clipPath = 'inset(0 0 0 0)';
+	}
+
+	function closeCommunityView() {
+		showCommunityViewStore.set(false);
+		document.body.style.overflow = 'hidden';
+		document.body.style.height = '100vh';
+		if (!isMobile) {
+			if (leftSection) leftSection.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
+			if (rightSection) rightSection.style.clipPath = `inset(0 0 0 ${sliderPosition}%)`;
+		}
+	}
+
 	function closeQuestionnaire() {
 		showQuestionnaireStore.set(false);
 		currentFlow = '';
@@ -180,6 +265,7 @@
 			if (!showTrainingView) {
 				if (showGearView) closeGearView();
 				if (showScheduleView) closeScheduleView();
+				if (showCommunityView) closeCommunityView();
 				if (showQuestionnaire) closeQuestionnaire();
 				openTrainingView();
 			}
@@ -187,6 +273,7 @@
 			if (!showGearView) {
 				if (showTrainingView) closeTrainingView();
 				if (showScheduleView) closeScheduleView();
+				if (showCommunityView) closeCommunityView();
 				if (showQuestionnaire) closeQuestionnaire();
 				openGearView('basic');
 			}
@@ -194,8 +281,17 @@
 			if (!showScheduleView) {
 				if (showTrainingView) closeTrainingView();
 				if (showGearView) closeGearView();
+				if (showCommunityView) closeCommunityView();
 				if (showQuestionnaire) closeQuestionnaire();
 				openScheduleView();
+			}
+		} else if (target === 'community') {
+			if (!showCommunityView) {
+				if (showTrainingView) closeTrainingView();
+				if (showGearView) closeGearView();
+				if (showScheduleView) closeScheduleView();
+				if (showQuestionnaire) closeQuestionnaire();
+				openCommunityView();
 			}
 		} else if (target === 'home') {
 			if (showTrainingView) {
@@ -204,6 +300,8 @@
 				closeGearView();
 			} else if (showScheduleView) {
 				closeScheduleView();
+			} else if (showCommunityView) {
+				closeCommunityView();
 			} else if (isMobile) {
 				currentMobileSectionStore.set(0);
 				isMobileMenuOpenStore.set(false);
@@ -231,7 +329,7 @@
 
 	// Mobile swipe handlers
 	function handleMobileTouchStart(e: TouchEvent) {
-		if (!isMobile || showQuestionnaire || showTrainingView || showGearView) return;
+		if (!isMobile || showQuestionnaire || showTrainingView || showGearView || showCommunityView) return;
 		touchStartX = e.touches[0].clientX;
 		touchCurrentX = e.touches[0].clientX;
 		touchStartY = e.touches[0].clientY;
@@ -398,6 +496,9 @@
 		checkMobile();
 		window.addEventListener('resize', checkMobile);
 
+		const handleClickOutside = () => { shareMenuId = null; };
+		window.addEventListener('click', handleClickOutside);
+
 		if (!isMobile) {
 			_sliderPos = sliderPosition;
 			if (sliderBar) sliderBar.style.left = sliderPosition + '%';
@@ -417,9 +518,25 @@
 
 		return () => {
 			window.removeEventListener('resize', checkMobile);
+			window.removeEventListener('click', handleClickOutside);
 		};
 	});
 </script>
+
+<svelte:head>
+	<title>the Ocean Frontier — GUE Dive Training & Gear in Cyprus</title>
+	<meta name="description" content="the Ocean Frontier is Cyprus's GUE dive training center. Technical diving courses, Halcyon & Xdeep gear, and a passionate diving community led by instructor Imad Farhat." />
+	<meta property="og:title" content="the Ocean Frontier — GUE Dive Training & Gear in Cyprus" />
+	<meta property="og:description" content="Cyprus's GUE dive training center. Technical diving courses, Halcyon & Xdeep gear, and a passionate community." />
+	<meta property="og:url" content="https://theoceanfrontier.com/" />
+	<meta property="og:image" content="https://theoceanfrontier.com/og-image.jpg" />
+	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="the Ocean Frontier — GUE Dive Training & Gear in Cyprus" />
+	<meta name="twitter:description" content="Cyprus's GUE dive training center. Technical diving courses, Halcyon & Xdeep gear, and a passionate community." />
+	<meta name="twitter:image" content="https://theoceanfrontier.com/og-image.jpg" />
+	<link rel="canonical" href="https://theoceanfrontier.com/" />
+</svelte:head>
 
 <svelte:window
 	on:mousemove={handleMouseMove}
@@ -430,7 +547,7 @@
 
 <div
 	class="split-container"
-	class:training-active={showTrainingView || showScheduleView}
+	class:training-active={showTrainingView || showScheduleView || showCommunityView}
 	class:gear-active={showGearView}
 	class:mobile-view={isMobile}
 	class:mobile-section-0={isMobile && currentMobileSection === 0}
@@ -445,11 +562,11 @@
 	<div
 		bind:this={leftSection}
 		class="split-section left"
-		class:expanded={showTrainingView || showScheduleView}
+		class:expanded={showTrainingView || showScheduleView || showCommunityView}
 		class:hidden={showGearView}
 	>
 		<div class="section-content">
-			{#if !showTrainingView && !showScheduleView}
+			{#if !showTrainingView && !showScheduleView && !showCommunityView}
 				<div class="logo">OCEAN FRONTIER</div>
 				<div class="logo-subtitle">CONSULTING</div>
 				<Nav variant="light" onNavClick={handleNavClick} activeLink={null} centered={false} onMobileClose={null} />
@@ -468,6 +585,161 @@
 					</svg>
 				</button>
 				<GUESchedule />
+			{/if}
+
+			{#if showCommunityView}
+				<div class="training-header">
+					<div class="logo centered">OCEAN FRONTIER</div>
+					<div class="logo-subtitle centered">CONSULTING</div>
+					<Nav variant="light" centered={true} activeLink="community" onNavClick={handleNavClick} onMobileClose={null} />
+				</div>
+				<button class="close-x-button" on:click={() => closeCommunityView()} aria-label="Close community view">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				</button>
+				<div class="gear-content">
+					<nav class="filter-bar">
+						<a href="#all" class="filter-link" class:active={activeCommunityFilter === 'all'} on:click|preventDefault|stopPropagation={() => filterArticles('all')}>ALL</a>
+						<span class="filter-separator">/</span>
+						<a href="#trips" class="filter-link" class:active={activeCommunityFilter === 'Trips'} on:click|preventDefault|stopPropagation={() => filterArticles('Trips')}>TRIPS</a>
+						<span class="filter-separator">/</span>
+						<a href="#gear" class="filter-link" class:active={activeCommunityFilter === 'Gear'} on:click|preventDefault|stopPropagation={() => filterArticles('Gear')}>GEAR</a>
+						<span class="filter-separator">/</span>
+						<a href="#training" class="filter-link" class:active={activeCommunityFilter === 'Training'} on:click|preventDefault|stopPropagation={() => filterArticles('Training')}>TRAINING</a>
+						<span class="filter-separator">/</span>
+						<a href="#news" class="filter-link" class:active={activeCommunityFilter === 'News'} on:click|preventDefault|stopPropagation={() => filterArticles('News')}>NEWS</a>
+					</nav>
+				</div>
+				<div class="community-articles-section">
+
+					{#if featuredArticle}
+						<div class="community-hero-card">
+							<div class="community-hero-image">
+								{#if featuredArticle.image}
+									<img src={featuredArticle.image} alt={featuredArticle.title} />
+								{:else}
+									<div class="community-image-placeholder"></div>
+								{/if}
+								<span class="community-badge" style="background:{categoryColors[featuredArticle.category]}">{featuredArticle.category}</span>
+							</div>
+							<div class="community-hero-body">
+								<span class="community-meta">{featuredArticle.date} · {featuredArticle.author}</span>
+								<h2>{featuredArticle.title}</h2>
+								<p>{featuredArticle.excerpt}</p>
+								<div class="community-hero-tags">
+									{#each featuredArticle.tags as tag}
+										<span class="community-inline-tag">{tag}</span>
+									{/each}
+								</div>
+								<div class="community-card-footer">
+									<span class="community-read-more">Read article →</span>
+									<div class="share-buttons">
+										<button class="share-btn" title="Copy link" on:click={(e) => shareArticle(e, featuredArticle.id, 'copy')}>
+											{#if copiedArticleId === featuredArticle.id}
+												<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+											{:else}
+												<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+											{/if}
+										</button>
+										<div class="share-menu-wrap">
+											<button class="share-btn" title="Share" on:click={(e) => toggleShareMenu(e, featuredArticle.id)}>
+												<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+											</button>
+											{#if shareMenuId === featuredArticle.id}
+												<!-- svelte-ignore a11y-click-events-have-key-events -->
+												<!-- svelte-ignore a11y-no-static-element-interactions -->
+												<div class="share-dropdown" on:click|stopPropagation>
+													<button class="share-dropdown-item" title="Instagram" on:click={(e) => shareArticle(e, featuredArticle.id, 'copy')}>
+														<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+													</button>
+													<button class="share-dropdown-item" title="Facebook" on:click={(e) => shareArticle(e, featuredArticle.id, 'facebook')}>
+														<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+													</button>
+													<button class="share-dropdown-item" title="X" on:click={(e) => shareArticle(e, featuredArticle.id, 'x')}>
+														<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+													</button>
+													<button class="share-dropdown-item" title="LinkedIn" on:click={(e) => shareArticle(e, featuredArticle.id, 'linkedin')}>
+														<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+													</button>
+													<button class="share-dropdown-item" title="Email" on:click={(e) => shareArticle(e, featuredArticle.id, 'email')}>
+														<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+													</button>
+												</div>
+											{/if}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					{/if}
+
+					{#if gridArticles.length > 0}
+						<div class="community-articles-grid">
+							{#each gridArticles as article, i}
+								<div class="community-article-card" style="--card-index: {i}">
+									<div class="community-card-image">
+										{#if article.image}
+											<img src={article.image} alt={article.title} loading="lazy" />
+										{:else}
+											<div class="community-image-placeholder"></div>
+										{/if}
+										<span class="community-badge" style="background:{categoryColors[article.category]}">{article.category}</span>
+									</div>
+									<div class="community-card-body">
+										<span class="community-meta">{article.date}</span>
+										<h3>{article.title}</h3>
+										<p>{article.excerpt}</p>
+										<div class="community-inline-tags">
+											{#each article.tags as tag}
+												<span class="community-inline-tag">{tag}</span>
+											{/each}
+										</div>
+										<div class="community-card-footer">
+											<span class="community-read-more">Read article →</span>
+											<div class="share-buttons">
+												<button class="share-btn" title="Copy link" on:click={(e) => shareArticle(e, article.id, 'copy')}>
+													{#if copiedArticleId === article.id}
+														<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+													{:else}
+														<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+													{/if}
+												</button>
+												<div class="share-menu-wrap">
+													<button class="share-btn" title="Share" on:click={(e) => toggleShareMenu(e, article.id)}>
+														<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+													</button>
+													{#if shareMenuId === article.id}
+														<!-- svelte-ignore a11y-click-events-have-key-events -->
+														<!-- svelte-ignore a11y-no-static-element-interactions -->
+														<div class="share-dropdown" on:click|stopPropagation>
+															<button class="share-dropdown-item" title="Instagram" on:click={(e) => shareArticle(e, article.id, 'copy')}>
+																<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+															</button>
+															<button class="share-dropdown-item" title="Facebook" on:click={(e) => shareArticle(e, article.id, 'facebook')}>
+																<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+															</button>
+															<button class="share-dropdown-item" title="X" on:click={(e) => shareArticle(e, article.id, 'x')}>
+																<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+															</button>
+															<button class="share-dropdown-item" title="LinkedIn" on:click={(e) => shareArticle(e, article.id, 'linkedin')}>
+																<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+															</button>
+															<button class="share-dropdown-item" title="Email" on:click={(e) => shareArticle(e, article.id, 'email')}>
+																<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+															</button>
+														</div>
+													{/if}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							{/each}
+						</div>
+					{/if}
+				</div>
 			{/if}
 
 			{#if showTrainingView}
@@ -524,7 +796,7 @@
 					</div>
 				</div>
 			{:else}
-				<div class="cta-container" class:minimized={showQuestionnaire} class:hidden={showTrainingView || showScheduleView}>
+				<div class="cta-container" class:minimized={showQuestionnaire} class:hidden={showTrainingView || showScheduleView || showCommunityView}>
 					{#each trainingCTAs as cta, i}
 						<div
 							class="cta-item"
@@ -542,13 +814,13 @@
 				</div>
 			{/if}
 
-			{#if !showTrainingView && !showScheduleView}
+			{#if !showTrainingView && !showScheduleView && !showCommunityView}
 				<div class="section-label">
 					<span class="label-text">DIVE TRAINING</span>
 				</div>
 			{/if}
 
-			{#if showQuestionnaire && !showTrainingView && !showScheduleView}
+			{#if showQuestionnaire && !showTrainingView && !showScheduleView && !showCommunityView}
 				<QuestionnairePanel
 					flow={currentFlow}
 					section="training"
@@ -563,7 +835,7 @@
 	<div
 		bind:this={rightSection}
 		class="split-section right"
-		class:hidden={showTrainingView || showScheduleView}
+		class:hidden={showTrainingView || showScheduleView || showCommunityView}
 		class:expanded={showGearView}
 	>
 		<div class="section-content">
@@ -605,7 +877,7 @@
 					<GearDiagram />
 				</div>
 			{:else}
-				<div class="cta-container" class:minimized={showQuestionnaire} class:hidden={showTrainingView}>
+				<div class="cta-container" class:minimized={showQuestionnaire} class:hidden={showTrainingView || showCommunityView}>
 					{#each gearCTAs as cta, i}
 						<div
 							class="cta-item"
@@ -637,7 +909,7 @@
 	</div>
 
 	<!-- Slider Bar -->
-	<div bind:this={sliderBar} class="slider-bar" class:hidden={showTrainingView || showGearView || showScheduleView}>
+	<div bind:this={sliderBar} class="slider-bar" class:hidden={showTrainingView || showGearView || showScheduleView || showCommunityView}>
 		<button class="slider-handle" on:mousedown={handleSliderMouseDown} on:touchstart={handleTouchStart}>
 			<div class="slider-toggle-thumb">
 				<div class="slider-arrows">
@@ -653,7 +925,7 @@
 	</div>
 
 	<!-- Social Links -->
-	<div class="social-links left-social" class:hidden={showTrainingView || showGearView}>
+	<div class="social-links left-social" class:hidden={showTrainingView || showGearView || showCommunityView}>
 		<div class="social-text">
 			<a href="https://facebook.com" target="_blank" rel="noopener">FB</a>
 			<span> . </span>
@@ -669,18 +941,18 @@
 	</div>
 
 	<!-- Date Display -->
-	<div class="date-display" class:hidden={showTrainingView || showGearView}>
+	<div class="date-display" class:hidden={showTrainingView || showGearView || showCommunityView}>
 		<span class="date-text">{currentDate} . concept and design by Imad Farhat - copyright 2026, all rights reserved</span>
 	</div>
 
 	<!-- Center Logo - Split for background reactivity -->
-	<CenterLogo variant="light" bind:element={logoLeft} hidden={showQuestionnaire || showTrainingView || showGearView || showScheduleView} />
-	<CenterLogo variant="dark" bind:element={logoRight} hidden={showQuestionnaire || showTrainingView || showGearView || showScheduleView} />
+	<CenterLogo variant="light" bind:element={logoLeft} hidden={showQuestionnaire || showTrainingView || showGearView || showScheduleView || showCommunityView} />
+	<CenterLogo variant="dark" bind:element={logoRight} hidden={showQuestionnaire || showTrainingView || showGearView || showScheduleView || showCommunityView} />
 
 	<!-- Mobile Menu -->
 	<MobileMenu
 		onNavClick={handleNavClick}
-		hidden={showTrainingView || showGearView}
+		hidden={showTrainingView || showGearView || showCommunityView}
 	/>
 
 	<!-- Mobile Pagination -->

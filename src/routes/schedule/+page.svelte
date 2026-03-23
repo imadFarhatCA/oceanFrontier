@@ -68,6 +68,14 @@
 <svelte:head>
 	<title>Class Schedule | the Ocean Frontier — Cyprus</title>
 	<meta name="description" content="Upcoming GUE dive training classes in Cyprus taught by Imad Farhat. Book your next course." />
+	<meta property="og:title" content="Class Schedule | the Ocean Frontier — Cyprus" />
+	<meta property="og:description" content="Upcoming GUE dive training classes in Cyprus taught by Imad Farhat. Book your next course." />
+	<meta property="og:url" content="https://theoceanfrontier.com/schedule" />
+	<meta property="og:image" content="https://theoceanfrontier.com/og-image.jpg" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Class Schedule | the Ocean Frontier — Cyprus" />
+	<meta name="twitter:description" content="Upcoming GUE dive training classes in Cyprus. Book your next GUE course." />
+	<meta name="twitter:image" content="https://theoceanfrontier.com/og-image.jpg" />
 	<link rel="canonical" href="https://theoceanfrontier.com/schedule" />
 </svelte:head>
 
